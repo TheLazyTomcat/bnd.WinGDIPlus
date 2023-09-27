@@ -4,18 +4,24 @@
 *
 * Module Name:
 *
-*   Gdiplus.h
+*   GdiplusBase.h
 *
 * Abstract:
 *
-*   GDI+ public header file
+*   GDI+ base memory allocation class
 *
 \**************************************************************************)
-unit WinGDIPlus;
+unit gdiplusbase;
 
 {$INCLUDE '.\gdiplus_defs.inc'}
 
 interface
+
+uses
+  gdiplus_common;
+
+type
+  TGdiPlusBase = class(TObject);  //!! common ancestor
 
 implementation
 

@@ -1,3 +1,16 @@
+(**************************************************************************
+*
+* Copyright (c) 2000-2003 Microsoft Corporation
+*
+* Module Name:
+*
+*   Gdiplus initialization
+*
+* Abstract:
+*
+*   GDI+ Startup and Shutdown APIs
+*
+**************************************************************************)
 unit gdiplusinit;
 
 {$INCLUDE '.\gdiplus_defs.inc'}
@@ -15,11 +28,12 @@ type
     DebugEventLevelFatal,
     DebugEventLevelWarning
   );
+  PDebugEventLevel = ^TDebugEventLevel;
 
 // Callback function that GDI+ can call, on debug builds, for assertions
 // and warnings.
 type
-  // dunno about ansi vs unicode, the only declaration in gdipluinit.h is "..., CHAR *message);"
+  //!! dunno about ansi vs unicode, the only declaration in gdipluinit.h is "..., CHAR *message);"
   TDebugEventProc = procedure(level: TDebugEventLevel; message: PAnsiChar); stdcall;
 
 // Notification functions which the user must call appropriately if
@@ -106,6 +120,8 @@ Function GdiplusStartup(token: PULONG_PTR; input: PGdiplusStartupInput; output: 
 // to GDI+ object destructors.
 procedure GdiplusShutdown(token: ULONG_PTR); stdcall; external GDIPLIB;
 
+{$message 'make versions initializing dynamically linked functions'}
+
 implementation
 
 Function GdiplusStartupInput(
@@ -120,7 +136,7 @@ Result.SuppressExternalCodecs := suppressExternalCodecs;
 end;
 
 {$IF GDIPVER >= $0110}
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 Function GdiplusStartupInputEx(
   startupParameters:        INT = 0;

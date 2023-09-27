@@ -1,3 +1,16 @@
+(**************************************************************************\
+*
+* Copyright (c) 1998-2001, Microsoft Corp.  All Rights Reserved.
+*
+* Module Name:
+*
+*   GdiplusTypes.h
+*
+* Abstract:
+*
+*   GDI+ Types
+*
+\**************************************************************************)
 unit gdiplustypes;
 
 {$INCLUDE '.\gdiplus_defs.inc'}
@@ -53,7 +66,7 @@ type
 //      DWORD - use UINT32
 //--------------------------------------------------------------------------
 type
-  REAL = Single;
+  REAL = Single;  PREAL = ^REAL;
 
 const
   REAL_MAX       = MaxSingle;
@@ -64,7 +77,11 @@ const
 //--------------------------------------------------------------------------
 // Forward declarations of common classes
 //--------------------------------------------------------------------------
-(*
+{!!
+  Forward declarations removed - they are not needed here.
+
+  Original text:
+
 class Size;
 class SizeF;
 class Point;
@@ -72,7 +89,7 @@ class PointF;
 class Rect;
 class RectF;
 class CharacterRange;
-*){$IFDEF ShowHints}{$MESSAGE 'not needed?'}{$ENDIF}
+}
 
 //--------------------------------------------------------------------------
 // Status return values from GDI+ methods
@@ -104,6 +121,7 @@ type
     ProfileNotFound           = 21
   {$IFEND}
   );
+  PStatus = ^TStatus;
 
 //--------------------------------------------------------------------------
 // Represents a dimension in a 2D coordinate system (floating-point coordinates)
@@ -122,8 +140,8 @@ Function SizeF(width,height: REAL): TSizeF; overload;
 Function Add(a,b: TSizeF): TSizeF; overload;
 Function Subtract(a,b: TSizeF): TSizeF; overload;
 
-Function Equals(a,b: TSizeF): Boolean; overload;
-Function Empty(a: TSizeF): Boolean; overload;
+Function Equals(a,b: TSizeF): BOOL; overload;
+Function Empty(a: TSizeF): BOOL; overload;
 
 //--------------------------------------------------------------------------
 // Represents a dimension in a 2D coordinate system (integer coordinates)
@@ -142,8 +160,8 @@ Function Size(width,height: INT): TSize; overload;
 Function Add(a,b: TSize): TSize; overload;
 Function Subtract(a,b: TSize): TSize; overload;
 
-Function Equals(a,b: TSize): Boolean; overload;
-Function Empty(a: TSize): Boolean; overload;
+Function Equals(a,b: TSize): BOOL; overload;
+Function Empty(a: TSize): BOOL; overload;
 
 //--------------------------------------------------------------------------
 // Represents a location in a 2D coordinate system (floating-point coordinates)
@@ -163,7 +181,7 @@ Function PointF(x,y: REAL): TPointF; overload;
 Function Add(a,b: TPointF): TPointF; overload;
 Function Subtract(a,b: TPointF): TPointF; overload;
 
-Function Equals(a,b: TPointF): Boolean; overload;
+Function Equals(a,b: TPointF): BOOL; overload;
 
 //--------------------------------------------------------------------------
 // Represents a location in a 2D coordinate system (integer coordinates)
@@ -183,7 +201,7 @@ Function Point(x,y: INT): TPoint; overload;
 Function Add(a,b: TPoint): TPoint; overload;
 Function Subtract(a,b: TPoint): TPoint; overload;
 
-Function Equals(a,b: TPoint): Boolean; overload;
+Function Equals(a,b: TPoint): BOOL; overload;
 
 //--------------------------------------------------------------------------
 // Represents a rectangle in a 2D coordinate system (floating-point coordinates)
@@ -211,19 +229,19 @@ Function GetTop(a: TRectF): REAL; overload;
 Function GetRight(a: TRectF): REAL; overload;
 Function GetBottom(a: TRectF): REAL; overload;
 
-Function IsEmptyArea(a: TRectF): Boolean; overload;
-Function Equals(a,b: TRectF): Boolean; overload;
-Function Contains(a: TRectF; x,y: REAL): Boolean; overload;
-Function Contains(a: TRectF; pt: TPointF): Boolean; overload;
-Function Contains(a: TRectF; b: TRectF): Boolean; overload;
+Function IsEmptyArea(a: TRectF): BOOL; overload;
+Function Equals(a,b: TRectF): BOOL; overload;
+Function Contains(a: TRectF; x,y: REAL): BOOL; overload;
+Function Contains(a: TRectF; pt: TPointF): BOOL; overload;
+Function Contains(a: TRectF; b: TRectF): BOOL; overload;
 
 Function Inflate(a: TRectF; dx,dy: REAL): TRectF; overload;
 Function Inflate(a: TRectF; point: TPointF): TRectF; overload;
 Function Intersect(a,b: TRectF): TRectF; overload;
-Function Intersect(out c: TRectF; a,b: TRectF): Boolean; overload;
-Function IntersectsWith(a,b: TRectF): Boolean; overload;
+Function Intersect(out c: TRectF; a,b: TRectF): BOOL; overload;
+Function IntersectsWith(a,b: TRectF): BOOL; overload;
 Function Union(a,b: TRectF): TRectF; overload;
-Function Union(out c: TRectF; a,b: TRectF): Boolean; overload;
+Function Union(out c: TRectF; a,b: TRectF): BOOL; overload;
 Function Offset(a: TRectF; point: TPointF): TRectF; overload;
 Function Offset(a: TRectF; dx,dy: REAL): TRectF; overload;
 
@@ -253,34 +271,35 @@ Function GetTop(a: TRect): INT; overload;
 Function GetRight(a: TRect): INT; overload;
 Function GetBottom(a: TRect): INT; overload;
 
-Function IsEmptyArea(a: TRect): Boolean; overload;
-Function Equals(a,b: TRect): Boolean; overload;
-Function Contains(a: TRect; x,y: INT): Boolean; overload;
-Function Contains(a: TRect; pt: TPoint): Boolean; overload;
-Function Contains(a: TRect; b: TRect): Boolean; overload;
+Function IsEmptyArea(a: TRect): BOOL; overload;
+Function Equals(a,b: TRect): BOOL; overload;
+Function Contains(a: TRect; x,y: INT): BOOL; overload;
+Function Contains(a: TRect; pt: TPoint): BOOL; overload;
+Function Contains(a: TRect; b: TRect): BOOL; overload;
 
 Function Inflate(a: TRect; dx,dy: INT): TRect; overload;
 Function Inflate(a: TRect; point: TPoint): TRect; overload;
 Function Intersect(a,b: TRect): TRect; overload;
-Function Intersect(out c: TRect; a,b: TRect): Boolean; overload;
-Function IntersectsWith(a,b: TRect): Boolean; overload;
+Function Intersect(out c: TRect; a,b: TRect): BOOL; overload;
+Function IntersectsWith(a,b: TRect): BOOL; overload;
 Function Union(a,b: TRect): TRect; overload;
-Function Union(out c: TRect; a,b: TRect): Boolean; overload;
+Function Union(out c: TRect; a,b: TRect): BOOL; overload;
 Function Offset(a: TRect; point: TPoint): TRect; overload;
 Function Offset(a: TRect; dx,dy: INT): TRect; overload;
 
-{-------------------------------------------------------------------------------
+{!!-----------------------------------------------------------------------------
     TPathData - declaration
 -------------------------------------------------------------------------------}
 type
   TPathData = record
     Count:  INT;
-    Points: PPointF;  // pointer to an array of TPointF data
+    Points: PPointF;  //!! pointer to an array of TPointF data
     Types:  PByte;
   end;
   PPathData = ^TPathData;
 
-Function PathDataCreate(count: Integer): TPathData;
+procedure PathDataInit(out PathData: TPathData);
+procedure PathDataAlloc(var PathData: TPathData; Count: Integer);
 procedure PathDataFree(var PathData: TPathData);
 
 Function PathDataPointGet(PathData: TPathData; Index: Integer): TPointF;
@@ -289,7 +308,7 @@ procedure PathDataPointSet(PathData: TPathData; Index: Integer; Value: TPointF);
 Function PathDataTypeGet(PathData: TPathData; Index: Integer): Byte;
 procedure PathDataTypeSet(PathData: TPathData; Index: Integer; Value: Byte);
 
-{-------------------------------------------------------------------------------
+{!!-----------------------------------------------------------------------------
     TCharacterRange - declaration
 -------------------------------------------------------------------------------}
 type
@@ -319,7 +338,7 @@ else
   Result := b;
 end;
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Function GDIPLUS_MIN(a,b: Single): Single;
 begin
@@ -329,7 +348,7 @@ else
   Result := b;
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 Function GDIPLUS_MAX(a,b: Integer): Integer;
 begin
@@ -339,7 +358,7 @@ else
   Result := b;
 end;
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Function GDIPLUS_MAX(a,b: Single): Single;
 begin
@@ -350,7 +369,7 @@ else
 end;
 
 
-{-------------------------------------------------------------------------------
+{!!-----------------------------------------------------------------------------
     TSizeF - implementation
 -------------------------------------------------------------------------------}
 
@@ -360,7 +379,7 @@ Result.Width := 0.0;
 Result.Height := 0.0;
 end;
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Function SizeF(size: TSizeF): TSizeF;
 begin
@@ -368,7 +387,7 @@ Result.Width := size.Width;
 Result.Height := size.Height;
 end;
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Function SizeF(width,height: REAL): TSizeF;
 begin
@@ -376,7 +395,7 @@ Result.Width := width;
 Result.Height := height;
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 Function Add(a,b: TSizeF): TSizeF;
 begin
@@ -384,7 +403,7 @@ Result.Width := a.Width + b.Width;
 Result.Height := a.Height + b.Height;
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 Function Subtract(a,b: TSizeF): TSizeF;
 begin
@@ -392,21 +411,22 @@ Result.Width := a.Width - b.Width;
 Result.Height := a.Height - b.Height;
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
-Function Equals(a,b: TSizeF): Boolean;
+Function Equals(a,b: TSizeF): BOOL;
 begin
 Result := (a.Width = b.Width) and (a.Height = b.Height);
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
-Function Empty(a: TSizeF): Boolean;
+Function Empty(a: TSizeF): BOOL;
 begin
 Result := (a.Width = 0.0) and (a.Height = 0.0);
 end;
 
-{-------------------------------------------------------------------------------
+
+{!!-----------------------------------------------------------------------------
     TSize - implementation
 -------------------------------------------------------------------------------}
 
@@ -416,7 +436,7 @@ Result.Width := 0;
 Result.Height := 0;
 end;
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Function Size(size: TSize): TSize;
 begin
@@ -424,7 +444,7 @@ Result.Width := size.Width;
 Result.Height := size.Height;
 end;
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Function Size(width,height: INT): TSize;
 begin
@@ -432,7 +452,7 @@ Result.Width := width;
 Result.Height := height;
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 Function Add(a,b: TSize): TSize;
 begin
@@ -440,7 +460,7 @@ Result.Width := a.Width + b.Width;
 Result.Height := a.Height + b.Height;
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 Function Subtract(a,b: TSize): TSize;
 begin
@@ -448,21 +468,22 @@ Result.Width := a.Width - b.Width;
 Result.Height := a.Height - b.Height;
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
-Function Equals(a,b: TSize): Boolean;
+Function Equals(a,b: TSize): BOOL;
 begin
 Result := (a.Width = b.Width) and (a.Height = b.Height);
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
-Function Empty(a: TSize): Boolean;
+Function Empty(a: TSize): BOOL;
 begin
 Result := (a.Width = 0) and (a.Height = 0);
 end;
 
-{-------------------------------------------------------------------------------
+
+{!!-----------------------------------------------------------------------------
     TPointF - implementation
 -------------------------------------------------------------------------------}
 
@@ -472,7 +493,7 @@ Result.X := 0.0;
 Result.Y := 0.0;
 end;
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Function PointF(point: TPointF): TPointF;
 begin
@@ -480,7 +501,7 @@ Result.X := point.X;
 Result.Y := point.Y;
 end;
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Function PointF(size: TSizeF): TPointF;
 begin
@@ -488,7 +509,7 @@ Result.X := size.Width;
 Result.Y := size.Height;
 end;
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Function PointF(x,y: REAL): TPointF;
 begin
@@ -496,7 +517,7 @@ Result.X := x;
 Result.Y := y;
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 Function Add(a,b: TPointF): TPointF;
 begin
@@ -504,7 +525,7 @@ Result.X := a.X + b.X;
 Result.Y := a.Y + b.Y;
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 Function Subtract(a,b: TPointF): TPointF;
 begin
@@ -512,14 +533,15 @@ Result.X := a.X - b.X;
 Result.Y := a.Y - b.Y;
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
-Function Equals(a,b: TPointF): Boolean;
+Function Equals(a,b: TPointF): BOOL;
 begin
 Result := (a.X = b.X) and (a.Y = b.Y);
 end;
 
-{-------------------------------------------------------------------------------
+
+{!!-----------------------------------------------------------------------------
     TPoint - implementation
 -------------------------------------------------------------------------------}
 
@@ -529,7 +551,7 @@ Result.X := 0;
 Result.Y := 0;
 end;
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Function Point(point: TPoint): TPoint;
 begin
@@ -537,7 +559,7 @@ Result.X := point.X;
 Result.Y := point.Y;
 end;
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Function Point(size: TSize): TPoint;
 begin
@@ -545,7 +567,7 @@ Result.X := size.Width;
 Result.Y := size.Height;
 end;
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Function Point(x,y: INT): TPoint;
 begin
@@ -553,7 +575,7 @@ Result.X := x;
 Result.Y := y;
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 Function Add(a,b: TPoint): TPoint;
 begin
@@ -561,7 +583,7 @@ Result.X := a.X + b.X;
 Result.Y := a.Y + b.Y;
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 Function Subtract(a,b: TPoint): TPoint;
 begin
@@ -569,14 +591,15 @@ Result.X := a.X - b.X;
 Result.Y := a.Y - b.Y;
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
-Function Equals(a,b: TPoint): Boolean;
+Function Equals(a,b: TPoint): BOOL;
 begin
 Result := (a.X = b.X) and (a.Y = b.Y);
 end;
 
-{-------------------------------------------------------------------------------
+
+{!!-----------------------------------------------------------------------------
     TRectF - implementation
 -------------------------------------------------------------------------------}
 
@@ -588,7 +611,7 @@ Result.Width := 0.0;
 Result.Height := 0.0;
 end;
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Function RectF(x,y,width,height: REAL): TRectF;
 begin
@@ -598,7 +621,7 @@ Result.Width := width;
 Result.Height := height;
 end;
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Function RectF(location: TPointF; size: TSizeF): TRectF;
 begin
@@ -608,14 +631,14 @@ Result.Width := size.Width;
 Result.Height := size.Height;
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 Function Clone(a: TRectF): TRectF;
 begin
 Result := RectF(a.X,a.Y,a.Width,a.Height);
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 Function GetLocation(a: TRectF): TPointF;
 begin
@@ -623,7 +646,7 @@ Result.X := a.X;
 Result.Y := a.Y;
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 Function GetSize(a: TRectF): TSizeF;
 begin
@@ -631,7 +654,7 @@ Result.Width := a.Width;
 Result.Height := a.Height;
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 Function GetBounds(a: TRectF): TRectF;
 begin
@@ -641,72 +664,72 @@ Result.Width := a.Width;
 Result.Height := a.Height;
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 Function GetLeft(a: TRectF): REAL;
 begin
 Result := a.X;
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 Function GetTop(a: TRectF): REAL;
 begin
 Result := a.Y;
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 Function GetRight(a: TRectF): REAL;
 begin
 Result := a.X + a.Width;
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 Function GetBottom(a: TRectF): REAL;
 begin
 Result := a.Y + a.Height;
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
-Function IsEmptyArea(a: TRectF): Boolean;
+Function IsEmptyArea(a: TRectF): BOOL;
 begin
 Result := (a.Width <= REAL_EPSILON) or (a.Height <= REAL_EPSILON);
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
-Function Equals(a,b: TRectF): Boolean;
+Function Equals(a,b: TRectF): BOOL;
 begin
 Result := (a.X = b.X) and (a.Y = b.Y) and (a.Width = b.Width) and (a.Height = b.Height);
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
-Function Contains(a: TRectF; x,y: REAL): Boolean;
+Function Contains(a: TRectF; x,y: REAL): BOOL;
 begin
 Result := ((x >= a.X) and (x < (a.X + a.Width))) and
           ((y >= a.Y) and (y < (a.Y + a.Height)))
 end;
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Function Contains(a: TRectF; pt: TPointF): Boolean;
+Function Contains(a: TRectF; pt: TPointF): BOOL;
 begin
 Result := Contains(a,pt.X,pt.Y);
 end;
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Function Contains(a: TRectF; b: TRectF): Boolean;
+Function Contains(a: TRectF; b: TRectF): BOOL;
 begin
 Result := ((a.X <= b.X) and (GetRight(b) <= GetRight(a))) and
           ((a.Y <= b.Y) and (GetBottom(b) <= GetBottom(a)));
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 Function Inflate(a: TRectF; dx,dy: REAL): TRectF;
 begin
@@ -716,23 +739,23 @@ Result.Width := a.Width + (2 * dx);
 Result.Height := a.Height + (2 * dy);
 end;
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Function Inflate(a: TRectF; point: TPointF): TRectF;
 begin
 Result := Inflate(a,point.X,point.Y);
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 Function Intersect(a,b: TRectF): TRectF;
 begin
 Intersect(Result,a,b);
 end;
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Function Intersect(out c: TRectF; a,b: TRectF): Boolean;
+Function Intersect(out c: TRectF; a,b: TRectF): BOOL;
 var
   right,bottom,left,top:  REAL;
 begin
@@ -747,24 +770,24 @@ c.Height := bottom - top;
 Result := not IsEmptyArea(c);
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
-Function IntersectsWith(a,b: TRectF): Boolean;
+Function IntersectsWith(a,b: TRectF): BOOL;
 begin
 Result := (GetLeft(a) < GetRight(b)) and (GetTop(a) < GetBottom(b)) and
           (GetRight(a) > GetLeft(b)) and (GetBottom(a) > GetTop(b));
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 Function Union(a,b: TRectF): TRectF;
 begin
 Union(Result,a,b);
 end;
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Function Union(out c: TRectF; a,b: TRectF): Boolean;
+Function Union(out c: TRectF; a,b: TRectF): BOOL;
 var
   right,bottom,left,top:  REAL;
 begin
@@ -779,14 +802,14 @@ c.Height := bottom - top;
 Result := not IsEmptyArea(c);
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 Function Offset(a: TRectF; point: TPointF): TRectF;
 begin
 Result := Offset(a,point.X,point.Y);
 end;
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Function Offset(a: TRectF; dx,dy: REAL): TRectF;
 begin
@@ -794,7 +817,8 @@ Result.X := a.X + dx;
 Result.Y := a.Y + dy;
 end;
 
-{-------------------------------------------------------------------------------
+
+{!!-----------------------------------------------------------------------------
     TRect - implementation
 -------------------------------------------------------------------------------}
 
@@ -806,7 +830,7 @@ Result.Width := 0;
 Result.Height := 0;
 end;
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Function Rect(x,y,width,height: INT): TRect;
 begin
@@ -816,7 +840,7 @@ Result.Width := width;
 Result.Height := height;
 end;
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Function Rect(location: TPoint; size: TSize): TRect;
 begin
@@ -826,14 +850,14 @@ Result.Width := size.Width;
 Result.Height := size.Height;
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 Function Clone(a: TRect): TRect;
 begin
 Result := Rect(a.X,a.Y,a.Width,a.Height);
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 Function GetLocation(a: TRect): TPoint;
 begin
@@ -841,7 +865,7 @@ Result.X := a.X;
 Result.Y := a.Y;
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 Function GetSize(a: TRect): TSize;
 begin
@@ -849,7 +873,7 @@ Result.Width := a.Width;
 Result.Height := a.Height;
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 Function GetBounds(a: TRect): TRect;
 begin
@@ -859,72 +883,72 @@ Result.Width := a.Width;
 Result.Height := a.Height;
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 Function GetLeft(a: TRect): INT;
 begin
 Result := a.X;
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 Function GetTop(a: TRect): INT;
 begin
 Result := a.Y;
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 Function GetRight(a: TRect): INT;
 begin
 Result := a.X + a.Width;
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 Function GetBottom(a: TRect): INT;
 begin
 Result := a.Y + a.Height;
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
-Function IsEmptyArea(a: TRect): Boolean;
+Function IsEmptyArea(a: TRect): BOOL;
 begin
 Result := (a.Width <= 0) or (a.Height <= 0);
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
-Function Equals(a,b: TRect): Boolean;
+Function Equals(a,b: TRect): BOOL;
 begin
 Result := (a.X = b.X) and (a.Y = b.Y) and (a.Width = b.Width) and (a.Height = b.Height);
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
-Function Contains(a: TRect; x,y: INT): Boolean;
+Function Contains(a: TRect; x,y: INT): BOOL;
 begin
 Result := ((x >= a.X) and (x < (a.X + a.Width))) and
           ((y >= a.Y) and (y < (a.Y + a.Height)))
 end;
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Function Contains(a: TRect; pt: TPoint): Boolean;
+Function Contains(a: TRect; pt: TPoint): BOOL;
 begin
 Result := Contains(a,pt.X,pt.Y);
 end;
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Function Contains(a: TRect; b: TRect): Boolean;
+Function Contains(a: TRect; b: TRect): BOOL;
 begin
 Result := ((a.X <= b.X) and (GetRight(b) <= GetRight(a))) and
           ((a.Y <= b.Y) and (GetBottom(b) <= GetBottom(a)));
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 Function Inflate(a: TRect; dx,dy: INT): TRect;
 begin
@@ -934,23 +958,23 @@ Result.Width := a.Width + (2 * dx);
 Result.Height := a.Height + (2 * dy);
 end;
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Function Inflate(a: TRect; point: TPoint): TRect;
 begin
 Result := Inflate(a,point.X,point.Y);
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 Function Intersect(a,b: TRect): TRect;
 begin
 Intersect(Result,a,b);
 end;
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Function Intersect(out c: TRect; a,b: TRect): Boolean;
+Function Intersect(out c: TRect; a,b: TRect): BOOL;
 var
   right,bottom,left,top:  INT;
 begin
@@ -965,24 +989,24 @@ c.Height := bottom - top;
 Result := not IsEmptyArea(c);
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
-Function IntersectsWith(a,b: TRect): Boolean;
+Function IntersectsWith(a,b: TRect): BOOL;
 begin
 Result := (GetLeft(a) < GetRight(b)) and (GetTop(a) < GetBottom(b)) and
           (GetRight(a) > GetLeft(b)) and (GetBottom(a) > GetTop(b));
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 Function Union(a,b: TRect): TRect;
 begin
 Union(Result,a,b);
 end;
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Function Union(out c: TRect; a,b: TRect): Boolean;
+Function Union(out c: TRect; a,b: TRect): BOOL;
 var
   right,bottom,left,top:  INT;
 begin
@@ -997,14 +1021,14 @@ c.Height := bottom - top;
 Result := not IsEmptyArea(c);
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 Function Offset(a: TRect; point: TPoint): TRect;
 begin
 Result := Offset(a,point.X,point.Y);
 end;
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Function Offset(a: TRect; dx,dy: INT): TRect;
 begin
@@ -1012,78 +1036,86 @@ Result.X := a.X + dx;
 Result.Y := a.Y + dy;
 end;
 
-{-------------------------------------------------------------------------------
+
+{!!-----------------------------------------------------------------------------
     TPathData - implementation
 -------------------------------------------------------------------------------}
 
-Function PathDataCreate(count: Integer): TPathData;
+procedure PathDataInit(out PathData: TPathData);
 begin
-If Count > 0 then
-  begin
-    Result.Count := count;
-    Result.Points := AllocMem(count * SizeOf(TPointF));
-    Result.Types := AllocMem(count);
-  end
-else
-  begin
-    Result.Count := 0;
-    Result.Points := nil;
-    Result.Types := nil;
-  end;
-end;
-
-//------------------------------------------------------------------------------
-
-procedure PathDataFree(var PathData: TPathData);
-begin
-FreeMem(PathData.Points,PathData.Count * SizeOf(TPointF));
-FreeMem(PathData.Types,PathData.Count);
 PathData.Count := 0;
 PathData.Points := nil;
 PathData.Types := nil;
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
+
+procedure PathDataAlloc(var PathData: TPathData; Count: Integer);
+begin
+If Count > 0 then
+  begin
+    PathData.Count := count;
+    PathData.Points := AllocMem(count * SizeOf(TPointF));
+    PathData.Types := AllocMem(count);
+  end
+else PathDataFree(PathData);
+end;
+
+//!!----------------------------------------------------------------------------
+
+procedure PathDataFree(var PathData: TPathData);
+begin
+If Assigned(PathData.Points) then
+  FreeMem(PathData.Points,PathData.Count * SizeOf(TPointF));
+IF Assigned(PathData.Types) then
+  FreeMem(PathData.Types,PathData.Count);
+PathData.Count := 0;
+PathData.Points := nil;
+PathData.Types := nil;
+end;
+
+//!!----------------------------------------------------------------------------
 
 Function PathDataPointGet(PathData: TPathData; Index: Integer): TPointF;
 begin
 If (Index >= 0) and (Index < PathData.Count) then
   Result := PPointF(PtrUInt(PathData.Points) + PtrUInt(Index * SizeOf(TPointF)))^
 else
-  raise EGDIPlusIndexOutOfBound.CreateFmt('PathDataPointGet: Index (%d) out of bounds.',[Index]);
+  raise EGDIPlusIndexOutOfBounds.CreateFmt('PathDataPointGet: Index (%d) out of bounds.',[Index]);
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 procedure PathDataPointSet(PathData: TPathData; Index: Integer; Value: TPointF);
 begin
 If (Index >= 0) and (Index < PathData.Count) then
   PPointF(PtrUInt(PathData.Points) + PtrUInt(Index * SizeOf(TPointF)))^ := Value
 else
-  raise EGDIPlusIndexOutOfBound.CreateFmt('PathDataPointSet: Index (%d) out of bounds.',[Index]);
+  raise EGDIPlusIndexOutOfBounds.CreateFmt('PathDataPointSet: Index (%d) out of bounds.',[Index]);
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 Function PathDataTypeGet(PathData: TPathData; Index: Integer): Byte;
 begin
 If (Index >= 0) and (Index < PathData.Count) then
   Result := PByte(PtrUInt(PathData.Points) + PtrUInt(Index))^
 else
-  raise EGDIPlusIndexOutOfBound.CreateFmt('PathDataTypeGet: Index (%d) out of bounds.',[Index]);
+  raise EGDIPlusIndexOutOfBounds.CreateFmt('PathDataTypeGet: Index (%d) out of bounds.',[Index]);
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 procedure PathDataTypeSet(PathData: TPathData; Index: Integer; Value: Byte);
 begin
 If (Index >= 0) and (Index < PathData.Count) then
   PByte(PtrUInt(PathData.Points) + PtrUInt(Index))^ := Value
 else
-  raise EGDIPlusIndexOutOfBound.CreateFmt('PathDataTypeSet: Index (%d) out of bounds.',[Index]);
+  raise EGDIPlusIndexOutOfBounds.CreateFmt('PathDataTypeSet: Index (%d) out of bounds.',[Index]);
 end;
 
-{-------------------------------------------------------------------------------
+
+{!!-----------------------------------------------------------------------------
     TCharacterRange - implementation
 -------------------------------------------------------------------------------}
 
@@ -1093,7 +1125,7 @@ Result.First := 0;
 Result.Length := 0;
 end;
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Function CharacterRange(first,length: INT): TCharacterRange;
 begin
@@ -1101,7 +1133,7 @@ Result.First := first;
 Result.Length := length;
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 procedure Assign(var range: TCharacterRange; rhs: TCharacterRange);
 begin

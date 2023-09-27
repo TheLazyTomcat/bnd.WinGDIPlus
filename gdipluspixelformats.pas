@@ -1,3 +1,16 @@
+(**************************************************************************\
+*
+* Copyright (c) 1998-2001, Microsoft Corp.  All Rights Reserved.
+*
+* Module Name:
+*
+*   Gdiplus Pixel Formats
+*
+* Abstract:
+*
+*   GDI+ Pixel Formats
+*
+\**************************************************************************)
 unit gdipluspixelformats;
 
 {$INCLUDE '.\gdiplus_defs.inc'}
@@ -9,8 +22,8 @@ uses
   gdiplus_common;
 
 type
-  TARGB   = DWORD;
-  TARGB64 = DWORDLONG;
+  TARGB   = DWORD;        PARGB   = ^TARGB;
+  TARGB64 = DWORDLONG;    PARGB64 = ^TARGB64;
 
 const
   ALPHA_SHIFT = 24;
@@ -25,7 +38,7 @@ const
 // bits 16-23 = flags
 // bits 24-31 = reserved
 type
-  TPixelFormat = INT;
+  TPixelFormat = INT;     PPixelFormat = ^TPixelFormat;
 
 const
   PixelFormatIndexed   = $00010000; // Indexes into a palette
@@ -110,6 +123,7 @@ type
     PaletteTypeFixedHalftone252 = 8, // 6-red, 7-green, 6-blue intensities
     PaletteTypeFixedHalftone256 = 9  // 8-red, 8-green, 4-blue intensities
   );
+  PPaletteType = ^TPaletteType;
 
   TDitherType = (
     DitherTypeNone           = 0,
@@ -139,10 +153,11 @@ type
 
     DitherTypeMax            = 10
   );
+  PDitherType = ^TDitherType;
 {$IFEND}
 
 type
-  TPaletteFlags = UINT;
+  TPaletteFlags = UINT;     PPaletteFlags = ^TPaletteFlags;
 const
   PaletteFlagsHasAlpha  = $0001;
   PaletteFlagsGrayScale = $0002;
@@ -154,6 +169,7 @@ type
     Count:    UINT;                 // Number of color entries
     Entries:  array[0..0] of TARGB; // Palette color entries
   end;
+  PColorPalette = ^TColorPalette;
 
 implementation
 
@@ -162,28 +178,28 @@ begin
 Result := (pixfmt shr 8) and $FF;
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 Function IsIndexedPixelFormat(pixfmt: TPixelFormat): BOOL;
 begin
 Result := (pixfmt and PixelFormatIndexed) <> 0;
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 Function IsAlphaPixelFormat(pixfmt: TPixelFormat): BOOL;
 begin
 Result := (pixfmt and PixelFormatAlpha) <> 0;
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 Function IsExtendedPixelFormat(pixfmt: TPixelFormat): BOOL;
 begin
 Result := (pixfmt and PixelFormatExtended) <> 0;
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 Function IsCanonicalPixelFormat(pixfmt: TPixelFormat): BOOL;
 begin

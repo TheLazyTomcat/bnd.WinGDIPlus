@@ -1,3 +1,16 @@
+(**************************************************************************\
+*
+* Copyright (c) 1998-2001, Microsoft Corp.  All Rights Reserved.
+*
+* Module Name:
+*
+*   GdiplusMem.h
+*
+* Abstract:
+*
+*   GDI+ Private Memory Management APIs
+*
+\**************************************************************************)
 unit gdiplusmem;
 
 {$INCLUDE '.\gdiplus_defs.inc'}

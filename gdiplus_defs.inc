@@ -18,4 +18,6 @@
 {$MINENUMSIZE 4}
 {$ALIGN 8}  // this should be default, but to be sure
 
+{$DEFINE NewGDIP}
+
 {$DEFINE ShowHints}

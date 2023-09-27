@@ -5,21 +5,25 @@ unit gdiplus_common;
 interface
 
 uses
-  Windows, SysUtils,
+  Windows, SysUtils, ActiveX,
   AuxTypes;
 
+{!!-----------------------------------------------------------------------------
+    Library-specific exceptions
+-------------------------------------------------------------------------------}
 type
   EGDIPlusException = class(Exception);
 
-  EGDIPlusIndexOutOfBound = class(EGDIPlusException);
+  EGDIPlusIndexOutOfBounds = class(EGDIPlusException);
 
+{!!-----------------------------------------------------------------------------
+    Constant and types
+-------------------------------------------------------------------------------}
 const
-  GDIPVER = $0110; // for conditional compilation
-
   GDIPLIB = 'gdiplus.dll';
 
 type
-  INT = Int32;
+  INT = Int32;              PINT = ^INT;
 
   DWORDLONG = UInt64;
   
@@ -36,6 +40,37 @@ type
   UINT_PTR = PtrUInt;
 
   PROPID = ULONG;
+
+  float = Single;
+
+  PHRGN = ^HRGN;
+
+  PHBITMAP = ^HBITMAP;
+
+  PHICON = ^HICON;
+
+  HINSTANCE = THandle;
+
+  PHDC = ^HDC;
+
+  PHENHMETAFILE = ^HENHMETAFILE; 
+
+  HANDLE = THandle;
+
+  PIStream = ^IStream;
+
+  PLANGID = ^LANGID;
+
+  LPBYTE = PByte; 
+
+//!! translation starts here ===================================================
+const
+  GDIPVER = {$IFDEF NewGDIP}$0110{$ELSE}$0100{$ENDIF};  //** for conditional compilation
+
+type
+  //!! just some placeholder I assume
+  IDirectDrawSurface7  = IUnknown;
+  PIDirectDrawSurface7 = ^IDirectDrawSurface7;
 
 implementation
 

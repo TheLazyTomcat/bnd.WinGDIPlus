@@ -1,3 +1,16 @@
+(**************************************************************************\
+*
+* Copyright (c) 1998-2001, Microsoft Corp.  All Rights Reserved.
+*
+* Module Name:
+*
+*   GdiplusColorMatrix.h
+*
+* Abstract:
+*
+*  GDI+ Color Matrix object, used with Graphics.DrawImage
+*
+\**************************************************************************)
 unit gdipluscolormatrix;
 
 {$INCLUDE '.\gdiplus_defs.inc'}
@@ -14,6 +27,7 @@ uses
 //----------------------------------------------------------------------------
 type
   TColorChannelLUT = array[0..255] of Byte;
+  PColorChannelLUT = ^TColorChannelLUT;
 
 //----------------------------------------------------------------------------
 // Per-channel Histogram for 8bpp images.
@@ -29,6 +43,7 @@ type
     HistogramFormatR,
     HistogramFormatA
   );
+  PHistogramFormat = ^THistogramFormat;
 {$IFEND}
 
 //----------------------------------------------------------------------------
@@ -38,6 +53,7 @@ type
   TColorMatrix = record
     m:  array[0..4,0..4] of REAL;
   end;
+  PColorMatrix = ^TColorMatrix;
 
 //----------------------------------------------------------------------------
 // Color Matrix flags
@@ -48,6 +64,7 @@ type
     ColorMatrixFlagsSkipGrays = 1,
     ColorMatrixFlagsAltGray   = 2
   );
+  PColorMatrixFlags = ^TColorMatrixFlags;
 
 //----------------------------------------------------------------------------
 // Color Adjust Type
@@ -62,6 +79,7 @@ type
     ColorAdjustTypeCount,
     ColorAdjustTypeAny      // Reserved
   );
+  PColorAdjustType = ^TColorAdjustType;
 
 //----------------------------------------------------------------------------
 // Color Map
@@ -71,6 +89,7 @@ type
     oldColor: TColor;
     newColor: TColor;
   end;
+  PColorMap = ^TColorMap; 
 
 implementation
 

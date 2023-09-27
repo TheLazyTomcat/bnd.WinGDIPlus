@@ -1,3 +1,16 @@
+(**************************************************************************\
+* 
+* Copyright (c) 1999-2000  Microsoft Corporation
+*
+* Module Name:
+*
+*   GdiplusImaging.h
+*
+* Abstract:
+*
+*   GDI+ Imaging GUIDs
+*
+\**************************************************************************)
 unit gdiplusimaging;
 
 {$INCLUDE '.\gdiplus_defs.inc'}
@@ -97,12 +110,13 @@ type
     SigPattern:         PByte;
     SigMask:            PByte;
   end;
+  PImageCodecInfo = ^TImageCodecInfo;
 
 //--------------------------------------------------------------------------
 // Information flags about image codecs
 //--------------------------------------------------------------------------
 type
-  TImageCodecFlags = DWORD;
+  TImageCodecFlags = DWORD;   PImageCodecFlags = ^TImageCodecFlags;
 const
   ImageCodecFlagsEncoder        = $00000001;
   ImageCodecFlagsDecoder        = $00000002;
@@ -119,7 +133,7 @@ const
 // Access modes used when calling Image::LockBits
 //---------------------------------------------------------------------------
 type
-  TImageLockMode = UINT;
+  TImageLockMode = UINT;    PImageLockMode = ^TImageLockMode;
 const
   ImageLockModeRead         = $0001;
   ImageLockModeWrite        = $0002;
@@ -137,12 +151,13 @@ type
     Scan0:        Pointer;
     Reserved:     UINT_PTR;
   end;
+  PBitmapData = ^TBitmapData;
 
 //---------------------------------------------------------------------------
 // Image flags
 //---------------------------------------------------------------------------
 type
-  TImageFlags = UINT;
+  TImageFlags = UINT;   PImageFlags = ^TImageFlags;
 const
   ImageFlagsNone              = 0;
 
@@ -193,6 +208,7 @@ type
     Rotate180FlipXY    = RotateNoneFlipNone,
     Rotate270FlipXY    = Rotate90FlipNone
   );
+  PRotateFlipType = ^TRotateFlipType;
 
 //---------------------------------------------------------------------------
 // Encoder Parameter structure
@@ -204,6 +220,7 @@ type
     Type_:          ULONG;      // Value type, like ValueTypeLONG  etc.
     Value:          Pointer;    // A pointer to the parameter values
   end;
+  PEncoderParameter = ^TEncoderParameter;
 
 //---------------------------------------------------------------------------
 // Encoder Parameters structure
@@ -213,6 +230,7 @@ type
     Count:      UINT;                             // Number of parameters in this structure
     Parameter:  array[0..0] of TEncoderParameter; // Parameter values
   end;
+  PEncoderParameters = ^TEncoderParameters;
 
 {$IF GDIPVER >= $0110}
   TItemDataPosition = (
@@ -220,6 +238,7 @@ type
     ItemDataPositionAfterPalette = $1,
     ItemDataPositionAfterBits    = $2
   );
+  PItemDataPosition = ^TItemDataPosition;
 
 //---------------------------------------------------------------------------
 // External Data Item
@@ -237,6 +256,8 @@ type
     Cookie:   UINT;       // opaque for the apps data member used during
                           // enumeration of image data items.
   end;
+  PImageItemData = ^TImageItemData;
+
 {$IFEND}
 
 //---------------------------------------------------------------------------
@@ -250,6 +271,7 @@ type
                         // defined above
     value:  Pointer;    // property value
   end;
+  PPropertyItem = ^TPropertyItem;
 
 //---------------------------------------------------------------------------
 // Image property types 
@@ -550,8 +572,7 @@ const
   PropertyTagGpsProcessingMethod = $001B;
   PropertyTagGpsAreaInformation  = $001C;
   PropertyTagGpsDate             = $001D;
-  PropertyTagGpsDifferential     = $001E;
-
+  PropertyTagGpsDifferential     = $001E;   
 
 implementation
 

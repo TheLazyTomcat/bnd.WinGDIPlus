@@ -1,3 +1,16 @@
+(**************************************************************************\
+*
+* Copyright (c) 1998-2001, Microsoft Corp.  All Rights Reserved.
+*
+* Module Name:
+*
+*   GdiplusEnums.h
+*
+* Abstract:
+*
+*   GDI+ Enumeration Types
+*
+\**************************************************************************)
 unit gdiplusenums;
 
 {$INCLUDE '.\gdiplus_defs.inc'}
@@ -18,8 +31,8 @@ const
 // Graphics and Container State cookies
 //--------------------------------------------------------------------------
 type
-  TGraphicsState = UINT;
-  TGraphicsContainer = UINT;
+  TGraphicsState     = UINT;    PGraphicsState     = ^TGraphicsState;
+  TGraphicsContainer = UINT;    PGraphicsContainer = ^TGraphicsContainer;
 
 //--------------------------------------------------------------------------
 // Fill mode constants
@@ -29,6 +42,7 @@ type
     FillModeAlternate,  // 0
     FillModeWinding     // 1
   );
+  PFillMode = ^TFillMode;
 
 //--------------------------------------------------------------------------
 // Quality mode constants
@@ -40,6 +54,7 @@ type
     QualityModeLow     = 1, // Best performance
     QualityModeHigh    = 2  // Best rendering quality
   );
+  PQualityMode = ^TQualityMode;
 
 //--------------------------------------------------------------------------
 // Alpha Compositing mode constants
@@ -49,6 +64,7 @@ type
     CompositingModeSourceOver,  // 0
     CompositingModeSourceCopy   // 1
   );
+  PCompositingMode = ^TCompositingMode;
 
 //--------------------------------------------------------------------------
 // Alpha Compositing quality constants
@@ -62,6 +78,7 @@ type
     CompositingQualityGammaCorrected,
     CompositingQualityAssumeLinear
   );
+  PCompositingQuality = ^TCompositingQuality;
 
 //--------------------------------------------------------------------------
 // Unit constants
@@ -76,6 +93,7 @@ type
     UnitDocument,   // 5 -- Each unit is 1/300 inch.
     UnitMillimeter  // 6 -- Each unit is 1 millimeter.
   );
+  PUnit = ^TUnit;
 
 //--------------------------------------------------------------------------
 // MetafileFrameUnit
@@ -95,6 +113,7 @@ type
     MetafileFrameUnitMillimeter = Ord(UnitMillimeter),
     MetafileFrameUnitGdi                        // GDI compatible .01 MM units
   );
+  PMetafileFrameUnit = ^TMetafileFrameUnit;
 
 //--------------------------------------------------------------------------
 // Coordinate space identifiers
@@ -105,6 +124,7 @@ type
     CoordinateSpacePage,    // 1
     CoordinateSpaceDevice   // 2
   );
+  PCoordinateSpace = ^TCoordinateSpace;
 
 //--------------------------------------------------------------------------
 // Various wrap modes for brushes
@@ -117,6 +137,7 @@ type
     WrapModeTileFlipXY,  // 3
     WrapModeClamp        // 4
   );
+  PWrapMode = ^TWrapMode;
 
 //--------------------------------------------------------------------------
 // Various hatch styles
@@ -183,6 +204,7 @@ type
     HatchStyleMin       = HatchStyleHorizontal,
     HatchStyleMax       = HatchStyleTotal - 1
   );
+  PHatchStyle = ^THatchStyle;
 
 //--------------------------------------------------------------------------
 // Dash style constants
@@ -196,6 +218,7 @@ type
     DashStyleDashDotDot,  // 4
     DashStyleCustom       // 5
   );
+  PDashStyle = ^TDashStyle;
 
 //--------------------------------------------------------------------------
 // Dash cap constants
@@ -206,6 +229,7 @@ type
     DashCapRound    = 2,
     DashCapTriangle = 3
   );
+  PDashCap = ^TDashCap;
 
 //--------------------------------------------------------------------------
 // Line cap constants (only the lowest 8 bits are used).
@@ -227,6 +251,7 @@ type
 
     LineCapAnchorMask    = $f0    // mask to check for anchor or not.
   );
+  PLineCap = ^TLineCap;
 
 //--------------------------------------------------------------------------
 // Custom Line cap type constants
@@ -236,6 +261,7 @@ type
     CustomLineCapTypeDefault         = 0,
     CustomLineCapTypeAdjustableArrow = 1
   );
+  PCustomLineCapType = ^TCustomLineCapType;
 
 //--------------------------------------------------------------------------
 // Line join constants
@@ -247,6 +273,7 @@ type
     LineJoinRound        = 2,
     LineJoinMiterClipped = 3
   );
+  PLineJoin = ^TLineJoin;
 
 //--------------------------------------------------------------------------
 // Path point types (only the lowest 8 bits are used.)
@@ -266,7 +293,8 @@ type
     // Path types used for advanced path.
 
     PathPointTypeBezier3      = 3     // cubic Bezier
-  );          
+  );
+  PPathPointType = ^TPathPointType;
 
 //--------------------------------------------------------------------------
 // WarpMode constants
@@ -276,6 +304,7 @@ type
     WarpModePerspective,    // 0
     WarpModeBilinear        // 1
   );
+  PWarpMode = ^TWarpMode;
 
 //--------------------------------------------------------------------------
 // LineGradient Mode
@@ -287,6 +316,7 @@ type
     LinearGradientModeForwardDiagonal,    // 2
     LinearGradientModeBackwardDiagonal    // 3
   );
+  PLinearGradientMode = ^TLinearGradientMode;
 
 //--------------------------------------------------------------------------
 // Region Comine Modes
@@ -300,6 +330,7 @@ type
     CombineModeExclude,     // 4
     CombineModeComplement   // 5 (Exclude From)
   );
+  PCombineMode = ^TCombineMode;
 
 //--------------------------------------------------------------------------
 // Image types
@@ -310,6 +341,7 @@ type
     ImageTypeBitmap,    // 1
     ImageTypeMetafile   // 2
   );
+  PImageType = ^TImageType;
 
 //--------------------------------------------------------------------------
 // Interpolation modes
@@ -326,6 +358,7 @@ type
     InterpolationModeHighQualityBilinear,
     InterpolationModeHighQualityBicubic
   );
+  PInterpolationMode = ^TInterpolationMode;
 
 //--------------------------------------------------------------------------
 // Pen types
@@ -335,6 +368,7 @@ type
     PenAlignmentCenter = 0,
     PenAlignmentInset  = 1
   );
+  PPenAlignment = ^TPenAlignment;
 
 //--------------------------------------------------------------------------
 // Brush types
@@ -347,6 +381,7 @@ type
    BrushTypePathGradient   = 3,
    BrushTypeLinearGradient = 4
   );
+  PBrushType = ^TBrushType;
 
 //--------------------------------------------------------------------------
 // Pen's Fill types
@@ -360,6 +395,7 @@ type
    PenTypeLinearGradient = Ord(BrushTypeLinearGradient),
    PenTypeUnknown        = -1
   );
+  PPenType = ^TPenType;
 
 //--------------------------------------------------------------------------
 // Matrix Order
@@ -369,6 +405,7 @@ type
     MatrixOrderPrepend = 0,
     MatrixOrderAppend  = 1
   );
+  PMatrixOrder = ^TMatrixOrder;
 
 //--------------------------------------------------------------------------
 // Generic font families
@@ -379,12 +416,13 @@ type
     GenericFontFamilySansSerif,
     GenericFontFamilyMonospace
   );
+  PGenericFontFamily = ^TGenericFontFamily;
 
 //--------------------------------------------------------------------------
 // FontStyle: face types and common styles
 //--------------------------------------------------------------------------
 type
-  TFontStyle = INT;
+  TFontStyle = INT;     PFontStyle = ^TFontStyle;
 const
   FontStyleRegular    = 0;
   FontStyleBold       = 1;
@@ -409,6 +447,7 @@ type
     SmoothingModeAntiAlias8x8
   {$IFEND}
   );
+  PSmoothingMode = ^TSmoothingMode;
 
 //---------------------------------------------------------------------------
 // Pixel Format Mode
@@ -422,6 +461,7 @@ type
     PixelOffsetModeNone,    // No pixel offset
     PixelOffsetModeHalf     // Offset by -0.5, -0.5 for fast anti-alias perf
   );
+  PPixelOffsetMode = ^TPixelOffsetMode;
 
 //---------------------------------------------------------------------------
 // Text Rendering Hint
@@ -435,6 +475,7 @@ type
     TextRenderingHintAntiAlias,                 // Glyph anti-alias bitmap without hinting
     TextRenderingHintClearTypeGridFit           // Glyph CT bitmap with hinting
   );
+  PTextRenderingHint = ^TTextRenderingHint;
 
 //---------------------------------------------------------------------------
 // Metafile Types
@@ -448,6 +489,7 @@ type
     MetafileTypeEmfPlusOnly,    // EMF+ without dual, down-level records
     MetafileTypeEmfPlusDual     // EMF+ with dual, down-level records
   );
+  PMetafileType = ^TMetafileType;
 
 //---------------------------------------------------------------------------
 // Specifies the type of EMF to record
@@ -458,6 +500,7 @@ type
     EmfTypeEmfPlusOnly = Ord(MetafileTypeEmfPlusOnly),  // no EMF, only EMF+
     EmfTypeEmfPlusDual = Ord(MetafileTypeEmfPlusDual)   // both EMF+ and EMF
   );
+  PEmfType = ^TEmfType;
 
 //---------------------------------------------------------------------------
 // EMF+ Persistent object types
@@ -483,6 +526,7 @@ type
   {$IFEND}
     ObjectTypeMin = ObjectTypeBrush
   );
+  PObjectType = ^TObjectType;
 
 Function ObjectTypeIsValid(type_: TObjectType): BOOL;{$IFDEF CanInline} inline;{$ENDIF}
 
@@ -795,6 +839,7 @@ type
     EmfPlusRecordTypeMax = EmfPlusRecordTotal-1,
     EmfPlusRecordTypeMin = EmfPlusRecordTypeHeader
   );
+  PEmfPlusRecordType = ^TEmfPlusRecordType;
 
 Function GDIP_WMF_RECORD_TO_EMFPLUS(Value: TEmfPlusRecordType): TEmfPlusRecordType;
 Function GDIP_EMFPLUS_RECORD_TO_WMF(Value: TEmfPlusRecordType): TEmfPlusRecordType;
@@ -872,7 +917,7 @@ Function GDIP_IS_WMF_RECORDTYPE(Value: TEmfPlusRecordType): Boolean;
 
 //---------------------------------------------------------------------------
 type
-  TStringFormatFlags = INT;
+  TStringFormatFlags = INT;     PStringFormatFlags = ^TStringFormatFlags;
 const
   StringFormatFlagsDirectionRightToLeft  = $00000001;
   StringFormatFlagsDirectionVertical     = $00000002;
@@ -898,6 +943,7 @@ type
     StringTrimmingEllipsisWord      = 4,
     StringTrimmingEllipsisPath      = 5
   );
+  PStringTrimming = ^TStringTrimming;
 
 //---------------------------------------------------------------------------
 // National language digit substitution
@@ -909,6 +955,7 @@ type
     StringDigitSubstituteNational    = 2,
     StringDigitSubstituteTraditional = 3
   );
+  PStringDigitSubstitute = ^TStringDigitSubstitute;
 
 //---------------------------------------------------------------------------
 // Hotkey prefix interpretation
@@ -919,6 +966,7 @@ type
     HotkeyPrefixShow = 1,
     HotkeyPrefixHide = 2
   );
+  PHotkeyPrefix = ^THotkeyPrefix;
 
 //---------------------------------------------------------------------------
 // String alignment flags
@@ -932,12 +980,13 @@ type
     StringAlignmentCenter = 1,
     StringAlignmentFar    = 2
   );
+  PStringAlignment = ^TStringAlignment;
 
 //---------------------------------------------------------------------------
 // DriverStringOptions
 //---------------------------------------------------------------------------
 type
-  TDriverStringOptions = INT;
+  TDriverStringOptions = INT;     PDriverStringOptions = ^TDriverStringOptions;
 const
   DriverStringOptionsCmapLookup      = 1;
   DriverStringOptionsVertical        = 2;
@@ -953,6 +1002,7 @@ type
     FlushIntentionSync  = 1   // Flush all batched rendering operations
                               // and wait for them to complete
   );
+  PFlushIntention = ^TFlushIntention;
 
 //---------------------------------------------------------------------------
 // Image encoder parameter related types
@@ -982,6 +1032,7 @@ type
     EncoderParameterValueTypePointer        = 9   // a pointer to a parameter defined data.
   {$IFEND}
   );
+  PEncoderParameterValueType = ^TEncoderParameterValueType;
 
 //---------------------------------------------------------------------------
 // Image encoder value types
@@ -1017,6 +1068,7 @@ type
     EncoderValueColorTypeRGB
   {$IFEND}
   );
+  PEncoderValue = ^TEncoderValue;
 
 //---------------------------------------------------------------------------
 // Conversion of Emf To WMF Bits flags
@@ -1028,6 +1080,7 @@ type
     EmfToWmfBitsFlagsIncludePlaceable = $00000002,
     EmfToWmfBitsFlagsNoXORClip        = $00000004
   );
+  PEmfToWmfBitsFlags = ^TEmfToWmfBitsFlags;
 
 {$IF GDIPVER >= $0110}
 //---------------------------------------------------------------------------
@@ -1040,6 +1093,7 @@ type
     ConvertToEmfPlusFlagsText          = $00000002,
     ConvertToEmfPlusFlagsInvalidRecord = $00000004
   );
+  PConvertToEmfPlusFlags = ^TConvertToEmfPlusFlags;
 {$IFEND}
 
 //---------------------------------------------------------------------------
@@ -1051,6 +1105,7 @@ type
     TestControlNoICM          = 1,
     TestControlGetBuildNumber = 2
   );
+  PGpTestControlEnum = ^TGpTestControlEnum;
 
 implementation
 
@@ -1059,25 +1114,25 @@ begin
 Result := (type_ >= ObjectTypeMin) and (type_ <= ObjectTypeMax)
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 Function GDIP_WMF_RECORD_TO_EMFPLUS(Value: TEmfPlusRecordType): TEmfPlusRecordType;
 begin
-Result := TEmfPlusRecordType(Integer(Ord(Value)) or GDIP_WMF_RECORD_BASE);
+Result := TEmfPlusRecordType(Ord(Value) or GDIP_WMF_RECORD_BASE);
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 Function GDIP_EMFPLUS_RECORD_TO_WMF(Value: TEmfPlusRecordType): TEmfPlusRecordType;
 begin
-Result := TEmfPlusRecordType(Integer(Ord(Value)) and not GDIP_WMF_RECORD_BASE);
+Result := TEmfPlusRecordType(Ord(Value) and not GDIP_WMF_RECORD_BASE);
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
 Function GDIP_IS_WMF_RECORDTYPE(Value: TEmfPlusRecordType): Boolean;
 begin
-Result := (Integer(Ord(Value)) and GDIP_WMF_RECORD_BASE) <> 0;
+Result := (Ord(Value) and GDIP_WMF_RECORD_BASE) <> 0;
 end;
 
 end.

@@ -1,3 +1,16 @@
+(**************************************************************************\
+*
+* Copyright (c) 1998-2001, Microsoft Corp.  All Rights Reserved.
+*
+* Module Name:
+*
+*   GdiplusColor.h
+*
+* Abstract:
+*
+*   GDI+ Color Object
+*
+\**************************************************************************)
 unit gdipluscolor;
 
 {$INCLUDE '.\gdiplus_defs.inc'}
@@ -16,6 +29,7 @@ type
     ColorModeARGB32 = 0,
     ColorModeARGB64 = 1
   );
+  PColorMode = ^TColorMode;
 
 //----------------------------------------------------------------------------
 // Color Channel flags
@@ -28,6 +42,7 @@ type
     ColorChannelFlagsK,
     ColorChannelFlagsLast
   );
+  PColorChannelFlags = ^TColorChannelFlags;
 
 //----------------------------------------------------------------------------
 // Color
@@ -187,44 +202,48 @@ const
   GreenMask = $0000ff00;
   BlueMask  = $000000ff;
 
-//------------------------------------------------------------------------------
+{!!=============================================================================
+    TColor - class declaration
+===============================================================================}
 type
-  TColor = class(TObject)
-  protected
-    fArgb:  TARGB;
-  public
-    // Assemble A, R, G, B values into a 32-bit integer
-    class Function MakeARGB(a,r,g,b: Byte): TARGB;
-    constructor Create; overload;
-    // Construct an opaque Color object with
-    // the specified Red, Green, Blue values.
-    //
-    // Color values are not premultiplied.
-    constructor Create(r,g,b: Byte); overload;
-    constructor Create(a,r,g,b: Byte); overload;
-    constructor Create(argb: TARGB); overload;
-    Function GetAlpha: Byte;
-    Function GetA: Byte;
-    Function GetRed: Byte;
-    Function GetR: Byte;
-    Function GetGreen: Byte;
-    Function GetG: Byte;
-    Function GetBlue: Byte;
-    Function GetB: Byte;
-    Function GetValue: TARGB;
-    procedure SetValue(argb: TARGB);
-    procedure SetFromCOLORREF(rgb: TCOLORREF);
-    Function ToCOLORREF: TCOLORREF;
-    property ARGB: TARGB read fArgb write fArgb;
+  TColor = record
+    Argb:  TARGB;
   end;
+  PColor = ^TColor;
+
+// Assemble A, R, G, B values into a 32-bit integer
+Function MakeARGB(a,r,g,b: Byte): TARGB;
+
+Function Color: TColor; overload;
+// Construct an opaque Color object with
+// the specified Red, Green, Blue values.
+//
+// Color values are not premultiplied.
+Function Color(r,g,b: Byte): TColor; overload;
+Function Color(a,r,g,b: Byte): TColor; overload;
+Function Color(argb: TARGB): TColor; overload;
+
+Function GetAlpha(Color: TColor): Byte;
+Function GetA(Color: TColor): Byte;
+Function GetRed(Color: TColor): Byte;
+Function GetR(Color: TColor): Byte;
+Function GetGreen(Color: TColor): Byte;
+Function GetG(Color: TColor): Byte;
+Function GetBlue(Color: TColor): Byte;
+Function GetB(Color: TColor): Byte;
+
+Function GetValue(Color: TColor): TARGB; overload;
+procedure SetValue(var Color: TColor; argb: TARGB); overload;
+procedure SetFromCOLORREF(var Color: TColor; rgb: TCOLORREF);
+Function ToCOLORREF(Color: TColor): TCOLORREF;
 
 implementation
 
-{===============================================================================
-    TColor - class implementation
-===============================================================================}
+{!!-----------------------------------------------------------------------------
+    TColor - implementation
+-------------------------------------------------------------------------------}
 
-class Function TColor.MakeARGB(a,r,g,b: Byte): TARGB;
+Function MakeARGB(a,r,g,b: Byte): TARGB;
 begin
 Result := (TARGB(b) shl BlueShift) or
           (TARGB(g) shl GreenShift) or
@@ -232,120 +251,116 @@ Result := (TARGB(b) shl BlueShift) or
           (TARGB(a) shl AlphaShift);
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
-constructor TColor.Create;
+Function Color: TColor;
 begin
-inherited Create;
-fArgb := TARGB(Black);
+Result.Argb := TARGB(Black);
 end;
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-constructor TColor.Create(r,g,b: Byte);
+Function Color(r,g,b: Byte): TColor;
 begin
-inherited Create;
-fArgb := MakeARGB(255,r,g,b);
+Result.Argb := MakeARGB(255,r,g,b);
 end;
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-constructor TColor.Create(a,r,g,b: Byte);
+Function Color(a,r,g,b: Byte): TColor;
 begin
-inherited Create;
-fArgb := MakeARGB(a,r,g,b);
+Result.Argb := MakeARGB(a,r,g,b);
 end;
 
-// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-constructor TColor.Create(argb: TARGB);
+Function Color(argb: TARGB): TColor;
 begin
-inherited Create;
-fArgb := argb;
+Result.Argb := argb;
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
-Function TColor.GetAlpha: Byte;
+Function GetAlpha(Color: TColor): Byte;
 begin
-Result := Byte(fArgb shr AlphaShift);
+Result := Byte(Color.Argb shr AlphaShift);
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
-Function TColor.GetA: Byte;
+Function GetA(Color: TColor): Byte;
 begin
-Result := GetAlpha;
+Result := GetAlpha(Color);
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
-Function TColor.GetRed: Byte;
+Function GetRed(Color: TColor): Byte;
 begin
-Result := Byte(fArgb shr RedShift);
+Result := Byte(Color.Argb shr RedShift);
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
-Function TColor.GetR: Byte;
+Function GetR(Color: TColor): Byte;
 begin
-Result := GetRed;
+Result := GetRed(Color);
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
-Function TColor.GetGreen: Byte;
+Function GetGreen(Color: TColor): Byte;
 begin
-Result := Byte(fArgb shr GreenShift);
+Result := Byte(Color.Argb shr GreenShift);
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
-Function TColor.GetG: Byte;
+Function GetG(Color: TColor): Byte;
 begin
-Result := GetGreen;
+Result := GetGreen(Color);
 end;
 
-//------------------------------------------------------------------------------
+//!!---------------------------------------------------------------------------
 
-Function TColor.GetBlue: Byte;
+Function GetBlue(Color: TColor): Byte;
 begin
-Result := Byte(fArgb shr BlueShift);
+Result := Byte(Color.Argb shr BlueShift);
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
-Function TColor.GetB: Byte;
+Function GetB(Color: TColor): Byte;
 begin
-Result := GetBlue;
+Result := GetBlue(Color);
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
-Function TColor.GetValue: TARGB;
+Function GetValue(Color: TColor): TARGB;
 begin
-Result := fArgb;
+Result := Color.Argb;
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
-procedure TColor.SetValue(argb: TARGB);
+procedure SetValue(var Color: TColor; argb: TARGB);
 begin
-fArgb := argb;
+Color.Argb := argb;
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
-procedure TColor.SetFromCOLORREF(rgb: TCOLORREF);
+procedure SetFromCOLORREF(var Color: TColor; rgb: TCOLORREF);
 begin
-fArgb := MakeARGB(255,GetRValue(rgb),GetGValue(rgb),GetBValue(rgb));
+Color.Argb := MakeARGB(255,GetRValue(rgb),GetGValue(rgb),GetBValue(rgb));
 end;
 
-//------------------------------------------------------------------------------
+//!!----------------------------------------------------------------------------
 
-Function TColor.ToCOLORREF: TCOLORREF;
+Function ToCOLORREF(Color: TColor): TCOLORREF;
 begin
-Result := RGB(GetRed,GetGreen,GetBlue);
+Result := RGB(GetRed(Color),GetGreen(Color),GetBlue(Color));
 end;
 
 end.
