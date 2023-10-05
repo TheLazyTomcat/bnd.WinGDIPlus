@@ -82,13 +82,13 @@ type
   IImageBytes = interface(IUnknown)
   ['{025D1823-6C7D-447B-BBDB-A3CBC3DFA2FC}']
     // Return total number of bytes in the IStream
-    procedure CountBytes(pcb: PUINT); safecall;
+    Function CountBytes(pcb: PUINT): HRESULT; stdcall;
     // Locks "cb" bytes, starting from "ulOffset" in the stream, and returns the
     // pointer to the beginning of the locked memory chunk in "ppvBytes"
-    procedure LockBytes(cb: UINT; ulOffset: ULONG; ppvBytes: PPointer); safecall;
+    Function LockBytes(cb: UINT; ulOffset: ULONG; ppvBytes: PPointer): HRESULT; stdcall;
     // Unlocks "cb" bytes, pointed by "pvBytes", starting from "ulOffset" in the
     // stream
-    procedure UnlockBytes(pvBytes: Pointer; cb: UINT; ulOffset: ULONG); safecall;
+    Function UnlockBytes(pvBytes: Pointer; cb: UINT; ulOffset: ULONG): HRESULT; stdcall;
   end;
 
 //--------------------------------------------------------------------------

@@ -554,7 +554,7 @@ Function GdipSetPenUnit(pen: PGpPen; unit_: TGpUnit): TGpStatus; stdcall; extern
 
 Function GdipGetPenUnit(pen: PGpPen; unit_: PGpUnit): TGpStatus; stdcall; external GDIPLIB;
 
-Function GdipSetPenLineCap197819(pen: PGpPen; startCap,endCap,dashCap: TGpLineCap): TGpStatus; stdcall; external GDIPLIB;
+Function GdipSetPenLineCap197819(pen: PGpPen; startCap,endCap: TGpLineCap; dashCap: TGpDashCap): TGpStatus; stdcall; external GDIPLIB;
 
 Function GdipSetPenStartCap(pen: PGpPen; startCap: TGpLineCap): TGpStatus; stdcall; external GDIPLIB;
 

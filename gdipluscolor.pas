@@ -202,14 +202,18 @@ const
   GreenMask = $0000ff00;
   BlueMask  = $000000ff;
 
-{!!=============================================================================
-    TColor - class declaration
-===============================================================================}
+{!!-----------------------------------------------------------------------------
+    TColor - declaration
+-------------------------------------------------------------------------------}
 type
   TColor = record
     Argb:  TARGB;
   end;
   PColor = ^TColor;
+
+  //!! do not use TColorArray, it is here only for declaration of PColorArray
+  TColorArray = array[0..Pred(MaxInt div SizeOf(TColor))] of TColor;
+  PColorArray = ^TColorArray;
 
 // Assemble A, R, G, B values into a 32-bit integer
 Function MakeARGB(a,r,g,b: Byte): TARGB;
@@ -223,19 +227,19 @@ Function Color(r,g,b: Byte): TColor; overload;
 Function Color(a,r,g,b: Byte): TColor; overload;
 Function Color(argb: TARGB): TColor; overload;
 
-Function GetAlpha(Color: TColor): Byte;
-Function GetA(Color: TColor): Byte;
-Function GetRed(Color: TColor): Byte;
-Function GetR(Color: TColor): Byte;
-Function GetGreen(Color: TColor): Byte;
-Function GetG(Color: TColor): Byte;
-Function GetBlue(Color: TColor): Byte;
-Function GetB(Color: TColor): Byte;
+Function GetAlpha(const cl: TColor): Byte;
+Function GetA(const cl: TColor): Byte;
+Function GetRed(const cl: TColor): Byte;
+Function GetR(const cl: TColor): Byte;
+Function GetGreen(const cl: TColor): Byte;
+Function GetG(const cl: TColor): Byte;
+Function GetBlue(const cl: TColor): Byte;
+Function GetB(const cl: TColor): Byte;
 
-Function GetValue(Color: TColor): TARGB; overload;
-procedure SetValue(var Color: TColor; argb: TARGB); overload;
-procedure SetFromCOLORREF(var Color: TColor; rgb: TCOLORREF);
-Function ToCOLORREF(Color: TColor): TCOLORREF;
+Function GetValue(const cl: TColor): TARGB; overload;
+procedure SetValue(var cl: TColor; argb: TARGB); overload;
+procedure SetFromCOLORREF(var cl: TColor; rgb: TCOLORREF);
+Function ToCOLORREF(const cl: TColor): TCOLORREF;
 
 implementation
 
@@ -281,86 +285,86 @@ end;
 
 //!!----------------------------------------------------------------------------
 
-Function GetAlpha(Color: TColor): Byte;
+Function GetAlpha(const cl: TColor): Byte;
 begin
-Result := Byte(Color.Argb shr AlphaShift);
+Result := Byte(cl.Argb shr AlphaShift);
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function GetA(Color: TColor): Byte;
+Function GetA(const cl: TColor): Byte;
 begin
-Result := GetAlpha(Color);
+Result := GetAlpha(cl);
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function GetRed(Color: TColor): Byte;
+Function GetRed(const cl: TColor): Byte;
 begin
-Result := Byte(Color.Argb shr RedShift);
+Result := Byte(cl.Argb shr RedShift);
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function GetR(Color: TColor): Byte;
+Function GetR(const cl: TColor): Byte;
 begin
-Result := GetRed(Color);
+Result := GetRed(cl);
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function GetGreen(Color: TColor): Byte;
+Function GetGreen(const cl: TColor): Byte;
 begin
-Result := Byte(Color.Argb shr GreenShift);
+Result := Byte(cl.Argb shr GreenShift);
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function GetG(Color: TColor): Byte;
+Function GetG(const cl: TColor): Byte;
 begin
-Result := GetGreen(Color);
+Result := GetGreen(cl);
 end;
 
 //!!---------------------------------------------------------------------------
 
-Function GetBlue(Color: TColor): Byte;
+Function GetBlue(const cl: TColor): Byte;
 begin
-Result := Byte(Color.Argb shr BlueShift);
+Result := Byte(cl.Argb shr BlueShift);
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function GetB(Color: TColor): Byte;
+Function GetB(const cl: TColor): Byte;
 begin
-Result := GetBlue(Color);
+Result := GetBlue(cl);
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function GetValue(Color: TColor): TARGB;
+Function GetValue(const cl: TColor): TARGB;
 begin
-Result := Color.Argb;
+Result := cl.Argb;
 end;
 
 //!!----------------------------------------------------------------------------
 
-procedure SetValue(var Color: TColor; argb: TARGB);
+procedure SetValue(var cl: TColor; argb: TARGB);
 begin
-Color.Argb := argb;
+cl.Argb := argb;
 end;
 
 //!!----------------------------------------------------------------------------
 
-procedure SetFromCOLORREF(var Color: TColor; rgb: TCOLORREF);
+procedure SetFromCOLORREF(var cl: TColor; rgb: TCOLORREF);
 begin
-Color.Argb := MakeARGB(255,GetRValue(rgb),GetGValue(rgb),GetBValue(rgb));
+cl.Argb := MakeARGB(255,GetRValue(rgb),GetGValue(rgb),GetBValue(rgb));
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function ToCOLORREF(Color: TColor): TCOLORREF;
+Function ToCOLORREF(const cl: TColor): TCOLORREF;
 begin
-Result := RGB(GetRed(Color),GetGreen(Color),GetBlue(Color));
+Result := RGB(GetRed(cl),GetGreen(cl),GetBlue(cl));
 end;
 
 end.

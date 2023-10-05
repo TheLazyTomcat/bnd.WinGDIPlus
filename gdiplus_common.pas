@@ -17,60 +17,49 @@ type
   EGDIPlusIndexOutOfBounds = class(EGDIPlusException);
 
 {!!-----------------------------------------------------------------------------
-    Constant and types
+    Constants and types
 -------------------------------------------------------------------------------}
 const
   GDIPLIB = 'gdiplus.dll';
 
 type
-  INT = Int32;              PINT = ^INT;
-
+  // integer types
+  INT       = Int32;        PINT = ^INT;
   DWORDLONG = UInt64;
-  
-  size_t = PtrUInt;
-
+  size_t    = PtrUInt;
   ULONG_PTR = PtrUInt;      PULONG_PTR = ^ULONG_PTR;
+  UINT_PTR  = PtrUInt;
+  PROPID    = ULONG;
 
-  RECTL = Windows.TRect;
+  // handle types
+  HINSTANCE = THandle;
+  HANDLE = THandle;  
 
-  SIZEL = Windows.TSize;
-
-  TCLSID = TGUID;
-
-  UINT_PTR = PtrUInt;
-
-  PROPID = ULONG;
-
+  // floating-point types
   float = Single;
 
-  PHRGN = ^HRGN;
+  // pointer types
+  PHRGN         = ^HRGN;
+  PHBITMAP      = ^HBITMAP;
+  PHICON        = ^HICON;
+  PHDC          = ^HDC;
+  PIStream      = ^IStream;
+  PLANGID       = ^LANGID;
+  LPBYTE        = PByte;
+  PHENHMETAFILE = ^HENHMETAFILE;
 
-  PHBITMAP = ^HBITMAP;
-
-  PHICON = ^HICON;
-
-  HINSTANCE = THandle;
-
-  PHDC = ^HDC;
-
-  PHENHMETAFILE = ^HENHMETAFILE; 
-
-  HANDLE = THandle;
-
-  PIStream = ^IStream;
-
-  PLANGID = ^LANGID;
-
-  LPBYTE = PByte; 
+  // structured types
+  RECTL  = Windows.TRect;
+  SIZEL  = Windows.TSize;
+  TCLSID = TGUID;
 
 //!! translation starts here ===================================================
 const
-  GDIPVER = {$IFDEF NewGDIP}$0110{$ELSE}$0100{$ENDIF};  //** for conditional compilation
+  GDIPVER = {$IFDEF NewGDIP}$0110{$ELSE}$0100{$ENDIF};  //!! for conditional compilation
 
 type
   //!! just some placeholder I assume
   IDirectDrawSurface7  = IUnknown;
-  PIDirectDrawSurface7 = ^IDirectDrawSurface7;
 
 implementation
 

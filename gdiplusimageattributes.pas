@@ -49,59 +49,59 @@ type
     fNativeImageAttr: PGpImageAttributes;
     fLastResult:      TStatus;
     constructor Create(ImageAttr: PGpImageAttributes; Status: TStatus); overload;
-    procedure SetNativeImageAttr(NativeImageAttrArg: PGpImageAttributes); virtual;
-    Function SetStatus(Status: TStatus): TStatus; virtual;
+    procedure SetNativeImageAttr(NativeImageAttrArg: PGpImageAttributes); 
+    Function SetStatus(Status: TStatus): TStatus; 
   public
     constructor Create; overload;
     destructor Destroy; override;
-    Function Clone: TImageAttributes; virtual;
+    Function Clone: TImageAttributes; 
     
-    Function SetToIdentity(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; virtual;
-    Function Reset(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; virtual;
+    Function SetToIdentity(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; 
+    Function Reset(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; 
 
-    Function SetColorMatrix(ColorMatrix: PColorMatrix;Mode: TColorMatrixFlags = ColorMatrixFlagsDefault;
-      TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; virtual;
-    Function ClearColorMatrix(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; virtual;
+    Function SetColorMatrix(ColorMatrix: PColorMatrix; Mode: TColorMatrixFlags = ColorMatrixFlagsDefault;
+      TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; 
+    Function ClearColorMatrix(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; 
 
     Function SetColorMatrices(ColorMatrix,GrayMatrix: PColorMatrix; Mode: TColorMatrixFlags = ColorMatrixFlagsDefault;
-      TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; virtual;
-    Function ClearColorMatrices(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; virtual;
+      TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; 
+    Function ClearColorMatrices(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; 
 
-    Function SetThreshold(Threshold: REAL; TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; virtual;
-    Function ClearThreshold(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; virtual;
+    Function SetThreshold(Threshold: REAL; TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; 
+    Function ClearThreshold(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; 
 
-    Function SetGamma(Gamma: REAL; TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; virtual;
-    Function ClearGamma(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; virtual;
+    Function SetGamma(Gamma: REAL; TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; 
+    Function ClearGamma(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; 
 
-    Function SetNoOp(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; virtual;
-    Function ClearNoOp(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; virtual;
+    Function SetNoOp(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; 
+    Function ClearNoOp(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; 
 
-    Function SetColorKey(ColorLow,ColorHigh: PColor; TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; virtual;
-    Function ClearColorKey(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; virtual;
+    Function SetColorKey(const ColorLow,ColorHigh: TColor; TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; 
+    Function ClearColorKey(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; 
 
-    Function SetOutputChannel(ChannelFlags: TColorChannelFlags; TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; virtual;
-    Function ClearOutputChannel(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; virtual;
+    Function SetOutputChannel(ChannelFlags: TColorChannelFlags; TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; 
+    Function ClearOutputChannel(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; 
 
     Function SetOutputChannelColorProfile(ColorProfileFilename: PWideChar;
-      TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; overload; virtual;
+      TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; overload; 
     Function SetOutputChannelColorProfile(const ColorProfileFilename: String;
-      TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; overload; virtual;
-    Function ClearOutputChannelColorProfile(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; virtual;
+      TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; overload; 
+    Function ClearOutputChannelColorProfile(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; 
 
-    Function SetRemapTable(MapSize: UINT; Map: PColorMap; TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; virtual;
-    Function ClearRemapTable(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; virtual;
+    Function SetRemapTable(MapSize: UINT; Map: PColorMap; TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; 
+    Function ClearRemapTable(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; 
 
-    Function SetBrushRemapTable(MapSize: UINT; Map: PColorMap): TStatus; virtual;
-    Function ClearBrushRemapTable: TStatus; virtual;
+    Function SetBrushRemapTable(MapSize: UINT; Map: PColorMap): TStatus; 
+    Function ClearBrushRemapTable: TStatus; 
 
-    Function SetWrapMode(Wrap: TWrapMode; Color: PColor; Clamp: BOOL = False): TStatus; overload; virtual;
+    Function SetWrapMode(Wrap: TWrapMode; const Color: TColor; Clamp: BOOL = False): TStatus; overload; 
     //!! since record parameters (Color) cannot have default value...
-    Function SetWrapMode(Wrap: TWrapMode): TStatus; overload; virtual;
+    Function SetWrapMode(Wrap: TWrapMode): TStatus; overload; 
 
     // The flags of the palette are ignored.
-    Function GetAdjustedPalette(ColorPalette: PColorPalette; ColorAdjustType: TColorAdjustType): TStatus; virtual;
+    Function GetAdjustedPalette(ColorPalette: PColorPalette; ColorAdjustType: TColorAdjustType): TStatus; 
     
-    Function GetLastStatus: TStatus; virtual;
+    Function GetLastStatus: TStatus; 
   end;
 
 implementation
@@ -257,9 +257,9 @@ end;
 
 //!!----------------------------------------------------------------------------
 
-Function TImageAttributes.SetColorKey(ColorLow,ColorHigh: PColor; TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus;
+Function TImageAttributes.SetColorKey(const ColorLow,ColorHigh: TColor; TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus;
 begin
-Result := SetStatus(GdipSetImageAttributesColorKeys(fNativeImageAttr,TypeAdjusted,True,GetValue(ColorLow^),GetValue(ColorHigh^)));
+Result := SetStatus(GdipSetImageAttributesColorKeys(fNativeImageAttr,TypeAdjusted,True,GetValue(ColorLow),GetValue(ColorHigh)));
 end;
 
 //!!----------------------------------------------------------------------------
@@ -336,19 +336,16 @@ end;
 
 //!!----------------------------------------------------------------------------
 
-Function TImageAttributes.SetWrapMode(Wrap: TWrapMode; Color: PColor; Clamp: BOOL = False): TStatus;
+Function TImageAttributes.SetWrapMode(Wrap: TWrapMode; const Color: TColor; Clamp: BOOL = False): TStatus;
 begin
-Result := SetStatus(GdipSetImageAttributesWrapMode(fNativeImageAttr,Wrap,GetValue(Color^),Clamp));
+Result := SetStatus(GdipSetImageAttributesWrapMode(fNativeImageAttr,Wrap,GetValue(Color),Clamp));
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Function TImageAttributes.SetWrapMode(Wrap: TWrapMode): TStatus;
-var
-  Temp: TColor;
 begin
-Temp := Color();
-Result := SetWrapMode(Wrap,@Temp,False);
+Result := SetWrapMode(Wrap,Color(),False);
 end;
 
 //!!----------------------------------------------------------------------------

@@ -300,7 +300,7 @@ type
 // WarpMode constants
 //--------------------------------------------------------------------------
 type
-  TWarpMode =(
+  TWarpMode = (
     WarpModePerspective,    // 0
     WarpModeBilinear        // 1
   );

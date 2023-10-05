@@ -32,7 +32,7 @@ Function GDIPLUS_MAX(a,b: Single): Single; overload;
 //--------------------------------------------------------------------------
 // Callback functions
 //--------------------------------------------------------------------------
-type {$IFDEF ShowHints}{$MESSAGE 'rewisit'}{$ENDIF}
+type
   TImageAbort = Function(Param: Pointer): BOOL; stdcall;
   TDrawImageAbort = TImageAbort;
   TGetThumbnailImageAbort = TImageAbort;
@@ -134,14 +134,14 @@ type
   PSizeF = ^TSizeF;
 
 Function SizeF: TSizeF; overload;
-Function SizeF(size: TSizeF): TSizeF; overload;
+Function SizeF(const sz: TSizeF): TSizeF; overload;
 Function SizeF(width,height: REAL): TSizeF; overload;
 
-Function Add(a,b: TSizeF): TSizeF; overload;
-Function Subtract(a,b: TSizeF): TSizeF; overload;
+Function Add(const sza,szb: TSizeF): TSizeF; overload;
+Function Subtract(const sza,szb: TSizeF): TSizeF; overload;
 
-Function Equals(a,b: TSizeF): BOOL; overload;
-Function Empty(a: TSizeF): BOOL; overload;
+Function Equals(const sza,szb: TSizeF): BOOL; overload;
+Function Empty(const sz: TSizeF): BOOL; overload;
 
 //--------------------------------------------------------------------------
 // Represents a dimension in a 2D coordinate system (integer coordinates)
@@ -154,14 +154,14 @@ type
   PSize = ^TSize;
 
 Function Size: TSize; overload;
-Function Size(size: TSize): TSize; overload;
+Function Size(const sz: TSize): TSize; overload;
 Function Size(width,height: INT): TSize; overload;
 
-Function Add(a,b: TSize): TSize; overload;
-Function Subtract(a,b: TSize): TSize; overload;
+Function Add(const sza,szb: TSize): TSize; overload;
+Function Subtract(const sza,szb: TSize): TSize; overload;
 
-Function Equals(a,b: TSize): BOOL; overload;
-Function Empty(a: TSize): BOOL; overload;
+Function Equals(const sza,szb: TSize): BOOL; overload;
+Function Empty(const sz: TSize): BOOL; overload;
 
 //--------------------------------------------------------------------------
 // Represents a location in a 2D coordinate system (floating-point coordinates)
@@ -174,14 +174,14 @@ type
   PPointF = ^TPointF;
 
 Function PointF: TPointF; overload;
-Function PointF(point: TPointF): TPointF; overload;
-Function PointF(size: TSizeF): TPointF; overload;
+Function PointF(const pt: TPointF): TPointF; overload;
+Function PointF(const sz: TSizeF): TPointF; overload;
 Function PointF(x,y: REAL): TPointF; overload;
 
-Function Add(a,b: TPointF): TPointF; overload;
-Function Subtract(a,b: TPointF): TPointF; overload;
+Function Add(const pta,ptb: TPointF): TPointF; overload;
+Function Subtract(const pta,ptb: TPointF): TPointF; overload;
 
-Function Equals(a,b: TPointF): BOOL; overload;
+Function Equals(const pta,ptb: TPointF): BOOL; overload;
 
 //--------------------------------------------------------------------------
 // Represents a location in a 2D coordinate system (integer coordinates)
@@ -194,14 +194,14 @@ type
   PPoint = ^TPoint;
 
 Function Point: TPoint; overload;
-Function Point(point: TPoint): TPoint; overload;
-Function Point(size: TSize): TPoint; overload;
+Function Point(const pt: TPoint): TPoint; overload;
+Function Point(const sz: TSize): TPoint; overload;
 Function Point(x,y: INT): TPoint; overload;
 
-Function Add(a,b: TPoint): TPoint; overload;
-Function Subtract(a,b: TPoint): TPoint; overload;
+Function Add(const pta,ptb: TPoint): TPoint; overload;
+Function Subtract(const pta,ptb: TPoint): TPoint; overload;
 
-Function Equals(a,b: TPoint): BOOL; overload;
+Function Equals(const pta,ptb: TPoint): BOOL; overload;
 
 //--------------------------------------------------------------------------
 // Represents a rectangle in a 2D coordinate system (floating-point coordinates)
@@ -217,33 +217,33 @@ type
 
 Function RectF: TRectF; overload;
 Function RectF(x,y,width,height: REAL): TRectF; overload;
-Function RectF(location: TPointF; size: TSizeF): TRectF; overload;
+Function RectF(const location: TPointF; const sz: TSizeF): TRectF; overload;
 
-Function Clone(a: TRectF): TRectF; overload;
+Function Clone(const rc: TRectF): TRectF; overload;
 
-Function GetLocation(a: TRectF): TPointF; overload;
-Function GetSize(a: TRectF): TSizeF; overload;
-Function GetBounds(a: TRectF): TRectF; overload;
-Function GetLeft(a: TRectF): REAL; overload;
-Function GetTop(a: TRectF): REAL; overload;
-Function GetRight(a: TRectF): REAL; overload;
-Function GetBottom(a: TRectF): REAL; overload;
+Function GetLocation(const rc: TRectF): TPointF; overload;
+Function GetSize(const rc: TRectF): TSizeF; overload;
+Function GetBounds(const rc: TRectF): TRectF; overload;
+Function GetLeft(const rc: TRectF): REAL; overload;
+Function GetTop(const rc: TRectF): REAL; overload;
+Function GetRight(const rc: TRectF): REAL; overload;
+Function GetBottom(const rc: TRectF): REAL; overload;
 
-Function IsEmptyArea(a: TRectF): BOOL; overload;
-Function Equals(a,b: TRectF): BOOL; overload;
-Function Contains(a: TRectF; x,y: REAL): BOOL; overload;
-Function Contains(a: TRectF; pt: TPointF): BOOL; overload;
-Function Contains(a: TRectF; b: TRectF): BOOL; overload;
+Function IsEmptyArea(const rc: TRectF): BOOL; overload;
+Function Equals(const rca,rcb: TRectF): BOOL; overload;
+Function Contains(const rc: TRectF; x,y: REAL): BOOL; overload;
+Function Contains(const rc: TRectF; const pt: TPointF): BOOL; overload;
+Function Contains(const rca,rcb: TRectF): BOOL; overload;
 
-Function Inflate(a: TRectF; dx,dy: REAL): TRectF; overload;
-Function Inflate(a: TRectF; point: TPointF): TRectF; overload;
-Function Intersect(a,b: TRectF): TRectF; overload;
-Function Intersect(out c: TRectF; a,b: TRectF): BOOL; overload;
-Function IntersectsWith(a,b: TRectF): BOOL; overload;
-Function Union(a,b: TRectF): TRectF; overload;
-Function Union(out c: TRectF; a,b: TRectF): BOOL; overload;
-Function Offset(a: TRectF; point: TPointF): TRectF; overload;
-Function Offset(a: TRectF; dx,dy: REAL): TRectF; overload;
+Function Inflate(const rc: TRectF; dx,dy: REAL): TRectF; overload;
+Function Inflate(const rc: TRectF; const pt: TPointF): TRectF; overload;
+Function Intersect(const rca,rcb: TRectF): TRectF; overload;
+Function Intersect(out rcc: TRectF; const rca,rcb: TRectF): BOOL; overload;
+Function IntersectsWith(const rca,rcb: TRectF): BOOL; overload;
+Function Union(const rca,rcb: TRectF): TRectF; overload;
+Function Union(out rcc: TRectF; const rca,rcb: TRectF): BOOL; overload;
+Function Offset(const rc: TRectF; const pt: TPointF): TRectF; overload;
+Function Offset(const rc: TRectF; dx,dy: REAL): TRectF; overload;
 
 //--------------------------------------------------------------------------
 // Represents a rectangle in a 2D coordinate system (integer coordinates)
@@ -259,33 +259,33 @@ type
 
 Function Rect: TRect; overload;
 Function Rect(x,y,width,height: INT): TRect; overload;
-Function Rect(location: TPoint; size: TSize): TRect; overload;
+Function Rect(const location: TPoint; const sz: TSize): TRect; overload;
 
-Function Clone(a: TRect): TRect; overload;
+Function Clone(const rc: TRect): TRect; overload;
 
-Function GetLocation(a: TRect): TPoint; overload;
-Function GetSize(a: TRect): TSize; overload;
-Function GetBounds(a: TRect): TRect; overload;
-Function GetLeft(a: TRect): INT; overload;
-Function GetTop(a: TRect): INT; overload;
-Function GetRight(a: TRect): INT; overload;
-Function GetBottom(a: TRect): INT; overload;
+Function GetLocation(const rc: TRect): TPoint; overload;
+Function GetSize(const rc: TRect): TSize; overload;
+Function GetBounds(const rc: TRect): TRect; overload;
+Function GetLeft(const rc: TRect): INT; overload;
+Function GetTop(const rc: TRect): INT; overload;
+Function GetRight(const rc: TRect): INT; overload;
+Function GetBottom(const rc: TRect): INT; overload;
 
-Function IsEmptyArea(a: TRect): BOOL; overload;
-Function Equals(a,b: TRect): BOOL; overload;
-Function Contains(a: TRect; x,y: INT): BOOL; overload;
-Function Contains(a: TRect; pt: TPoint): BOOL; overload;
-Function Contains(a: TRect; b: TRect): BOOL; overload;
+Function IsEmptyArea(const rc: TRect): BOOL; overload;
+Function Equals(const rca,rcb: TRect): BOOL; overload;
+Function Contains(const rc: TRect; x,y: INT): BOOL; overload;
+Function Contains(const rc: TRect; const pt: TPoint): BOOL; overload;
+Function Contains(const rca,rcb: TRect): BOOL; overload;
 
-Function Inflate(a: TRect; dx,dy: INT): TRect; overload;
-Function Inflate(a: TRect; point: TPoint): TRect; overload;
-Function Intersect(a,b: TRect): TRect; overload;
-Function Intersect(out c: TRect; a,b: TRect): BOOL; overload;
-Function IntersectsWith(a,b: TRect): BOOL; overload;
-Function Union(a,b: TRect): TRect; overload;
-Function Union(out c: TRect; a,b: TRect): BOOL; overload;
-Function Offset(a: TRect; point: TPoint): TRect; overload;
-Function Offset(a: TRect; dx,dy: INT): TRect; overload;
+Function Inflate(const rc: TRect; dx,dy: INT): TRect; overload;
+Function Inflate(const rc: TRect; const pt: TPoint): TRect; overload;
+Function Intersect(const rca,rcb: TRect): TRect; overload;
+Function Intersect(out rcc: TRect; const rca,rcb: TRect): BOOL; overload;
+Function IntersectsWith(const rca,rcb: TRect): BOOL; overload;
+Function Union(const rca,rcb: TRect): TRect; overload;
+Function Union(out rcc: TRect; const rca,rcb: TRect): BOOL; overload;
+Function Offset(const rc: TRect; const pt: TPoint): TRect; overload;
+Function Offset(const rc: TRect; dx,dy: INT): TRect; overload;
 
 {!!-----------------------------------------------------------------------------
     TPathData - declaration
@@ -302,11 +302,11 @@ procedure PathDataInit(out PathData: TPathData);
 procedure PathDataAlloc(var PathData: TPathData; Count: Integer);
 procedure PathDataFree(var PathData: TPathData);
 
-Function PathDataPointGet(PathData: TPathData; Index: Integer): TPointF;
-procedure PathDataPointSet(PathData: TPathData; Index: Integer; Value: TPointF);
+Function PathDataPointGet(const PathData: TPathData; Index: Integer): TPointF;
+procedure PathDataPointSet(const PathData: TPathData; Index: Integer; Value: TPointF);
 
-Function PathDataTypeGet(PathData: TPathData; Index: Integer): Byte;
-procedure PathDataTypeSet(PathData: TPathData; Index: Integer; Value: Byte);
+Function PathDataTypeGet(const PathData: TPathData; Index: Integer): Byte;
+procedure PathDataTypeSet(const PathData: TPathData; Index: Integer; Value: Byte);
 
 {!!-----------------------------------------------------------------------------
     TCharacterRange - declaration
@@ -321,7 +321,7 @@ type
 Function CharacterRange: TCharacterRange; overload;
 Function CharacterRange(first,length: INT): TCharacterRange; overload;
 
-procedure Assign(var range: TCharacterRange; rhs: TCharacterRange); overload;
+procedure Assign(var range: TCharacterRange; const rhs: TCharacterRange); overload;
 
 
 implementation
@@ -381,10 +381,10 @@ end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Function SizeF(size: TSizeF): TSizeF;
+Function SizeF(const sz: TSizeF): TSizeF;
 begin
-Result.Width := size.Width;
-Result.Height := size.Height;
+Result.Width := sz.Width;
+Result.Height := sz.Height;
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -397,32 +397,32 @@ end;
 
 //!!----------------------------------------------------------------------------
 
-Function Add(a,b: TSizeF): TSizeF;
+Function Add(const sza,szb: TSizeF): TSizeF;
 begin
-Result.Width := a.Width + b.Width;
-Result.Height := a.Height + b.Height;
+Result.Width := sza.Width + szb.Width;
+Result.Height := sza.Height + szb.Height;
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function Subtract(a,b: TSizeF): TSizeF;
+Function Subtract(const sza,szb: TSizeF): TSizeF;
 begin
-Result.Width := a.Width - b.Width;
-Result.Height := a.Height - b.Height;
+Result.Width := sza.Width - szb.Width;
+Result.Height := sza.Height - szb.Height;
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function Equals(a,b: TSizeF): BOOL;
+Function Equals(const sza,szb: TSizeF): BOOL;
 begin
-Result := (a.Width = b.Width) and (a.Height = b.Height);
+Result := (sza.Width = szb.Width) and (sza.Height = szb.Height);
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function Empty(a: TSizeF): BOOL;
+Function Empty(const sz: TSizeF): BOOL;
 begin
-Result := (a.Width = 0.0) and (a.Height = 0.0);
+Result := (sz.Width = 0.0) and (sz.Height = 0.0);
 end;
 
 
@@ -438,10 +438,10 @@ end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Function Size(size: TSize): TSize;
+Function Size(const sz: TSize): TSize;
 begin
-Result.Width := size.Width;
-Result.Height := size.Height;
+Result.Width := sz.Width;
+Result.Height := sz.Height;
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -454,32 +454,32 @@ end;
 
 //!!----------------------------------------------------------------------------
 
-Function Add(a,b: TSize): TSize;
+Function Add(const sza,szb: TSize): TSize;
 begin
-Result.Width := a.Width + b.Width;
-Result.Height := a.Height + b.Height;
+Result.Width := sza.Width + szb.Width;
+Result.Height := sza.Height + szb.Height;
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function Subtract(a,b: TSize): TSize;
+Function Subtract(const sza,szb: TSize): TSize;
 begin
-Result.Width := a.Width - b.Width;
-Result.Height := a.Height - b.Height;
+Result.Width := sza.Width - szb.Width;
+Result.Height := sza.Height - szb.Height;
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function Equals(a,b: TSize): BOOL;
+Function Equals(const sza,szb: TSize): BOOL;
 begin
-Result := (a.Width = b.Width) and (a.Height = b.Height);
+Result := (sza.Width = szb.Width) and (sza.Height = szb.Height);
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function Empty(a: TSize): BOOL;
+Function Empty(const sz: TSize): BOOL;
 begin
-Result := (a.Width = 0) and (a.Height = 0);
+Result := (sz.Width = 0) and (sz.Height = 0);
 end;
 
 
@@ -495,18 +495,18 @@ end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Function PointF(point: TPointF): TPointF;
+Function PointF(const pt: TPointF): TPointF;
 begin
-Result.X := point.X;
-Result.Y := point.Y;
+Result.X := pt.X;
+Result.Y := pt.Y;
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Function PointF(size: TSizeF): TPointF;
+Function PointF(const sz: TSizeF): TPointF;
 begin
-Result.X := size.Width;
-Result.Y := size.Height;
+Result.X := sz.Width;
+Result.Y := sz.Height;
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -519,25 +519,25 @@ end;
 
 //!!----------------------------------------------------------------------------
 
-Function Add(a,b: TPointF): TPointF;
+Function Add(const pta,ptb: TPointF): TPointF;
 begin
-Result.X := a.X + b.X;
-Result.Y := a.Y + b.Y;
+Result.X := pta.X + ptb.X;
+Result.Y := pta.Y + ptb.Y;
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function Subtract(a,b: TPointF): TPointF;
+Function Subtract(const pta,ptb: TPointF): TPointF;
 begin
-Result.X := a.X - b.X;
-Result.Y := a.Y - b.Y;
+Result.X := pta.X - ptb.X;
+Result.Y := pta.Y - ptb.Y;
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function Equals(a,b: TPointF): BOOL;
+Function Equals(const pta,ptb: TPointF): BOOL;
 begin
-Result := (a.X = b.X) and (a.Y = b.Y);
+Result := (pta.X = ptb.X) and (pta.Y = ptb.Y);
 end;
 
 
@@ -553,18 +553,18 @@ end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Function Point(point: TPoint): TPoint;
+Function Point(const pt: TPoint): TPoint;
 begin
-Result.X := point.X;
-Result.Y := point.Y;
+Result.X := pt.X;
+Result.Y := pt.Y;
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Function Point(size: TSize): TPoint;
+Function Point(const sz: TSize): TPoint;
 begin
-Result.X := size.Width;
-Result.Y := size.Height;
+Result.X := sz.Width;
+Result.Y := sz.Height;
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -577,25 +577,25 @@ end;
 
 //!!----------------------------------------------------------------------------
 
-Function Add(a,b: TPoint): TPoint;
+Function Add(const pta,ptb: TPoint): TPoint;
 begin
-Result.X := a.X + b.X;
-Result.Y := a.Y + b.Y;
+Result.X := pta.X + ptb.X;
+Result.Y := pta.Y + ptb.Y;
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function Subtract(a,b: TPoint): TPoint;
+Function Subtract(const pta,ptb: TPoint): TPoint;
 begin
-Result.X := a.X - b.X;
-Result.Y := a.Y - b.Y;
+Result.X := pta.X - ptb.X;
+Result.Y := pta.Y - ptb.Y;
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function Equals(a,b: TPoint): BOOL;
+Function Equals(const pta,ptb: TPoint): BOOL;
 begin
-Result := (a.X = b.X) and (a.Y = b.Y);
+Result := (pta.X = ptb.X) and (pta.Y = ptb.Y);
 end;
 
 
@@ -623,198 +623,198 @@ end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Function RectF(location: TPointF; size: TSizeF): TRectF;
+Function RectF(const location: TPointF; const sz: TSizeF): TRectF;
 begin
 Result.X := location.X;
 Result.Y := location.Y;
-Result.Width := size.Width;
-Result.Height := size.Height;
+Result.Width := sz.Width;
+Result.Height := sz.Height;
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function Clone(a: TRectF): TRectF;
+Function Clone(const rc: TRectF): TRectF;
 begin
-Result := RectF(a.X,a.Y,a.Width,a.Height);
+Result := RectF(rc.X,rc.Y,rc.Width,rc.Height);
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function GetLocation(a: TRectF): TPointF;
+Function GetLocation(const rc: TRectF): TPointF;
 begin
-Result.X := a.X;
-Result.Y := a.Y;
+Result.X := rc.X;
+Result.Y := rc.Y;
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function GetSize(a: TRectF): TSizeF;
+Function GetSize(const rc: TRectF): TSizeF;
 begin
-Result.Width := a.Width;
-Result.Height := a.Height;
+Result.Width := rc.Width;
+Result.Height := rc.Height;
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function GetBounds(a: TRectF): TRectF;
+Function GetBounds(const rc: TRectF): TRectF;
 begin
-Result.X := a.X;
-Result.Y := a.Y;
-Result.Width := a.Width;
-Result.Height := a.Height;
+Result.X := rc.X;
+Result.Y := rc.Y;
+Result.Width := rc.Width;
+Result.Height := rc.Height;
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function GetLeft(a: TRectF): REAL;
+Function GetLeft(const rc: TRectF): REAL;
 begin
-Result := a.X;
+Result := rc.X;
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function GetTop(a: TRectF): REAL;
+Function GetTop(const rc: TRectF): REAL;
 begin
-Result := a.Y;
+Result := rc.Y;
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function GetRight(a: TRectF): REAL;
+Function GetRight(const rc: TRectF): REAL;
 begin
-Result := a.X + a.Width;
+Result := rc.X + rc.Width;
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function GetBottom(a: TRectF): REAL;
+Function GetBottom(const rc: TRectF): REAL;
 begin
-Result := a.Y + a.Height;
+Result := rc.Y + rc.Height;
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function IsEmptyArea(a: TRectF): BOOL;
+Function IsEmptyArea(const rc: TRectF): BOOL;
 begin
-Result := (a.Width <= REAL_EPSILON) or (a.Height <= REAL_EPSILON);
+Result := (rc.Width <= REAL_EPSILON) or (rc.Height <= REAL_EPSILON);
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function Equals(a,b: TRectF): BOOL;
+Function Equals(const rca,rcb: TRectF): BOOL;
 begin
-Result := (a.X = b.X) and (a.Y = b.Y) and (a.Width = b.Width) and (a.Height = b.Height);
+Result := (rca.X = rcb.X) and (rca.Y = rcb.Y) and (rca.Width = rcb.Width) and (rca.Height = rcb.Height);
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function Contains(a: TRectF; x,y: REAL): BOOL;
+Function Contains(const rc: TRectF; x,y: REAL): BOOL;
 begin
-Result := ((x >= a.X) and (x < (a.X + a.Width))) and
-          ((y >= a.Y) and (y < (a.Y + a.Height)))
+Result := ((x >= rc.X) and (x < (rc.X + rc.Width))) and
+          ((y >= rc.Y) and (y < (rc.Y + rc.Height)))
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Function Contains(a: TRectF; pt: TPointF): BOOL;
+Function Contains(const rc: TRectF; const pt: TPointF): BOOL;
 begin
-Result := Contains(a,pt.X,pt.Y);
+Result := Contains(rc,pt.X,pt.Y);
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Function Contains(a: TRectF; b: TRectF): BOOL;
+Function Contains(const rca,rcb: TRectF): BOOL;
 begin
-Result := ((a.X <= b.X) and (GetRight(b) <= GetRight(a))) and
-          ((a.Y <= b.Y) and (GetBottom(b) <= GetBottom(a)));
+Result := ((rca.X <= rcb.X) and (GetRight(rcb) <= GetRight(rca))) and
+          ((rca.Y <= rcb.Y) and (GetBottom(rcb) <= GetBottom(rca)));
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function Inflate(a: TRectF; dx,dy: REAL): TRectF;
+Function Inflate(const rc: TRectF; dx,dy: REAL): TRectF;
 begin
-Result.X := a.X - dx;
-Result.Y := a.Y - dy;
-Result.Width := a.Width + (2 * dx);
-Result.Height := a.Height + (2 * dy);
+Result.X := rc.X - dx;
+Result.Y := rc.Y - dy;
+Result.Width := rc.Width + (2 * dx);
+Result.Height := rc.Height + (2 * dy);
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Function Inflate(a: TRectF; point: TPointF): TRectF;
+Function Inflate(const rc: TRectF; const pt: TPointF): TRectF;
 begin
-Result := Inflate(a,point.X,point.Y);
+Result := Inflate(rc,pt.X,pt.Y);
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function Intersect(a,b: TRectF): TRectF;
+Function Intersect(const rca,rcb: TRectF): TRectF;
 begin
-Intersect(Result,a,b);
+Intersect(Result,rca,rcb);
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Function Intersect(out c: TRectF; a,b: TRectF): BOOL;
+Function Intersect(out rcc: TRectF; const rca,rcb: TRectF): BOOL;
 var
   right,bottom,left,top:  REAL;
 begin
-right := GDIPLUS_MIN(GetRight(a),GetRight(b));
-bottom := GDIPLUS_MIN(GetBottom(a),GetBottom(b));
-left := GDIPLUS_MAX(GetLeft(a),GetLeft(b));
-top := GDIPLUS_MAX(GetTop(a),GetTop(b));
-c.X := left;
-c.Y := top;
-c.Width := right - left;
-c.Height := bottom - top;
-Result := not IsEmptyArea(c);
+right := GDIPLUS_MIN(GetRight(rca),GetRight(rcb));
+bottom := GDIPLUS_MIN(GetBottom(rca),GetBottom(rcb));
+left := GDIPLUS_MAX(GetLeft(rca),GetLeft(rcb));
+top := GDIPLUS_MAX(GetTop(rca),GetTop(rcb));
+rcc.X := left;
+rcc.Y := top;
+rcc.Width := right - left;
+rcc.Height := bottom - top;
+Result := not IsEmptyArea(rcc);
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function IntersectsWith(a,b: TRectF): BOOL;
+Function IntersectsWith(const rca,rcb: TRectF): BOOL;
 begin
-Result := (GetLeft(a) < GetRight(b)) and (GetTop(a) < GetBottom(b)) and
-          (GetRight(a) > GetLeft(b)) and (GetBottom(a) > GetTop(b));
+Result := (GetLeft(rca) < GetRight(rcb)) and (GetTop(rca) < GetBottom(rcb)) and
+          (GetRight(rca) > GetLeft(rcb)) and (GetBottom(rca) > GetTop(rcb));
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function Union(a,b: TRectF): TRectF;
+Function Union(const rca,rcb: TRectF): TRectF;
 begin
-Union(Result,a,b);
+Union(Result,rca,rcb);
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Function Union(out c: TRectF; a,b: TRectF): BOOL;
+Function Union(out rcc: TRectF; const rca,rcb: TRectF): BOOL;
 var
   right,bottom,left,top:  REAL;
 begin
-right := GDIPLUS_MAX(GetRight(a),GetRight(b));
-bottom := GDIPLUS_MAX(GetBottom(a),GetBottom(b));
-left := GDIPLUS_MIN(GetLeft(a),GetLeft(b));
-top := GDIPLUS_MIN(GetTop(a),GetTop(b));
-c.X := left;
-c.Y := top;
-c.Width := right - left;
-c.Height := bottom - top;
-Result := not IsEmptyArea(c);
+right := GDIPLUS_MAX(GetRight(rca),GetRight(rcb));
+bottom := GDIPLUS_MAX(GetBottom(rca),GetBottom(rcb));
+left := GDIPLUS_MIN(GetLeft(rca),GetLeft(rcb));
+top := GDIPLUS_MIN(GetTop(rca),GetTop(rcb));
+rcc.X := left;
+rcc.Y := top;
+rcc.Width := right - left;
+rcc.Height := bottom - top;
+Result := not IsEmptyArea(rcc);
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function Offset(a: TRectF; point: TPointF): TRectF;
+Function Offset(const rc: TRectF; const pt: TPointF): TRectF;
 begin
-Result := Offset(a,point.X,point.Y);
+Result := Offset(rc,pt.X,pt.Y);
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Function Offset(a: TRectF; dx,dy: REAL): TRectF;
+Function Offset(const rc: TRectF; dx,dy: REAL): TRectF;
 begin
-Result.X := a.X + dx;
-Result.Y := a.Y + dy;
+Result.X := rc.X + dx;
+Result.Y := rc.Y + dy;
 end;
 
 
@@ -842,198 +842,198 @@ end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Function Rect(location: TPoint; size: TSize): TRect;
+Function Rect(const location: TPoint; const sz: TSize): TRect;
 begin
 Result.X := location.X;
 Result.Y := location.Y;
-Result.Width := size.Width;
-Result.Height := size.Height;
+Result.Width := sz.Width;
+Result.Height := sz.Height;
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function Clone(a: TRect): TRect;
+Function Clone(const rc: TRect): TRect;
 begin
-Result := Rect(a.X,a.Y,a.Width,a.Height);
+Result := Rect(rc.X,rc.Y,rc.Width,rc.Height);
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function GetLocation(a: TRect): TPoint;
+Function GetLocation(const rc: TRect): TPoint;
 begin
-Result.X := a.X;
-Result.Y := a.Y;
+Result.X := rc.X;
+Result.Y := rc.Y;
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function GetSize(a: TRect): TSize;
+Function GetSize(const rc: TRect): TSize;
 begin
-Result.Width := a.Width;
-Result.Height := a.Height;
+Result.Width := rc.Width;
+Result.Height := rc.Height;
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function GetBounds(a: TRect): TRect;
+Function GetBounds(const rc: TRect): TRect;
 begin
-Result.X := a.X;
-Result.Y := a.Y;
-Result.Width := a.Width;
-Result.Height := a.Height;
+Result.X := rc.X;
+Result.Y := rc.Y;
+Result.Width := rc.Width;
+Result.Height := rc.Height;
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function GetLeft(a: TRect): INT;
+Function GetLeft(const rc: TRect): INT;
 begin
-Result := a.X;
+Result := rc.X;
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function GetTop(a: TRect): INT;
+Function GetTop(const rc: TRect): INT;
 begin
-Result := a.Y;
+Result := rc.Y;
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function GetRight(a: TRect): INT;
+Function GetRight(const rc: TRect): INT;
 begin
-Result := a.X + a.Width;
+Result := rc.X + rc.Width;
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function GetBottom(a: TRect): INT;
+Function GetBottom(const rc: TRect): INT;
 begin
-Result := a.Y + a.Height;
+Result := rc.Y + rc.Height;
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function IsEmptyArea(a: TRect): BOOL;
+Function IsEmptyArea(const rc: TRect): BOOL;
 begin
-Result := (a.Width <= 0) or (a.Height <= 0);
+Result := (rc.Width <= 0) or (rc.Height <= 0);
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function Equals(a,b: TRect): BOOL;
+Function Equals(const rca,rcb: TRect): BOOL;
 begin
-Result := (a.X = b.X) and (a.Y = b.Y) and (a.Width = b.Width) and (a.Height = b.Height);
+Result := (rca.X = rcb.X) and (rca.Y = rcb.Y) and (rca.Width = rcb.Width) and (rca.Height = rcb.Height);
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function Contains(a: TRect; x,y: INT): BOOL;
+Function Contains(const rc: TRect; x,y: INT): BOOL;
 begin
-Result := ((x >= a.X) and (x < (a.X + a.Width))) and
-          ((y >= a.Y) and (y < (a.Y + a.Height)))
+Result := ((x >= rc.X) and (x < (rc.X + rc.Width))) and
+          ((y >= rc.Y) and (y < (rc.Y + rc.Height)))
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Function Contains(a: TRect; pt: TPoint): BOOL;
+Function Contains(const rc: TRect; const pt: TPoint): BOOL;
 begin
-Result := Contains(a,pt.X,pt.Y);
+Result := Contains(rc,pt.X,pt.Y);
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Function Contains(a: TRect; b: TRect): BOOL;
+Function Contains(const rca,rcb: TRect): BOOL;
 begin
-Result := ((a.X <= b.X) and (GetRight(b) <= GetRight(a))) and
-          ((a.Y <= b.Y) and (GetBottom(b) <= GetBottom(a)));
+Result := ((rca.X <= rcb.X) and (GetRight(rcb) <= GetRight(rca))) and
+          ((rca.Y <= rcb.Y) and (GetBottom(rcb) <= GetBottom(rca)));
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function Inflate(a: TRect; dx,dy: INT): TRect;
+Function Inflate(const rc: TRect; dx,dy: INT): TRect;
 begin
-Result.X := a.X - dx;
-Result.Y := a.Y - dy;
-Result.Width := a.Width + (2 * dx);
-Result.Height := a.Height + (2 * dy);
+Result.X := rc.X - dx;
+Result.Y := rc.Y - dy;
+Result.Width := rc.Width + (2 * dx);
+Result.Height := rc.Height + (2 * dy);
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Function Inflate(a: TRect; point: TPoint): TRect;
+Function Inflate(const rc: TRect; const pt: TPoint): TRect;
 begin
-Result := Inflate(a,point.X,point.Y);
+Result := Inflate(rc,pt.X,pt.Y);
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function Intersect(a,b: TRect): TRect;
+Function Intersect(const rca,rcb: TRect): TRect;
 begin
-Intersect(Result,a,b);
+Intersect(Result,rca,rcb);
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Function Intersect(out c: TRect; a,b: TRect): BOOL;
+Function Intersect(out rcc: TRect; const rca,rcb: TRect): BOOL;
 var
   right,bottom,left,top:  INT;
 begin
-right := GDIPLUS_MIN(GetRight(a),GetRight(b));
-bottom := GDIPLUS_MIN(GetBottom(a),GetBottom(b));
-left := GDIPLUS_MAX(GetLeft(a),GetLeft(b));
-top := GDIPLUS_MAX(GetTop(a),GetTop(b));
-c.X := left;
-c.Y := top;
-c.Width := right - left;
-c.Height := bottom - top;
-Result := not IsEmptyArea(c);
+right := GDIPLUS_MIN(GetRight(rca),GetRight(rcb));
+bottom := GDIPLUS_MIN(GetBottom(rca),GetBottom(rcb));
+left := GDIPLUS_MAX(GetLeft(rca),GetLeft(rcb));
+top := GDIPLUS_MAX(GetTop(rca),GetTop(rcb));
+rcc.X := left;
+rcc.Y := top;
+rcc.Width := right - left;
+rcc.Height := bottom - top;
+Result := not IsEmptyArea(rcc);
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function IntersectsWith(a,b: TRect): BOOL;
+Function IntersectsWith(const rca,rcb: TRect): BOOL;
 begin
-Result := (GetLeft(a) < GetRight(b)) and (GetTop(a) < GetBottom(b)) and
-          (GetRight(a) > GetLeft(b)) and (GetBottom(a) > GetTop(b));
+Result := (GetLeft(rca) < GetRight(rcb)) and (GetTop(rca) < GetBottom(rcb)) and
+          (GetRight(rca) > GetLeft(rcb)) and (GetBottom(rca) > GetTop(rcb));
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function Union(a,b: TRect): TRect;
+Function Union(const rca,rcb: TRect): TRect;
 begin
-Union(Result,a,b);
+Union(Result,rca,rcb);
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Function Union(out c: TRect; a,b: TRect): BOOL;
+Function Union(out rcc: TRect; const rca,rcb: TRect): BOOL;
 var
   right,bottom,left,top:  INT;
 begin
-right := GDIPLUS_MAX(GetRight(a),GetRight(b));
-bottom := GDIPLUS_MAX(GetBottom(a),GetBottom(b));
-left := GDIPLUS_MIN(GetLeft(a),GetLeft(b));
-top := GDIPLUS_MIN(GetTop(a),GetTop(b));
-c.X := left;
-c.Y := top;
-c.Width := right - left;
-c.Height := bottom - top;
-Result := not IsEmptyArea(c);
+right := GDIPLUS_MAX(GetRight(rca),GetRight(rcb));
+bottom := GDIPLUS_MAX(GetBottom(rca),GetBottom(rcb));
+left := GDIPLUS_MIN(GetLeft(rca),GetLeft(rcb));
+top := GDIPLUS_MIN(GetTop(rca),GetTop(rcb));
+rcc.X := left;
+rcc.Y := top;
+rcc.Width := right - left;
+rcc.Height := bottom - top;
+Result := not IsEmptyArea(rcc);
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function Offset(a: TRect; point: TPoint): TRect;
+Function Offset(const rc: TRect; const pt: TPoint): TRect;
 begin
-Result := Offset(a,point.X,point.Y);
+Result := Offset(rc,pt.X,pt.Y);
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Function Offset(a: TRect; dx,dy: INT): TRect;
+Function Offset(const rc: TRect; dx,dy: INT): TRect;
 begin
-Result.X := a.X + dx;
-Result.Y := a.Y + dy;
+Result.X := rc.X + dx;
+Result.Y := rc.Y + dy;
 end;
 
 
@@ -1065,9 +1065,9 @@ end;
 
 procedure PathDataFree(var PathData: TPathData);
 begin
-If Assigned(PathData.Points) then
+If Assigned(PathData.Points) and (PathData.Count > 0) then
   FreeMem(PathData.Points,PathData.Count * SizeOf(TPointF));
-IF Assigned(PathData.Types) then
+IF Assigned(PathData.Types) and (PathData.Count > 0) then
   FreeMem(PathData.Types,PathData.Count);
 PathData.Count := 0;
 PathData.Points := nil;
@@ -1076,7 +1076,7 @@ end;
 
 //!!----------------------------------------------------------------------------
 
-Function PathDataPointGet(PathData: TPathData; Index: Integer): TPointF;
+Function PathDataPointGet(const PathData: TPathData; Index: Integer): TPointF;
 begin
 If (Index >= 0) and (Index < PathData.Count) then
   Result := PPointF(PtrUInt(PathData.Points) + PtrUInt(Index * SizeOf(TPointF)))^
@@ -1086,7 +1086,7 @@ end;
 
 //!!----------------------------------------------------------------------------
 
-procedure PathDataPointSet(PathData: TPathData; Index: Integer; Value: TPointF);
+procedure PathDataPointSet(const PathData: TPathData; Index: Integer; Value: TPointF);
 begin
 If (Index >= 0) and (Index < PathData.Count) then
   PPointF(PtrUInt(PathData.Points) + PtrUInt(Index * SizeOf(TPointF)))^ := Value
@@ -1096,7 +1096,7 @@ end;
 
 //!!----------------------------------------------------------------------------
 
-Function PathDataTypeGet(PathData: TPathData; Index: Integer): Byte;
+Function PathDataTypeGet(const PathData: TPathData; Index: Integer): Byte;
 begin
 If (Index >= 0) and (Index < PathData.Count) then
   Result := PByte(PtrUInt(PathData.Points) + PtrUInt(Index))^
@@ -1106,7 +1106,7 @@ end;
 
 //!!----------------------------------------------------------------------------
 
-procedure PathDataTypeSet(PathData: TPathData; Index: Integer; Value: Byte);
+procedure PathDataTypeSet(const PathData: TPathData; Index: Integer; Value: Byte);
 begin
 If (Index >= 0) and (Index < PathData.Count) then
   PByte(PtrUInt(PathData.Points) + PtrUInt(Index))^ := Value
@@ -1135,7 +1135,7 @@ end;
 
 //!!----------------------------------------------------------------------------
 
-procedure Assign(var range: TCharacterRange; rhs: TCharacterRange);
+procedure Assign(var range: TCharacterRange; const rhs: TCharacterRange);
 begin
 range.First := rhs.First;
 range.Length := rhs.Length;

@@ -139,36 +139,36 @@ type
   end;
   PMetafileHeader = ^TMetafileHeader;
 
-Function GetType(Header: TMetafileHeader): TMetafileType;
-Function GetMetafileSize(Header: TMetafileHeader): UINT;
+Function GetType(const header: TMetafileHeader): TMetafileType;
+Function GetMetafileSize(const header: TMetafileHeader): UINT;
 // If IsEmfPlus, this is the EMF+ version; else it is the WMF or EMF ver
-Function GetVersion(Header: TMetafileHeader): UINT;
+Function GetVersion(const header: TMetafileHeader): UINT;
 // Get the EMF+ flags associated with the metafile
-Function GetEmfPlusFlags(Header: TMetafileHeader): UINT;
-Function GetDpiX(Header: TMetafileHeader): REAL;
-Function GetDpiY(Header: TMetafileHeader): REAL;
-Function GetBounds(Header: TMetafileHeader): TRect;
+Function GetEmfPlusFlags(const header: TMetafileHeader): UINT;
+Function GetDpiX(const header: TMetafileHeader): REAL;
+Function GetDpiY(const header: TMetafileHeader): REAL;
+Function GetBounds(const header: TMetafileHeader): TRect;
 
 // Is it any type of WMF (standard or Placeable Metafile)?
-Function IsWmf(Header: TMetafileHeader): BOOL;
+Function IsWmf(const header: TMetafileHeader): BOOL;
 // Is this an Placeable Metafile?
-Function IsWmfPlaceable(Header: TMetafileHeader): BOOL;
+Function IsWmfPlaceable(const header: TMetafileHeader): BOOL;
 // Is this an EMF (not an EMF+)?
-Function IsEmf(Header: TMetafileHeader): BOOL;
+Function IsEmf(const header: TMetafileHeader): BOOL;
 // Is this an EMF or EMF+ file?
-Function IsEmfOrEmfPlus(Header: TMetafileHeader): BOOL;
+Function IsEmfOrEmfPlus(const header: TMetafileHeader): BOOL;
 // Is this an EMF+ file?
-Function IsEmfPlus(Header: TMetafileHeader): BOOL;
+Function IsEmfPlus(const header: TMetafileHeader): BOOL;
 // Is this an EMF+ dual (has dual, down-level records) file?
-Function IsEmfPlusDual(Header: TMetafileHeader): BOOL;
+Function IsEmfPlusDual(const header: TMetafileHeader): BOOL;
 // Is this an EMF+ only (no dual records) file?
-Function IsEmfPlusOnly(Header: TMetafileHeader): BOOL;
+Function IsEmfPlusOnly(const header: TMetafileHeader): BOOL;
 // If it's an EMF+ file, was it recorded against a display Hdc?
-Function IsDisplay(Header: TMetafileHeader): BOOL;
+Function IsDisplay(const header: TMetafileHeader): BOOL;
 // Get the WMF header of the metafile (if it is a WMF)
-Function GetWmfHeader(Header: TMetafileHeader): PMETAHEADER;
+Function GetWmfHeader(const header: TMetafileHeader): PMETAHEADER;
 // Get the EMF header of the metafile (if it is an EMF)
-Function GetEmfHeader(Header: TMetafileHeader): PENHMETAHEADER3;
+Function GetEmfHeader(const header: TMetafileHeader): PENHMETAHEADER3;
 
 implementation
 
@@ -176,128 +176,128 @@ implementation
     TMetafileHeader - implementation
 -------------------------------------------------------------------------------}
 
-Function GetType(Header: TMetafileHeader): TMetafileType;
+Function GetType(const header: TMetafileHeader): TMetafileType;
 begin
-Result := Header.Type_;
+Result := header.Type_;
 end;  
 
 //!!----------------------------------------------------------------------------
 
-Function GetMetafileSize(Header: TMetafileHeader): UINT;
+Function GetMetafileSize(const header: TMetafileHeader): UINT;
 begin
-Result := Header.Size;
+Result := header.Size;
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function GetVersion(Header: TMetafileHeader): UINT;
+Function GetVersion(const header: TMetafileHeader): UINT;
 begin
-Result := Header.Version;
+Result := header.Version;
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function GetEmfPlusFlags(Header: TMetafileHeader): UINT;
+Function GetEmfPlusFlags(const header: TMetafileHeader): UINT;
 begin
-Result := Header.EmfPlusFlags;
+Result := header.EmfPlusFlags;
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function GetDpiX(Header: TMetafileHeader): REAL;
+Function GetDpiX(const header: TMetafileHeader): REAL;
 begin
-Result := Header.DpiX;
+Result := header.DpiX;
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function GetDpiY(Header: TMetafileHeader): REAL;
+Function GetDpiY(const header: TMetafileHeader): REAL;
 begin
-Result := Header.DpiY;
+Result := header.DpiY;
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function GetBounds(Header: TMetafileHeader): TRect;
+Function GetBounds(const header: TMetafileHeader): TRect;
 begin
-Result.X := Header.X;
-Result.Y := Header.Y;
-Result.Width := Header.Width;
-Result.Height := Header.Height;
+Result.X := header.X;
+Result.Y := header.Y;
+Result.Width := header.Width;
+Result.Height := header.Height;
 end;
 
 //!!---------------------------------------------------------------------------
 
-Function IsWmf(Header: TMetafileHeader): BOOL;
+Function IsWmf(const header: TMetafileHeader): BOOL;
 begin
-Result := (Header.Type_ = MetafileTypeWmf) or (Header.Type_ = MetafileTypeWmfPlaceable);
+Result := (header.Type_ = MetafileTypeWmf) or (header.Type_ = MetafileTypeWmfPlaceable);
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function IsWmfPlaceable(Header: TMetafileHeader): BOOL;
+Function IsWmfPlaceable(const header: TMetafileHeader): BOOL;
 begin
-Result := Header.Type_ = MetafileTypeWmfPlaceable;
+Result := header.Type_ = MetafileTypeWmfPlaceable;
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function IsEmf(Header: TMetafileHeader): BOOL;
+Function IsEmf(const header: TMetafileHeader): BOOL;
 begin
-Result := Header.Type_ = MetafileTypeEmf;
-end;
- 
-//!!----------------------------------------------------------------------------
-
-Function IsEmfOrEmfPlus(Header: TMetafileHeader): BOOL;
-begin
-Result := Header.Type_ >= MetafileTypeEmf;
+Result := header.Type_ = MetafileTypeEmf;
 end;
  
 //!!----------------------------------------------------------------------------
 
-Function IsEmfPlus(Header: TMetafileHeader): BOOL;
+Function IsEmfOrEmfPlus(const header: TMetafileHeader): BOOL;
 begin
-Result := Header.Type_ >= MetafileTypeEmfPlusOnly;
+Result := header.Type_ >= MetafileTypeEmf;
 end;
  
 //!!----------------------------------------------------------------------------
 
-Function IsEmfPlusDual(Header: TMetafileHeader): BOOL;
+Function IsEmfPlus(const header: TMetafileHeader): BOOL;
 begin
-Result := Header.Type_ = MetafileTypeEmfPlusDual;
-end;
-
-//!!----------------------------------------------------------------------------
-
-Function IsEmfPlusOnly(Header: TMetafileHeader): BOOL;
-begin
-Result := Header.Type_ = MetafileTypeEmfPlusOnly;
+Result := header.Type_ >= MetafileTypeEmfPlusOnly;
 end;
  
 //!!----------------------------------------------------------------------------
 
-Function IsDisplay(Header: TMetafileHeader): BOOL;
+Function IsEmfPlusDual(const header: TMetafileHeader): BOOL;
 begin
-Result := IsEmfPlus(Header) and ((Header.EmfPlusFlags and GDIP_EMFPLUSFLAGS_DISPLAY) <> 0);
+Result := header.Type_ = MetafileTypeEmfPlusDual;
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function GetWmfHeader(Header: TMetafileHeader): PMETAHEADER;
+Function IsEmfPlusOnly(const header: TMetafileHeader): BOOL;
 begin
-If IsWmf(Header) then
-  Result := Addr(Header.WmfHeader)
+Result := header.Type_ = MetafileTypeEmfPlusOnly;
+end;
+ 
+//!!----------------------------------------------------------------------------
+
+Function IsDisplay(const header: TMetafileHeader): BOOL;
+begin
+Result := IsEmfPlus(header) and ((header.EmfPlusFlags and GDIP_EMFPLUSFLAGS_DISPLAY) <> 0);
+end;
+
+//!!----------------------------------------------------------------------------
+
+Function GetWmfHeader(const header: TMetafileHeader): PMETAHEADER;
+begin
+If IsWmf(header) then
+  Result := Addr(header.WmfHeader)
 else
   Result := nil;
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function GetEmfHeader(Header: TMetafileHeader): PENHMETAHEADER3;
+Function GetEmfHeader(const header: TMetafileHeader): PENHMETAHEADER3;
 begin
-If IsEmfOrEmfPlus(Header) then
-  Result := Addr(Header.EmfHeader)
+If IsEmfOrEmfPlus(header) then
+  Result := Addr(header.EmfHeader)
 else
   Result := nil;
 end;

@@ -30,44 +30,44 @@ type
     fNativeMatrix:  PGpMatrix;
     fLastResult:    TStatus;
     constructor Create(NativeMatrixArg: PGpMatrix); overload;
-    procedure SetNativeMatrix(NativeMatrixArg: PGpMatrix); virtual;
-    Function SetStatus(Status: TStatus): TStatus; virtual;
+    procedure SetNativeMatrix(NativeMatrixArg: PGpMatrix); 
+    Function SetStatus(Status: TStatus): TStatus; 
   public
     // Default constructor is set to identity matrix.
     constructor Create; overload;
     constructor Create(M11,M12,M21,M22,DX,DY: REAL); overload;
-    constructor Create(Rect: PRectF; DstPlg: PPointF); overload;
-    constructor Create(Rect: PRect; DstPlg: PPoint); overload;
+    constructor Create(const Rect: TRectF; const DstPlg: TPointF); overload;
+    constructor Create(const Rect: TRect; const DstPlg: TPoint); overload;
     destructor Destroy; override;
-    Function Clone: TMatrix; virtual;
+    Function Clone: TMatrix; 
 
-    Function GetElements(M: PREAL): TStatus; virtual;
-    Function SetElements(M11,M12,M21,M22,DX,DY: REAL): TStatus; virtual;
+    Function GetElements(M: PREAL): TStatus; 
+    Function SetElements(M11,M12,M21,M22,DX,DY: REAL): TStatus; 
 
-    Function OffsetX: REAL; virtual;
-    Function OffsetY: REAL; virtual;
+    Function OffsetX: REAL; 
+    Function OffsetY: REAL; 
 
-    Function Reset: TStatus; virtual;
-    Function Multiply(Matrix: TMatrix; Order: TMatrixOrder = MatrixOrderPrepend): TStatus; virtual;
-    Function Translate(OffsetX,OffsetY: REAL; Order: TMatrixOrder = MatrixOrderPrepend): TStatus; virtual;
-    Function Scale(ScaleX,ScaleY: REAL; Order: TMatrixOrder = MatrixOrderPrepend): TStatus; virtual;
-    Function Rotate(Angle: REAL; Order: TMatrixOrder = MatrixOrderPrepend): TStatus; virtual;
-    Function RotateAt(Angle: REAL; Center: PPointF; Order: TMatrixOrder = MatrixOrderPrepend): TStatus; virtual;
-    Function Shear(ShearX,ShearY: REAL; Order: TMatrixOrder = MatrixOrderPrepend): TStatus; virtual;
-    Function Invert: TStatus; virtual;
+    Function Reset: TStatus; 
+    Function Multiply(Matrix: TMatrix; Order: TMatrixOrder = MatrixOrderPrepend): TStatus; 
+    Function Translate(OffsetX,OffsetY: REAL; Order: TMatrixOrder = MatrixOrderPrepend): TStatus; 
+    Function Scale(ScaleX,ScaleY: REAL; Order: TMatrixOrder = MatrixOrderPrepend): TStatus; 
+    Function Rotate(Angle: REAL; Order: TMatrixOrder = MatrixOrderPrepend): TStatus; 
+    Function RotateAt(Angle: REAL; const Center: TPointF; Order: TMatrixOrder = MatrixOrderPrepend): TStatus; 
+    Function Shear(ShearX,ShearY: REAL; Order: TMatrixOrder = MatrixOrderPrepend): TStatus; 
+    Function Invert: TStatus; 
 
     // float version
-    Function TransformPoints(Pts: PPointF; Count: INT = 1): TStatus; overload; virtual;
-    Function TransformPoints(Pts: PPoint; Count: INT = 1): TStatus; overload; virtual;
-    Function TransformVectors(Pts: PPointF; Count: INT = 1): TStatus; overload; virtual;
-    Function TransformVectors(Pts: PPoint; Count: INT = 1): TStatus; overload; virtual;
+    Function TransformPoints(Pts: PPointF; Count: INT = 1): TStatus; overload; 
+    Function TransformPoints(Pts: PPoint; Count: INT = 1): TStatus; overload; 
+    Function TransformVectors(Pts: PPointF; Count: INT = 1): TStatus; overload; 
+    Function TransformVectors(Pts: PPoint; Count: INT = 1): TStatus; overload; 
 
-    Function IsInvertible: BOOL; virtual;
-    Function IsIdentity: BOOL; virtual;
+    Function IsInvertible: BOOL; 
+    Function IsIdentity: BOOL; 
 
-    Function Equals(Matrix: TMatrix): BOOL; virtual;
+    Function Equals(Matrix: TMatrix): BOOL; 
 
-    Function GetLastStatus: TStatus; virtual;
+    Function GetLastStatus: TStatus; 
   end;
 
 implementation
@@ -133,25 +133,25 @@ end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-constructor TMatrix.Create(Rect: PRectF; DstPlg: PPointF);
+constructor TMatrix.Create(const Rect: TRectF; const DstPlg: TPointF);
 var
   Matrix: PGpMatrix;
 begin
 inherited Create;
 Matrix := nil;
-fLastResult := GdipCreateMatrix3(PGpRectF(Rect),PGpPointF(DstPlg),@Matrix);
+fLastResult := GdipCreateMatrix3(@Rect,@DstPlg,@Matrix);
 SetNativeMatrix(Matrix);
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-constructor TMatrix.Create(Rect: PRect; DstPlg: PPoint);
+constructor TMatrix.Create(const Rect: TRect; const DstPlg: TPoint);
 var
   Matrix: PGpMatrix;
 begin
 inherited Create;
 Matrix := nil;
-fLastResult := GdipCreateMatrix3I(PGpRect(Rect),PGpPoint(DstPlg),@Matrix);
+fLastResult := GdipCreateMatrix3I(@Rect,@DstPlg,@Matrix);
 SetNativeMatrix(Matrix);
 end;
 
@@ -252,19 +252,19 @@ end;
 
 //!!----------------------------------------------------------------------------
 
-Function TMatrix.RotateAt(Angle: REAL; Center: PPointF; Order: TMatrixOrder = MatrixOrderPrepend): TStatus;
+Function TMatrix.RotateAt(Angle: REAL; const Center: TPointF; Order: TMatrixOrder = MatrixOrderPrepend): TStatus;
 begin
 If Order = MatrixOrderPrepend then
   begin
-    SetStatus(GdipTranslateMatrix(fNativeMatrix,Center^.X,Center^.Y,Order));
+    SetStatus(GdipTranslateMatrix(fNativeMatrix,Center.X,Center.Y,Order));
     SetStatus(GdipRotateMatrix(fNativeMatrix,Angle,Order));
-    Result := SetStatus(GdipTranslateMatrix(fNativeMatrix,-Center^.X,-Center^.Y,Order));
+    Result := SetStatus(GdipTranslateMatrix(fNativeMatrix,-Center.X,-Center.Y,Order));
   end
 else
   begin
-    SetStatus(GdipTranslateMatrix(fNativeMatrix,-Center^.X,-Center^.Y,Order));
+    SetStatus(GdipTranslateMatrix(fNativeMatrix,-Center.X,-Center.Y,Order));
     SetStatus(GdipRotateMatrix(fNativeMatrix,Angle,Order));
-    Result := SetStatus(GdipTranslateMatrix(fNativeMatrix,Center^.X,Center^.Y,Order));
+    Result := SetStatus(GdipTranslateMatrix(fNativeMatrix,Center.X,Center.Y,Order));
   end;
 end;
 

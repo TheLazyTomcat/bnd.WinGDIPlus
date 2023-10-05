@@ -178,16 +178,16 @@ type
     fNativeEffect:  PCGpEffect;
     fAuxDataSize:   INT;
     fAuxData:       Pointer;
-    fUseAuxData:    BOOL;     //!! conflict with a method of the same name
+    fUseAuxData:    BOOL;     
     Function SetParameters(Params: Pointer; Size: UINT): TStatus; virtual;
-    Function GetParameters(Size: PUINT; Params: Pointer): TStatus; virtual;
+    Function GetParameters(Size: PUINT; Params: Pointer): TStatus; virtual; 
   public
     constructor Create;
     destructor Destroy; override;
-    Function GetAuxDataSize: INT; virtual;
-    Function GetAuxData: Pointer; virtual;
-    procedure UseAuxData(UseAuxDataFlag: BOOL); virtual;
-    Function GetParameterSize(Size: PUINT): TStatus; virtual;
+    Function GetAuxDataSize: INT; 
+    Function GetAuxData: Pointer; 
+    procedure UseAuxData(UseAuxDataFlag: BOOL); 
+    Function GetParameterSize(Size: PUINT): TStatus;
   end;
 
 {!!=============================================================================

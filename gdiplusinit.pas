@@ -120,8 +120,6 @@ Function GdiplusStartup(token: PULONG_PTR; input: PGdiplusStartupInput; output: 
 // to GDI+ object destructors.
 procedure GdiplusShutdown(token: ULONG_PTR); stdcall; external GDIPLIB;
 
-{$message 'make versions initializing dynamically linked functions'}
-
 implementation
 
 Function GdiplusStartupInput(
