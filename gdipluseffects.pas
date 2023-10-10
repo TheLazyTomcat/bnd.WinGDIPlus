@@ -20,7 +20,7 @@ interface
 
 uses
   Windows,
-  gdiplus_common, gdiplustypes, gdipluscolormatrix;
+  gdiplus_common, gdiplustypes, gdipluscolormatrix, gdiplusbase;
 
 {$IF GDIPVER >= $0110}
 
@@ -172,13 +172,15 @@ Function GdipGetEffectParameters(effect: PCGpEffect; size: PUINT; params: Pointe
     TEffect - class declaration
 ===============================================================================}
 type
-  TEffect = class(TObject)
+  TEffect = class(TGdiPlusWrapper)
   protected
     // protected data members.
     fNativeEffect:  PCGpEffect;
     fAuxDataSize:   INT;
     fAuxData:       Pointer;
-    fUseAuxData:    BOOL;     
+    fUseAuxData:    BOOL;
+    Function GetNativeObject: Pointer; override;
+    Function GetNativeObjectAddr: Pointer; override;
     Function SetParameters(Params: Pointer; Size: UINT): TStatus; virtual;
     Function GetParameters(Size: PUINT; Params: Pointer): TStatus; virtual; 
   public
@@ -337,6 +339,20 @@ uses
 {!!-----------------------------------------------------------------------------
     TEffect - protected methods
 -------------------------------------------------------------------------------}
+
+Function TEffect.GetNativeObject: Pointer;
+begin
+Result := fNativeEffect;
+end;
+
+//!!----------------------------------------------------------------------------
+
+Function TEffect.GetNativeObjectAddr: Pointer;
+begin
+Result := Addr(fNativeEffect);
+end;
+
+//!!----------------------------------------------------------------------------
 
 Function TEffect.SetParameters(Params: Pointer; Size: UINT): TStatus;
 begin

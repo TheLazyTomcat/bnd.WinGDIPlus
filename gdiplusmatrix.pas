@@ -29,6 +29,8 @@ type
   protected
     fNativeMatrix:  PGpMatrix;
     fLastResult:    TStatus;
+    Function GetNativeObject: Pointer; override;
+    Function GetNativeObjectAddr: Pointer; override;
     constructor Create(NativeMatrixArg: PGpMatrix); overload;
     procedure SetNativeMatrix(NativeMatrixArg: PGpMatrix); 
     Function SetStatus(Status: TStatus): TStatus; 
@@ -39,14 +41,11 @@ type
     constructor Create(const Rect: TRectF; const DstPlg: TPointF); overload;
     constructor Create(const Rect: TRect; const DstPlg: TPoint); overload;
     destructor Destroy; override;
-    Function Clone: TMatrix; 
-
+    Function Clone: TMatrix;
     Function GetElements(M: PREAL): TStatus; 
-    Function SetElements(M11,M12,M21,M22,DX,DY: REAL): TStatus; 
-
+    Function SetElements(M11,M12,M21,M22,DX,DY: REAL): TStatus;
     Function OffsetX: REAL; 
-    Function OffsetY: REAL; 
-
+    Function OffsetY: REAL;
     Function Reset: TStatus; 
     Function Multiply(Matrix: TMatrix; Order: TMatrixOrder = MatrixOrderPrepend): TStatus; 
     Function Translate(OffsetX,OffsetY: REAL; Order: TMatrixOrder = MatrixOrderPrepend): TStatus; 
@@ -54,19 +53,15 @@ type
     Function Rotate(Angle: REAL; Order: TMatrixOrder = MatrixOrderPrepend): TStatus; 
     Function RotateAt(Angle: REAL; const Center: TPointF; Order: TMatrixOrder = MatrixOrderPrepend): TStatus; 
     Function Shear(ShearX,ShearY: REAL; Order: TMatrixOrder = MatrixOrderPrepend): TStatus; 
-    Function Invert: TStatus; 
-
+    Function Invert: TStatus;
     // float version
     Function TransformPoints(Pts: PPointF; Count: INT = 1): TStatus; overload; 
     Function TransformPoints(Pts: PPoint; Count: INT = 1): TStatus; overload; 
     Function TransformVectors(Pts: PPointF; Count: INT = 1): TStatus; overload; 
-    Function TransformVectors(Pts: PPoint; Count: INT = 1): TStatus; overload; 
-
+    Function TransformVectors(Pts: PPoint; Count: INT = 1): TStatus; overload;
     Function IsInvertible: BOOL; 
-    Function IsIdentity: BOOL; 
-
+    Function IsIdentity: BOOL;
     Function Equals(Matrix: TMatrix): BOOL; 
-
     Function GetLastStatus: TStatus; 
   end;
 
@@ -81,6 +76,20 @@ uses
 {!!-----------------------------------------------------------------------------
     TMatrix - protected methods
 -------------------------------------------------------------------------------}
+
+Function TMatrix.GetNativeObject: Pointer;
+begin
+Result := fNativeMatrix;
+end;
+
+//!!----------------------------------------------------------------------------
+
+Function TMatrix.GetNativeObjectAddr: Pointer;
+begin
+Result := Addr(fNativeMatrix);
+end;
+
+//!!----------------------------------------------------------------------------
 
 constructor TMatrix.Create(NativeMatrixArg: PGpMatrix);
 begin
@@ -226,7 +235,7 @@ end;
 
 Function TMatrix.Multiply(Matrix: TMatrix; Order: TMatrixOrder = MatrixOrderPrepend): TStatus;
 begin
-Result := SetStatus(GdipMultiplyMatrix(fNativeMatrix,Matrix.fNativeMatrix,Order));
+Result := SetStatus(GdipMultiplyMatrix(fNativeMatrix,Matrix.NativeObject,Order));
 end;
 
 //!!----------------------------------------------------------------------------
@@ -331,7 +340,7 @@ end;
 Function TMatrix.Equals(Matrix: TMatrix): BOOL;
 begin
 Result := False;
-SetStatus(GdipIsMatrixEqual(fNativeMatrix,Matrix.fNativeMatrix,@Result));
+SetStatus(GdipIsMatrixEqual(fNativeMatrix,Matrix.NativeObject,@Result));
 end;
 
 //!!----------------------------------------------------------------------------

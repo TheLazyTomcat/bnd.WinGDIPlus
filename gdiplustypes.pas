@@ -123,6 +123,9 @@ type
   );
   PStatus = ^TStatus;
 
+Function GDIPCheck(Status: TStatus): Boolean;
+procedure GDIPError(Status: TStatus);
+
 //--------------------------------------------------------------------------
 // Represents a dimension in a 2D coordinate system (floating-point coordinates)
 //--------------------------------------------------------------------------
@@ -366,6 +369,21 @@ If a > b then
   Result := a
 else
   Result := b;
+end;
+
+//!!----------------------------------------------------------------------------
+
+Function GDIPCheck(Status: TStatus): Boolean;
+begin
+Result := Status = Ok;
+end;
+
+//!!----------------------------------------------------------------------------
+
+procedure GDIPError(Status: TStatus);
+begin
+If Status <> Ok then
+  raise EGDIPlusError.CreateFmt('GDI+ error %d.',[Ord(Status)]);
 end;
 
 

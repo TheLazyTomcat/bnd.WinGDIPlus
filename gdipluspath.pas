@@ -22,17 +22,16 @@ uses
   gdiplusbase, gdiplusgpstubs, gdiplustypes, gdiplusenums, gdiplusheaders,
   gdiplusstringformat, gdiplusmatrix, gdipluspen, gdiplusbrush, gdipluscolor;
 
+{!!=============================================================================
+    TGraphicsPath - class declaration
+===============================================================================}
 type
-  TFontFamily_ = class(gdiplusheaders.TFontFamily);
-  TStringFormat_ = class(gdiplusstringformat.TStringFormat);
-  TMatrix_ = class(gdiplusmatrix.TMatrix);
-  TPen_ = class(gdipluspen.TPen);
-  TGraphics_ = class(gdiplusheaders.TGraphics);
-
   TGraphicsPath = class(TGdiPlusBase)
   protected
     fNativePath:  PGpPath;
     fLastResult:  TStatus;
+    Function GetNativeObject: Pointer; override;
+    Function GetNativeObjectAddr: Pointer; override;
     constructor Create(Path: TGraphicsPath); overload;
     constructor Create(NativePath: PGpPath); overload;
     procedure SetNativePath(NativePathArg: PGpPath); 
@@ -42,135 +41,117 @@ type
     constructor Create(Points: PPointF; Types: PBYTE; Count: INT; FillMode: TFillMode = FillModeAlternate); overload;
     constructor Create(Points: PPoint; Types: PBYTE; Count: INT; FillMode: TFillMode = FillModeAlternate); overload;
     destructor Destroy; override;
-    Function Clone: TGraphicsPath; 
-
+    Function Clone: TGraphicsPath;
     // Reset the path object to empty (and fill mode to FillModeAlternate)
-    Function Reset: TStatus; 
-
+    Function Reset: TStatus;
     Function GetFillMode: TFillMode; 
-    Function SetFillMode(FillMode: TFillMode): TStatus; 
-
-    Function GetPathData(PathData: PPathData): TStatus; 
-
+    Function SetFillMode(FillMode: TFillMode): TStatus;
+    Function GetPathData(PathData: PPathData): TStatus;
     Function StartFigure: TStatus; 
     Function CloseFigure: TStatus; 
-    Function CloseAllFigures: TStatus; 
-
+    Function CloseAllFigures: TStatus;
     Function SetMarker: TStatus; 
-    Function ClearMarkers: TStatus; 
-
-    Function Reverse: TStatus; 
-
-    Function GetLastPoint(LastPoint: PPointF): TStatus; 
-
+    Function ClearMarkers: TStatus;
+    Function Reverse: TStatus;
+    Function GetLastPoint(LastPoint: PPointF): TStatus;
     Function AddLine(const Pt1,Pt2: TPointF): TStatus; overload; 
     Function AddLine(X1,Y1,X2,Y2: REAL): TStatus; overload; 
     Function AddLines(Points: PPointF; Count: INT): TStatus; overload; 
     Function AddLine(const Pt1,Pt2: TPoint): TStatus; overload; 
     Function AddLine(X1,Y1,X2,Y2: INT): TStatus; overload; 
-    Function AddLines(Points: PPoint; Count: INT): TStatus; overload; 
-
+    Function AddLines(Points: PPoint; Count: INT): TStatus; overload;
     Function AddArc(const Rect: TRectF; StartAngle,SweepAngle: REAL): TStatus; overload; 
     Function AddArc(X,Y,Width,Height: REAL; StartAngle,SweepAngle: REAL): TStatus; overload; 
     Function AddArc(const Rect: TRect; StartAngle,SweepAngle: REAL): TStatus; overload; 
-    Function AddArc(X,Y,Width,Height: INT; StartAngle,SweepAngle: REAL): TStatus; overload; 
-
+    Function AddArc(X,Y,Width,Height: INT; StartAngle,SweepAngle: REAL): TStatus; overload;
     Function AddBezier(const Pt1,Pt2,Pt3,Pt4: TPointF): TStatus; overload; 
     Function AddBezier(X1,Y1,X2,Y2,X3,Y3,X4,Y4: REAL): TStatus; overload; 
     Function AddBeziers(Points: PPointF; Count: INT): TStatus; overload; 
     Function AddBezier(const Pt1,Pt2,Pt3,Pt4: TPoint): TStatus; overload; 
     Function AddBezier(X1,Y1,X2,Y2,X3,Y3,X4,Y4: INT): TStatus; overload; 
-    Function AddBeziers(Points: PPoint; Count: INT): TStatus; overload; 
-
+    Function AddBeziers(Points: PPoint; Count: INT): TStatus; overload;
     Function AddCurve(Points: PPointF; Count: INT): TStatus; overload; 
     Function AddCurve(Points: PPointF; Count: INT; Tension: REAL): TStatus; overload; 
     Function AddCurve(Points: PPointF; Count,Offset,NumberOfSegments: INT; Tension: REAL): TStatus; overload; 
     Function AddCurve(Points: PPoint; Count: INT): TStatus; overload; 
     Function AddCurve(Points: PPoint; Count: INT; Tension: REAL): TStatus; overload; 
-    Function AddCurve(Points: PPoint; Count,Offset,NumberOfSegments: INT; Tension: REAL): TStatus; overload; 
-
+    Function AddCurve(Points: PPoint; Count,Offset,NumberOfSegments: INT; Tension: REAL): TStatus; overload;
     Function AddClosedCurve(Points: PPointF; Count: INT): TStatus; overload; 
     Function AddClosedCurve(Points: PPointF; Count: INT; Tension: REAL): TStatus; overload; 
     Function AddClosedCurve(Points: PPoint; Count: INT): TStatus; overload; 
-    Function AddClosedCurve(Points: PPoint; Count: INT; Tension: REAL): TStatus; overload; 
-
+    Function AddClosedCurve(Points: PPoint; Count: INT; Tension: REAL): TStatus; overload;
     Function AddRectangle(const Rect: TRectF): TStatus; overload; 
     Function AddRectangleS(Rects: PRectF; Count: INT): TStatus; overload; 
     Function AddRectangle(const Rect: TRect): TStatus; overload; 
-    Function AddRectangleS(Rects: PRect; Count: INT): TStatus; overload; 
-
+    Function AddRectangleS(Rects: PRect; Count: INT): TStatus; overload;
     Function AddEllipse(const Rect: TRectF): TStatus; overload; 
     Function AddEllipse(X,Y,Width,Height: REAL): TStatus; overload; 
     Function AddEllipse(const Rect: TRect): TStatus; overload; 
-    Function AddEllipse(X,Y,Width,Height: INT): TStatus; overload; 
-
+    Function AddEllipse(X,Y,Width,Height: INT): TStatus; overload;
     Function AddPie(const Rect: TRectF; StartAngle,SweepAngle: REAL): TStatus; overload; 
     Function AddPie(X,Y,Width,Height: REAL; StartAngle,SweepAngle: REAL): TStatus; overload; 
     Function AddPie(const Rect: TRect; StartAngle,SweepAngle: REAL): TStatus; overload; 
-    Function AddPie(X,Y,Width,Height: INT; StartAngle,SweepAngle: REAL): TStatus; overload; 
-
+    Function AddPie(X,Y,Width,Height: INT; StartAngle,SweepAngle: REAL): TStatus; overload;
     Function AddPolygon(Points: PPointF; Count: INT): TStatus; overload; 
-    Function AddPolygon(Points: PPoint; Count: INT): TStatus; overload; 
-
-    Function AddPath(AddingPath: TGraphicsPath; Connect: BOOL): TStatus; 
-
-    Function AddString(Str: PWideChar; Length: Int; Family: TFontFamily_; Style: INT; EmSize: REAL{World units};
-      const Origin: TPointF; Format: TStringFormat_): TStatus; overload; 
-    Function AddString(Str: PWideChar; Length: Int; Family: TFontFamily_; Style: INT; EmSize: REAL;
-      const LayoutRect: TRectF; Format: TStringFormat_): TStatus; overload; 
-    Function AddString(Str: PWideChar; Length: Int; Family: TFontFamily_; Style: INT; EmSize: REAL;
-      const Origin: TPoint; Format: TStringFormat_): TStatus; overload; 
-    Function AddString(Str: PWideChar; Length: Int; Family: TFontFamily_; Style: INT; EmSize: REAL;
-      const LayoutRect: TRect; Format: TStringFormat_): TStatus; overload; 
-
-    Function Transform(Matrix: TMatrix_): TStatus; 
-
+    Function AddPolygon(Points: PPoint; Count: INT): TStatus; overload;
+    Function AddPath(AddingPath: TGraphicsPath; Connect: BOOL): TStatus;
+    Function AddString(Str: PWideChar; Length: Int; Family: TFontFamily; Style: INT; EmSize: REAL{World units};
+      const Origin: TPointF; Format: TStringFormat): TStatus; overload;
+    Function AddString(Str: PWideChar; Length: Int; Family: TFontFamily; Style: INT; EmSize: REAL;
+      const LayoutRect: TRectF; Format: TStringFormat): TStatus; overload;
+    Function AddString(Str: PWideChar; Length: Int; Family: TFontFamily; Style: INT; EmSize: REAL;
+      const Origin: TPoint; Format: TStringFormat): TStatus; overload;
+    Function AddString(Str: PWideChar; Length: Int; Family: TFontFamily; Style: INT; EmSize: REAL;
+      const LayoutRect: TRect; Format: TStringFormat): TStatus; overload;
+    Function AddString(const Str: String; Length: Int; Family: TFontFamily; Style: INT; EmSize: REAL;
+      const Origin: TPointF; Format: TStringFormat): TStatus; overload;
+    Function AddString(const Str: String; Length: Int; Family: TFontFamily; Style: INT; EmSize: REAL;
+      const LayoutRect: TRectF; Format: TStringFormat): TStatus; overload;
+    Function AddString(const Str: String; Length: Int; Family: TFontFamily; Style: INT; EmSize: REAL;
+      const Origin: TPoint; Format: TStringFormat): TStatus; overload;
+    Function AddString(const Str: String; Length: Int; Family: TFontFamily; Style: INT; EmSize: REAL;
+      const LayoutRect: TRect; Format: TStringFormat): TStatus; overload;
+    Function Transform(Matrix: TMatrix): TStatus;
     // This is not always the tightest bounds.
-    Function GetBounds(const Bounds: TRectF; Matrix: TMatrix_ = nil; Pen: TPen_ = nil): TStatus; overload; 
-    Function GetBounds(const Bounds: TRect; Matrix: TMatrix_ = nil; Pen: TPen_ = nil): TStatus; overload; 
-
+    Function GetBounds(const Bounds: TRectF; Matrix: TMatrix = nil; Pen: TPen = nil): TStatus; overload; 
+    Function GetBounds(const Bounds: TRect; Matrix: TMatrix = nil; Pen: TPen = nil): TStatus; overload;
     // Once flattened, the resultant path is made of line segments and
     // the original path information is lost.  When matrix is NULL the
     // identity matrix is assumed.
-    Function Flatten(Matrix: TMatrix_; Flatness: REAL): TStatus; overload; 
-    Function Flatten(Matrix: TMatrix_ = nil): TStatus; overload; 
-
-    Function Widen(Pen: TPen_; Matrix: TMatrix_; Flatness: REAL): TStatus; overload; 
-    Function Widen(Pen: TPen_; Matrix: TMatrix_ = nil): TStatus; overload; 
-
-    Function Outline(Matrix: TMatrix_; Flatness: REAL): TStatus; overload; 
-    Function Outline(Matrix: TMatrix_ = nil): TStatus; overload; 
-
+    Function Flatten(Matrix: TMatrix; Flatness: REAL): TStatus; overload; 
+    Function Flatten(Matrix: TMatrix = nil): TStatus; overload;
+    Function Widen(Pen: TPen; Matrix: TMatrix; Flatness: REAL): TStatus; overload; 
+    Function Widen(Pen: TPen; Matrix: TMatrix = nil): TStatus; overload;
+    Function Outline(Matrix: TMatrix; Flatness: REAL): TStatus; overload; 
+    Function Outline(Matrix: TMatrix = nil): TStatus; overload;
     // Once this is called, the resultant path is made of line segments and
     // the original path information is lost.  When matrix is NULL, the 
     // identity matrix is assumed.
-    Function Warp(DestPoints: PPointF; Count: INT; const SrcRect: TRectF; Matrix: TMatrix_;
+    Function Warp(DestPoints: PPointF; Count: INT; const SrcRect: TRectF; Matrix: TMatrix;
       WarpMode: TWarpMode; Flatness: REAL): TStatus; overload; 
-    Function Warp(DestPoints: PPointF; Count: INT; const SrcRect: TRectF; Matrix: TMatrix_ = nil;
-      WarpMode: TWarpMode = WarpModePerspective): TStatus; overload; 
-
-    Function GetPointCount: INT; 
-
+    Function Warp(DestPoints: PPointF; Count: INT; const SrcRect: TRectF; Matrix: TMatrix = nil;
+      WarpMode: TWarpMode = WarpModePerspective): TStatus; overload;
+    Function GetPointCount: INT;
     Function GetPathTypes(Types: PBYTE; Count: INT): TStatus; 
     Function GetPathPoints(Points: PPointF; Count: INT): TStatus; overload; 
-    Function GetPathPoints(Points: PPoint; Count: INT): TStatus; overload; 
-
-    Function GetLastStatus: TStatus; 
-
-    Function IsVisible(const Point: TPointF; G: TGraphics_ = nil): BOOL; overload; 
-    Function IsVisible(X,Y: REAL; G: TGraphics_ = nil): BOOL; overload; 
-    Function IsVisible(const Point: TPoint; G: TGraphics_ = nil): BOOL; overload; 
-    Function IsVisible(X,Y: INT; G: TGraphics_ = nil): BOOL; overload; 
-
-    Function IsOutlineVisible(const Point: TPointF; Pen: TPen_; G: TGraphics_ = nil): BOOL; overload; 
-    Function IsOutlineVisible(X,Y: REAL; Pen: TPen_; G: TGraphics_ = nil): BOOL; overload; 
-    Function IsOutlineVisible(const Point: TPoint; Pen: TPen_; G: TGraphics_ = nil): BOOL; overload; 
-    Function IsOutlineVisible(X,Y: INT; Pen: TPen_; G: TGraphics_ = nil): BOOL; overload; 
+    Function GetPathPoints(Points: PPoint; Count: INT): TStatus; overload;
+    Function GetLastStatus: TStatus;
+    Function IsVisible(const Point: TPointF; G: TGraphics = nil): BOOL; overload;
+    Function IsVisible(X,Y: REAL; G: TGraphics = nil): BOOL; overload;
+    Function IsVisible(const Point: TPoint; G: TGraphics = nil): BOOL; overload;
+    Function IsVisible(X,Y: INT; G: TGraphics = nil): BOOL; overload;
+    Function IsOutlineVisible(const Point: TPointF; Pen: TPen; G: TGraphics = nil): BOOL; overload; 
+    Function IsOutlineVisible(X,Y: REAL; Pen: TPen; G: TGraphics = nil): BOOL; overload; 
+    Function IsOutlineVisible(const Point: TPoint; Pen: TPen; G: TGraphics = nil): BOOL; overload; 
+    Function IsOutlineVisible(X,Y: INT; Pen: TPen; G: TGraphics = nil): BOOL; overload; 
   end;
 
+{!!=============================================================================
+    TGraphicsPathIterator - class declaration
+===============================================================================}
 //--------------------------------------------------------------------------
 // GraphisPathIterator class
-//--------------------------------------------------------------------------
+//-------------------------------------------------------------------------- 
 type
   TGraphicsPathIterator = class(TGdiPlusBase)
   protected
@@ -181,28 +162,23 @@ type
   public
     constructor Create(Path: TGraphicsPath);
     destructor Destroy; override;
-
     Function NextSubPath(StartIndex,EndIndex: PINT; IsClosed: PBOOL): INT; overload; 
-    Function NextSubPath(Path: TGraphicsPath; IsClosed: PBOOL): INT; overload; 
-
-    Function NextPathType(PathType: PBYTE; StartIndex,EndIndex: PINT): INT; 
-
+    Function NextSubPath(Path: TGraphicsPath; IsClosed: PBOOL): INT; overload;
+    Function NextPathType(PathType: PBYTE; StartIndex,EndIndex: PINT): INT;
     Function NextMarker(StartIndex,EndIndex: PINT): INT; overload; 
-    Function NextMarker(Path: TGraphicsPath): INT; overload; 
-
+    Function NextMarker(Path: TGraphicsPath): INT; overload;
     Function GetCount: INT; 
-    Function GetSubpathCount: INT; 
-
-    Function HasCurve: BOOL; 
-
-    procedure Rewind; 
-
+    Function GetSubpathCount: INT;
+    Function HasCurve: BOOL;
+    procedure Rewind;
     Function Enumerate(Points: PPointF; Types: PBYTE; Count: INT): INT; 
     Function CopyData(Points: PPointF; Types: PBYTE; StartIndex,EndIndex: INT): INT; 
-
     Function GetLastStatus: TStatus; 
   end;
 
+{!!=============================================================================
+    TPathGradientBrush - class declaration
+===============================================================================}
 //--------------------------------------------------------------------------
 // Path Gradient Brush
 //--------------------------------------------------------------------------
@@ -212,53 +188,39 @@ type
     constructor Create(Points: PPointF; Count: INT; WrapMode: TWrapMode = WrapModeClamp); overload;
     constructor Create(Points: PPoint; Count: INT; WrapMode: TWrapMode = WrapModeClamp); overload;
     constructor Create(Path: TGraphicsPath); overload;
-
     Function GetCenterColor(Color: PColor): TStatus; 
-    Function SetCenterColor(const Color: TColor): TStatus; 
-
+    Function SetCenterColor(const Color: TColor): TStatus;
     Function GetPointCount: INT; 
-    Function GetSurroundColorCount: INT; 
-
+    Function GetSurroundColorCount: INT;
     Function GetSurroundColors(Colors: PColor; Count: PINT): TStatus; 
-    Function SetSurroundColors(Colors: PColor; Count: PINT): TStatus; 
-
+    Function SetSurroundColors(Colors: PColor; Count: PINT): TStatus;
     Function GetGraphicsPath(Path: TGraphicsPath): TStatus; 
-    Function SetGraphicsPath(Path: TGraphicsPath): TStatus; 
-
+    Function SetGraphicsPath(Path: TGraphicsPath): TStatus;
     Function GetCenterPoint(Point: PPointF): TStatus; overload; 
     Function GetCenterPoint(Point: PPoint): TStatus; overload; 
     Function SetCenterPoint(const Point: TPointF): TStatus; overload; 
-    Function SetCenterPoint(const Point: TPoint): TStatus; overload; 
-
+    Function SetCenterPoint(const Point: TPoint): TStatus; overload;
     Function GetRectangle(Rect: PRectF): TStatus; overload; 
-    Function GetRectangle(Rect: PRect): TStatus; overload; 
-
-    Function SetGammaCorrection(UseGammaCorrection: BOOL): TStatus; 
-    Function GetGammaCorrection: BOOL; 
-
+    Function GetRectangle(Rect: PRect): TStatus; overload;
+    Function SetGammaCorrection(UseGammaCorrection: BOOL): TStatus;
+    Function GetGammaCorrection: BOOL;
     Function GetBlendCount: INT; 
     Function GetBlend(BlendFactors,BlendPositions: PREAL; Count: INT): TStatus; 
-    Function SetBlend(BlendFactors,BlendPositions: PREAL; Count: INT): TStatus; 
-
+    Function SetBlend(BlendFactors,BlendPositions: PREAL; Count: INT): TStatus;
     Function GetInterpolationColorCount: INT; 
     Function SetInterpolationColors(PresetColors: PColor; BlendPositions: PREAL; Count: INT): TStatus; 
-    Function GetInterpolationColors(PresetColors: PColor; BlendPositions: PREAL; Count: INT): TStatus; 
-
+    Function GetInterpolationColors(PresetColors: PColor; BlendPositions: PREAL; Count: INT): TStatus;
     Function SetBlendBellShape(Focus: REAL; Scale: REAL = 1.0): TStatus;
-    Function SetBlendTriangularShape(Focus: REAL; Scale: REAL = 1.0): TStatus; 
-
-    Function GetTransform(Matrix: TMatrix_): TStatus;
-    Function SetTransform(Matrix: TMatrix_): TStatus;
+    Function SetBlendTriangularShape(Focus: REAL; Scale: REAL = 1.0): TStatus;
+    Function GetTransform(Matrix: TMatrix): TStatus;
+    Function SetTransform(Matrix: TMatrix): TStatus;
     Function ResetTransform: TStatus;
-
-    Function MultiplyTransform(Matrix: TMatrix_; Order: TMatrixOrder = MatrixOrderPrepend): TStatus;
+    Function MultiplyTransform(Matrix: TMatrix; Order: TMatrixOrder = MatrixOrderPrepend): TStatus;
     Function TranslateTransform(DX,DY: REAL; Order: TMatrixOrder = MatrixOrderPrepend): TStatus;
     Function ScaleTransform(SX,SY: REAL; Order: TMatrixOrder = MatrixOrderPrepend): TStatus;
     Function RotateTransform(Angle: REAL; Order: TMatrixOrder = MatrixOrderPrepend): TStatus;
-
     Function GetFocusScales(XScale,YScale: PREAL): TStatus;
     Function SetFocusScales(XScale,YScale: REAL): TStatus;
-
     Function GetWrapMode: TWrapMode;
     Function SetWrapMode(WrapMode: TWrapMode): TStatus;
   end;
@@ -266,6 +228,7 @@ type
 implementation
 
 uses
+  StrRect,
   gdiplusflat, gdipluspixelformats;
 
 {!!=============================================================================
@@ -275,13 +238,27 @@ uses
     TGraphicsPath - protected methods
 -------------------------------------------------------------------------------}
 
+Function TGraphicsPath.GetNativeObject: Pointer;
+begin
+Result := fNativePath;
+end;
+
+//!!----------------------------------------------------------------------------
+
+Function TGraphicsPath.GetNativeObjectAddr: Pointer;
+begin
+Result := Addr(fNativePath);
+end;
+
+//!!----------------------------------------------------------------------------
+
 constructor TGraphicsPath.Create(Path: TGraphicsPath);
 var
   ClonePath:  PGpPath;
 begin
 inherited Create;
 ClonePath := nil;
-SetStatus(GdipClonePath(Path.fNativePath,@ClonePath));
+SetStatus(GdipClonePath(Path.NativeObject,@ClonePath));
 SetNativePath(ClonePath);
 end;
 
@@ -764,218 +741,159 @@ end;
 
 Function TGraphicsPath.AddPath(AddingPath: TGraphicsPath; Connect: BOOL): TStatus;
 begin
-If Assigned(AddingPath) then
-  Result := SetStatus(GdipAddPathPath(fNativePath,AddingPath.fNativePath,Connect))
-else
-  Result := SetStatus(GdipAddPathPath(fNativePath,nil,Connect))
+Result := SetStatus(GdipAddPathPath(fNativePath,AddingPath.NativeObject,Connect))
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function TGraphicsPath.AddString(Str: PWideChar; Length: Int; Family: TFontFamily_; Style: INT; EmSize: REAL;
-  const Origin: TPointF; Format: TStringFormat_): TStatus;
+Function TGraphicsPath.AddString(Str: PWideChar; Length: Int; Family: TFontFamily; Style: INT; EmSize: REAL;
+  const Origin: TPointF; Format: TStringFormat): TStatus;
 var
-  LayoutRect:   TRectF;
-  NativeFamily: PGpFontFamily;
-  NativeFormat: PGpStringFormat;
+  LayoutRect: TRectF;
 begin
 LayoutRect := RectF(Origin.X,Origin.Y,0.0,0.0);
-If Assigned(Family) then
-  NativeFamily := Family.fNativeFamily
-else
-  NativeFamily := nil;
-If Assigned(Format) then
-  NativeFormat := Format.fNativeFormat
-else
-  NativeFormat := nil;
-Result := SetStatus(GdipAddPathString(fNativePath,Str,Length,NativeFamily,Style,EmSize,@LayoutRect,NativeFormat));
+Result := SetStatus(GdipAddPathString(fNativePath,Str,Length,Family.NativeObject,Style,EmSize,@LayoutRect,Format.NativeObject));
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Function TGraphicsPath.AddString(Str: PWideChar; Length: Int; Family: TFontFamily_; Style: INT; EmSize: REAL{World units};
-  const LayoutRect: TRectF; Format: TStringFormat_): TStatus;
-var
-  NativeFamily: PGpFontFamily;
-  NativeFormat: PGpStringFormat;
+Function TGraphicsPath.AddString(Str: PWideChar; Length: Int; Family: TFontFamily; Style: INT; EmSize: REAL{World units};
+  const LayoutRect: TRectF; Format: TStringFormat): TStatus;
 begin
-If Assigned(Family) then
-  NativeFamily := Family.fNativeFamily
-else
-  NativeFamily := nil;
-If Assigned(Format) then
-  NativeFormat := Format.fNativeFormat
-else
-  NativeFormat := nil;
-Result := SetStatus(GdipAddPathString(fNativePath,Str,Length,NativeFamily,Style,EmSize,@LayoutRect,NativeFormat));
+Result := SetStatus(GdipAddPathString(fNativePath,Str,Length,Family.NativeObject,Style,EmSize,@LayoutRect,Format.NativeObject));
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Function TGraphicsPath.AddString(Str: PWideChar; Length: Int; Family: TFontFamily_; Style: INT; EmSize: REAL;
-  const Origin: TPoint; Format: TStringFormat_): TStatus;
+Function TGraphicsPath.AddString(Str: PWideChar; Length: Int; Family: TFontFamily; Style: INT; EmSize: REAL;
+  const Origin: TPoint; Format: TStringFormat): TStatus;
 var
   LayoutRect:   TRect;
-  NativeFamily: PGpFontFamily;
-  NativeFormat: PGpStringFormat;
 begin
 LayoutRect := Rect(Origin.X,Origin.Y,0,0);
-If Assigned(Family) then
-  NativeFamily := Family.fNativeFamily
-else
-  NativeFamily := nil;
-If Assigned(Format) then
-  NativeFormat := Format.fNativeFormat
-else
-  NativeFormat := nil;
-Result := SetStatus(GdipAddPathStringI(fNativePath,Str,Length,NativeFamily,Style,EmSize,@LayoutRect,NativeFormat));
+Result := SetStatus(GdipAddPathStringI(fNativePath,Str,Length,Family.NativeObject,Style,EmSize,@LayoutRect,Format.NativeObject));
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Function TGraphicsPath.AddString(Str: PWideChar; Length: Int; Family: TFontFamily_; Style: INT; EmSize: REAL{World units};
-  const LayoutRect: TRect; Format: TStringFormat_): TStatus;
-var
-  NativeFamily: PGpFontFamily;
-  NativeFormat: PGpStringFormat;
+Function TGraphicsPath.AddString(Str: PWideChar; Length: Int; Family: TFontFamily; Style: INT; EmSize: REAL{World units};
+  const LayoutRect: TRect; Format: TStringFormat): TStatus;
 begin
-If Assigned(Family) then
-  NativeFamily := Family.fNativeFamily
-else
-  NativeFamily := nil;
-If Assigned(Format) then
-  NativeFormat := Format.fNativeFormat
-else
-  NativeFormat := nil;
-Result := SetStatus(GdipAddPathStringI(fNativePath,Str,Length,NativeFamily,Style,EmSize,@LayoutRect,NativeFormat));
+Result := SetStatus(GdipAddPathStringI(fNativePath,Str,Length,Family.NativeObject,Style,EmSize,@LayoutRect,Format.NativeObject));
+end;
+
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Function TGraphicsPath.AddString(const Str: String; Length: Int; Family: TFontFamily; Style: INT; EmSize: REAL;
+  const Origin: TPointF; Format: TStringFormat): TStatus;
+begin
+Result := AddString(PWideChar(StrToWide(Str)),Length,Family,Style,EmSize,Origin,Format);
+end;
+
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Function TGraphicsPath.AddString(const Str: String; Length: Int; Family: TFontFamily; Style: INT; EmSize: REAL;
+  const LayoutRect: TRectF; Format: TStringFormat): TStatus;
+begin
+Result := AddString(PWideChar(StrToWide(Str)),Length,Family,Style,EmSize,LayoutRect,Format);
+end;
+
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Function TGraphicsPath.AddString(const Str: String; Length: Int; Family: TFontFamily; Style: INT; EmSize: REAL;
+  const Origin: TPoint; Format: TStringFormat): TStatus;
+begin
+Result := AddString(PWideChar(StrToWide(Str)),Length,Family,Style,EmSize,Origin,Format);
+end;
+
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Function TGraphicsPath.AddString(const Str: String; Length: Int; Family: TFontFamily; Style: INT; EmSize: REAL;
+  const LayoutRect: TRect; Format: TStringFormat): TStatus;
+begin
+Result := AddString(PWideChar(StrToWide(Str)),Length,Family,Style,EmSize,LayoutRect,Format);
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function TGraphicsPath.Transform(Matrix: TMatrix_): TStatus;
+Function TGraphicsPath.Transform(Matrix: TMatrix): TStatus;
 begin
 If Assigned(Matrix) then
-  Result := SetStatus(GdipTransformPath(fNativePath,Matrix.fNativeMatrix))
+  Result := SetStatus(GdipTransformPath(fNativePath,Matrix.NativeObject))
 else
   Result := Ok;
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function TGraphicsPath.GetBounds(const Bounds: TRectF; Matrix: TMatrix_ = nil; Pen: TPen_ = nil): TStatus;
+Function TGraphicsPath.GetBounds(const Bounds: TRectF; Matrix: TMatrix = nil; Pen: TPen = nil): TStatus;
 //!! originally implemented in gdiplusgraphics.h
-var
-  NativeMatrix: PGpMatrix;
-  NativePen:    PGpPen;
 begin
-If Assigned(Matrix) then
-  NativeMatrix := Matrix.fNativeMatrix
-else
-  NativeMatrix := nil;
-If Assigned(Pen) then
-  NativePen := Pen.fNativePen
-else
-  NativePen := nil;
-Result := SetStatus(GdipGetPathWorldBounds(fNativePath,@Bounds,NativeMatrix,NativePen));
+Result := SetStatus(GdipGetPathWorldBounds(fNativePath,@Bounds,Matrix.NativeObject,Pen.NativeObject));
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Function TGraphicsPath.GetBounds(const Bounds: TRect; Matrix: TMatrix_ = nil; Pen: TPen_ = nil): TStatus;
+Function TGraphicsPath.GetBounds(const Bounds: TRect; Matrix: TMatrix = nil; Pen: TPen = nil): TStatus;
 //!! originally implemented in gdiplusgraphics.h
-var
-  NativeMatrix: PGpMatrix;
-  NativePen:    PGpPen;
 begin
-If Assigned(Matrix) then
-  NativeMatrix := Matrix.fNativeMatrix
-else
-  NativeMatrix := nil;
-If Assigned(Pen) then
-  NativePen := Pen.fNativePen
-else
-  NativePen := nil;
-Result := SetStatus(GdipGetPathWorldBoundsI(fNativePath,@Bounds,NativeMatrix,NativePen));
+Result := SetStatus(GdipGetPathWorldBoundsI(fNativePath,@Bounds,Matrix.NativeObject,Pen.NativeObject));
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function TGraphicsPath.Flatten(Matrix: TMatrix_; Flatness: REAL): TStatus;
-var
-  NativeMatrix: PGpMatrix;
+Function TGraphicsPath.Flatten(Matrix: TMatrix; Flatness: REAL): TStatus;
 begin
-If Assigned(Matrix) then
-  NativeMatrix := Matrix.fNativeMatrix
-else
-  NativeMatrix := nil;
-Result := SetStatus(GdipFlattenPath(fNativePath,NativeMatrix,Flatness));
+Result := SetStatus(GdipFlattenPath(fNativePath,Matrix.NativeObject,Flatness));
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Function TGraphicsPath.Flatten(Matrix: TMatrix_ = nil): TStatus;
+Function TGraphicsPath.Flatten(Matrix: TMatrix = nil): TStatus;
 begin
 Result := Flatten(Matrix,FlatnessDefault);
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function TGraphicsPath.Widen(Pen: TPen_; Matrix: TMatrix_; Flatness: REAL): TStatus;
-var
-  NativeMatrix: PGpMatrix;
+Function TGraphicsPath.Widen(Pen: TPen; Matrix: TMatrix; Flatness: REAL): TStatus;
 begin
-If Assigned(Matrix) then
-  NativeMatrix := Matrix.fNativeMatrix
-else
-  NativeMatrix := nil;
-Result := SetStatus(GdipWidenPath(fNativePath,Pen.fNativePen,NativeMatrix,Flatness));
+Result := SetStatus(GdipWidenPath(fNativePath,Pen.NativeObject,Matrix.NativeObject,Flatness));
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Function TGraphicsPath.Widen(Pen: TPen_; Matrix: TMatrix_ = nil): TStatus;
+Function TGraphicsPath.Widen(Pen: TPen; Matrix: TMatrix = nil): TStatus;
 begin
 Result := Widen(Pen,Matrix,FlatnessDefault);
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function TGraphicsPath.Outline(Matrix: TMatrix_; Flatness: REAL): TStatus;
-var
-  NativeMatrix: PGpMatrix;
+Function TGraphicsPath.Outline(Matrix: TMatrix; Flatness: REAL): TStatus;
 begin
-If Assigned(Matrix) then
-  NativeMatrix := Matrix.fNativeMatrix
-else
-  NativeMatrix := nil;
-Result := SetStatus(GdipWindingModeOutline(fNativePath,NativeMatrix,Flatness));
+Result := SetStatus(GdipWindingModeOutline(fNativePath,Matrix.NativeObject,Flatness));
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Function TGraphicsPath.Outline(Matrix: TMatrix_ = nil): TStatus;
+Function TGraphicsPath.Outline(Matrix: TMatrix = nil): TStatus;
 begin
 Result := Outline(Matrix,FlatnessDefault);
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function TGraphicsPath.Warp(DestPoints: PPointF; Count: INT; const SrcRect: TRectF; Matrix: TMatrix_;
+Function TGraphicsPath.Warp(DestPoints: PPointF; Count: INT; const SrcRect: TRectF; Matrix: TMatrix;
   WarpMode: TWarpMode; Flatness: REAL): TStatus;
-var
-  NativeMatrix: PGpMatrix;
 begin
-If Assigned(Matrix) then
-  NativeMatrix := Matrix.fNativeMatrix
-else
-  NativeMatrix := nil;
-Result := SetStatus(GdipWarpPath(fNativePath,NativeMatrix,PGpPointF(DestPoints),Count,
+Result := SetStatus(GdipWarpPath(fNativePath,Matrix.NativeObject,PGpPointF(DestPoints),Count,
   SrcRect.X,SrcRect.Y,SrcRect.Width,SrcRect.Height,WarpMode,Flatness));
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Function TGraphicsPath.Warp(DestPoints: PPointF; Count: INT; const SrcRect: TRectF; Matrix: TMatrix_ = nil;
+Function TGraphicsPath.Warp(DestPoints: PPointF; Count: INT; const SrcRect: TRectF; Matrix: TMatrix = nil;
   WarpMode: TWarpMode = WarpModePerspective): TStatus;
 begin
 Result := Warp(DestPoints,Count,SrcRect,Matrix,WarpMode,FlatnessDefault);
@@ -1019,100 +937,66 @@ end;
 
 //!!----------------------------------------------------------------------------
 
-Function TGraphicsPath.IsVisible(const Point: TPointF; G: TGraphics_ = nil): BOOL;
+Function TGraphicsPath.IsVisible(const Point: TPointF; G: TGraphics = nil): BOOL;
 begin
 Result := IsVisible(Point.X,Point.Y,G);
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Function TGraphicsPath.IsVisible(X,Y: REAL; G: TGraphics_ = nil): BOOL;
+Function TGraphicsPath.IsVisible(X,Y: REAL; G: TGraphics = nil): BOOL;
 //!! originally implemented in gdiplusgraphics.h
-var
-  NativeGraphics: PGpGraphics;
 begin
 Result := False;
-If Assigned(G) then
-  NativeGraphics := g.fNativeGraphics
-else
-  NativeGraphics := nil;
-SetStatus(GdipIsVisiblePathPoint(fNativePath,X,Y,NativeGraphics,@Result));
+SetStatus(GdipIsVisiblePathPoint(fNativePath,X,Y,G.NativeObject,@Result));
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Function TGraphicsPath.IsVisible(const Point: TPoint; G: TGraphics_ = nil): BOOL;
+Function TGraphicsPath.IsVisible(const Point: TPoint; G: TGraphics = nil): BOOL;
 begin
 Result := IsVisible(Point.X,Point.Y,G);
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Function TGraphicsPath.IsVisible(X,Y: INT; G: TGraphics_ = nil): BOOL;
+Function TGraphicsPath.IsVisible(X,Y: INT; G: TGraphics = nil): BOOL;
 //!! originally implemented in gdiplusgraphics.h
-var
-  NativeGraphics: PGpGraphics;
 begin
 Result := False;
-If Assigned(G) then
-  NativeGraphics := g.fNativeGraphics
-else
-  NativeGraphics := nil;
-SetStatus(GdipIsVisiblePathPointI(fNativePath,X,Y,NativeGraphics,@Result));
+SetStatus(GdipIsVisiblePathPointI(fNativePath,X,Y,G.NativeObject,@Result));
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function TGraphicsPath.IsOutlineVisible(const Point: TPointF; Pen: TPen_; G: TGraphics_ = nil): BOOL;
+Function TGraphicsPath.IsOutlineVisible(const Point: TPointF; Pen: TPen; G: TGraphics = nil): BOOL;
 begin
 Result := IsOutlineVisible(Point.X,Point.Y,Pen,G);
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Function TGraphicsPath.IsOutlineVisible(X,Y: REAL; Pen: TPen_; G: TGraphics_ = nil): BOOL;
+Function TGraphicsPath.IsOutlineVisible(X,Y: REAL; Pen: TPen; G: TGraphics = nil): BOOL;
 //!! originally implemented in gdiplusgraphics.h
-var
-  NativeGraphics: PGpGraphics;
-  NativePen:      PGpPen;
 begin
 Result := False;
-If Assigned(G) then
-  NativeGraphics := g.fNativeGraphics
-else
-  NativeGraphics := nil;
-If Assigned(Pen) then
-  NativePen := Pen.fNativePen
-else
-  NativePen := nil;
-SetStatus(GdipIsOutlineVisiblePathPoint(fNativePath,X,Y,NativePen,NativeGraphics,@Result));
+SetStatus(GdipIsOutlineVisiblePathPoint(fNativePath,X,Y,Pen.NativeObject,G.NativeObject,@Result));
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Function TGraphicsPath.IsOutlineVisible(const Point: TPoint; Pen: TPen_; G: TGraphics_ = nil): BOOL;
+Function TGraphicsPath.IsOutlineVisible(const Point: TPoint; Pen: TPen; G: TGraphics = nil): BOOL;
 begin
 Result := IsOutlineVisible(Point.X,Point.Y,Pen,G);
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Function TGraphicsPath.IsOutlineVisible(X,Y: INT; Pen: TPen_; G: TGraphics_ = nil): BOOL;
+Function TGraphicsPath.IsOutlineVisible(X,Y: INT; Pen: TPen; G: TGraphics = nil): BOOL;
 //!! originally implemented in gdiplusgraphics.h
-var
-  NativeGraphics: PGpGraphics;
-  NativePen:      PGpPen;
 begin
 Result := False;
-If Assigned(G) then
-  NativeGraphics := g.fNativeGraphics
-else
-  NativeGraphics := nil;
-If Assigned(Pen) then
-  NativePen := Pen.fNativePen
-else
-  NativePen := nil;
-SetStatus(GdipIsOutlineVisiblePathPointI(fNativePath,X,Y,NativePen,NativeGraphics,@Result));
+SetStatus(GdipIsOutlineVisiblePathPointI(fNativePath,X,Y,Pen.NativeObject,G.NativeObject,@Result));
 end;
 
 
@@ -1143,16 +1027,11 @@ end;
 
 constructor TGraphicsPathIterator.Create(Path: TGraphicsPath);
 var
-  NativePath: PGpPath;
-  Iter:       PGpPathIterator;
+  Iter: PGpPathIterator;
 begin
 inherited Create;
-If Assigned(Path) then
-  NativePath := Path.fNativePath
-else
-  NativePath := nil;
 Iter := nil;
-fLastResult := GdipCreatePathIter(@Iter,NativePath);
+fLastResult := GdipCreatePathIter(@Iter,Path.NativeObject);
 SetNativeIterator(Iter);
 end;
 
@@ -1174,14 +1053,8 @@ end;
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Function TGraphicsPathIterator.NextSubPath(Path: TGraphicsPath; IsClosed: PBOOL): INT;
-var
-  NativePath: PGpPath;
 begin
-If Assigned(Path) then
-  NativePath := Path.fNativePath
-else
-  NativePath := nil;
-SetStatus(GdipPathIterNextSubpathPath(fNativeIterator,@Result,NativePath,IsClosed));
+SetStatus(GdipPathIterNextSubpathPath(fNativeIterator,@Result,Path.NativeObject,IsClosed));
 end;
 
 //!!----------------------------------------------------------------------------
@@ -1201,14 +1074,8 @@ end;
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 Function TGraphicsPathIterator.NextMarker(Path: TGraphicsPath): INT;
-var
-  NativePath: PGpPath;
 begin
-If Assigned(Path) then
-  NativePath := Path.fNativePath
-else
-  NativePath := nil;
-SetStatus(GdipPathIterNextMarkerPath(fNativeIterator,@Result,NativePath));
+SetStatus(GdipPathIterNextMarkerPath(fNativeIterator,@Result,Path.NativeObject));
 end;
 
 //!!----------------------------------------------------------------------------
@@ -1299,7 +1166,7 @@ var
 begin
 inherited Create;
 Brush := nil;
-fLastResult := GdipCreatePathGradientFromPath(Path.fNativePath,@Brush);
+fLastResult := GdipCreatePathGradientFromPath(Path.NativeObject,@Brush);
 SetNativeBrush(PGpBrush(Brush));
 end;
 
@@ -1416,7 +1283,7 @@ end;
 Function TPathGradientBrush.GetGraphicsPath(Path: TGraphicsPath): TStatus;
 begin
 If Assigned(Path) then
-  Result := SetStatus(GdipGetPathGradientPath(PGpPathGradient(fNativeBrush),Path.fNativePath))
+  Result := SetStatus(GdipGetPathGradientPath(PGpPathGradient(fNativeBrush),Path.NativeObject))
 else
   Result := SetStatus(InvalidParameter);
 end;
@@ -1426,7 +1293,7 @@ end;
 Function TPathGradientBrush.SetGraphicsPath(Path: TGraphicsPath): TStatus;
 begin
 If Assigned(Path) then
-  Result := SetStatus(GdipSetPathGradientPath(PGpPathGradient(fNativeBrush),Path.fNativePath))
+  Result := SetStatus(GdipSetPathGradientPath(PGpPathGradient(fNativeBrush),Path.NativeObject))
 else
   Result := SetStatus(InvalidParameter);
 end;
@@ -1572,16 +1439,16 @@ end;
 
 //!!----------------------------------------------------------------------------
 
-Function TPathGradientBrush.GetTransform(Matrix: TMatrix_): TStatus;
+Function TPathGradientBrush.GetTransform(Matrix: TMatrix): TStatus;
 begin
-Result := SetStatus(GdipGetPathGradientTransform(PGpPathGradient(fNativeBrush),Matrix.fNativeMatrix));
+Result := SetStatus(GdipGetPathGradientTransform(PGpPathGradient(fNativeBrush),Matrix.NativeObject));
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function TPathGradientBrush.SetTransform(Matrix: TMatrix_): TStatus;
+Function TPathGradientBrush.SetTransform(Matrix: TMatrix): TStatus;
 begin
-Result := SetStatus(GdipSetPathGradientTransform(PGpPathGradient(fNativeBrush),Matrix.fNativeMatrix));
+Result := SetStatus(GdipSetPathGradientTransform(PGpPathGradient(fNativeBrush),Matrix.NativeObject));
 end;
 
 //!!----------------------------------------------------------------------------
@@ -1593,9 +1460,9 @@ end;
 
 //!!----------------------------------------------------------------------------
 
-Function TPathGradientBrush.MultiplyTransform(Matrix: TMatrix_; Order: TMatrixOrder = MatrixOrderPrepend): TStatus;
+Function TPathGradientBrush.MultiplyTransform(Matrix: TMatrix; Order: TMatrixOrder = MatrixOrderPrepend): TStatus;
 begin
-Result := SetStatus(GdipMultiplyPathGradientTransform(PGpPathGradient(fNativeBrush),Matrix.fNativeMatrix,Order));
+Result := SetStatus(GdipMultiplyPathGradientTransform(PGpPathGradient(fNativeBrush),Matrix.NativeObject,Order));
 end;
 
 //!!----------------------------------------------------------------------------

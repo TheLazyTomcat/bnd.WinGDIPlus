@@ -14,8 +14,10 @@ uses
 type
   EGDIPlusException = class(Exception);
 
+  EGDIPlusError = class(EGDIPlusException);
   EGDIPlusIndexOutOfBounds = class(EGDIPlusException);
-
+  EGDIPlusObjecNotAssigned = class(EGDIPlusException);
+  
 {!!-----------------------------------------------------------------------------
     Constants and types
 -------------------------------------------------------------------------------}
@@ -33,7 +35,7 @@ type
 
   // handle types
   HINSTANCE = THandle;
-  HANDLE = THandle;  
+  HANDLE = THandle;
 
   // floating-point types
   float = Single;

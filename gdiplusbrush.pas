@@ -22,6 +22,9 @@ uses
   gdiplus_common, gdiplusbase, gdiplusenums, gdiplustypes, gdiplusgpstubs,
   gdipluscolor, gdiplusmatrix, gdiplusheaders, gdiplusimageattributes;
 
+{!!=============================================================================
+    TBrush - class declaration
+===============================================================================}
 //--------------------------------------------------------------------------
 // Abstract base class for various brush types
 //--------------------------------------------------------------------------
@@ -30,19 +33,22 @@ type
   protected
     fNativeBrush: PGpBrush;
     fLastResult:  TStatus;
+    Function GetNativeObject: Pointer; override;
+    Function GetNativeObjectAddr: Pointer; override;
     constructor Create; overload;
     constructor Create(NativeBrushArg: PGpBrush; Status: TStatus); overload;
     procedure SetNativeBrush(NativeBrushArg: PGpBrush); 
     Function SetStatus(Status: TStatus): TStatus; 
   public
     destructor Destroy; override;
-    Function Clone: TBrush; 
-
-    Function GetType: TBrushType; 
-    
+    Function Clone: TBrush;
+    Function GetType: TBrushType;
     Function GetLastStatus: TStatus; 
   end;
 
+{!!=============================================================================
+    TSolidBrush - class declaration
+===============================================================================}
 //--------------------------------------------------------------------------
 // Solid Fill Brush Object
 //--------------------------------------------------------------------------
@@ -50,52 +56,46 @@ type
   TSolidBrush = class(TBrush)
   public
     constructor Create(const Color: TColor); overload;
-
     Function GetColor(Color: PColor): TStatus; 
     Function SetColor(const Color: TColor): TStatus; 
   end;
 
-
+{!!=============================================================================
+    TTextureBrush - class declaration
+===============================================================================}
 //--------------------------------------------------------------------------
 // Texture Brush Fill Object
 //--------------------------------------------------------------------------
 type
-  //!! following declarations are here to expose protected fields
-  TImage_ = class(gdiplusheaders.TImage);
-  TImageAttributes_ = class(gdiplusimageattributes.TImageAttributes);
-  TMatrix_ = class(gdiplusmatrix.TMatrix);{$message 'remove when combining'}
-
   TTextureBrush = class(TBrush)
   public
-    constructor Create(Image: TImage_; WrapMode: TWrapMode = WrapModeTile); overload;
+    constructor Create(Image: TImage; WrapMode: TWrapMode = WrapModeTile); overload;
     // When creating a texture brush from a metafile image, the dstRect
     // is used to specify the size that the metafile image should be
     // rendered at in the device units of the destination graphics.
     // It is NOT used to crop the metafile image, so only the width
     // and height values matter for metafiles.
-    constructor Create(Image: TImage_; WrapMode: TWrapMode; const DstRect: TRectF); overload;
-    constructor Create(Image: TImage_; const DstRect: TRectF; ImageAttributes: TImageAttributes_ = nil); overload;
-    constructor Create(Image: TImage_; const DstRect: TRect; ImageAttributes: TImageAttributes_ = nil); overload;
-    constructor Create(Image: TImage_; WrapMode: TWrapMode; const DstRect: TRect); overload;
-    constructor Create(Image: TImage_; WrapMode: TWrapMode; DstX,DstY,DstWidth,DstHeight: REAL); overload;
-    constructor Create(Image: TImage_; WrapMode: TWrapMode; DstX,DstY,DstWidth,DstHeight: INT); overload;
-
-    Function SetTransform(Matrix: TMatrix_): TStatus; 
-    Function GetTransform(Matrix: TMatrix_): TStatus; 
-    Function ResetTransform: TStatus; 
-
-    Function MultiplyTransform(Matrix: TMatrix_; Order: TMatrixOrder = MatrixOrderPrepend): TStatus; 
-    Function TranslateTransform(DX,DY: REAL; Order: TMatrixOrder = MatrixOrderPrepend): TStatus; 
+    constructor Create(Image: TImage; WrapMode: TWrapMode; const DstRect: TRectF); overload;
+    constructor Create(Image: TImage; const DstRect: TRectF; ImageAttributes: TImageAttributes = nil); overload;
+    constructor Create(Image: TImage; const DstRect: TRect; ImageAttributes: TImageAttributes = nil); overload;
+    constructor Create(Image: TImage; WrapMode: TWrapMode; const DstRect: TRect); overload;
+    constructor Create(Image: TImage; WrapMode: TWrapMode; DstX,DstY,DstWidth,DstHeight: REAL); overload;
+    constructor Create(Image: TImage; WrapMode: TWrapMode; DstX,DstY,DstWidth,DstHeight: INT); overload;
+    Function SetTransform(Matrix: TMatrix): TStatus;
+    Function GetTransform(Matrix: TMatrix): TStatus;
+    Function ResetTransform: TStatus;
+    Function MultiplyTransform(Matrix: TMatrix; Order: TMatrixOrder = MatrixOrderPrepend): TStatus;
+    Function TranslateTransform(DX,DY: REAL; Order: TMatrixOrder = MatrixOrderPrepend): TStatus;
     Function ScaleTransform(SX,SY: REAL; Order: TMatrixOrder = MatrixOrderPrepend): TStatus; 
-    Function RotateTransform(Angle: REAL; Order: TMatrixOrder = MatrixOrderPrepend): TStatus; 
-
+    Function RotateTransform(Angle: REAL; Order: TMatrixOrder = MatrixOrderPrepend): TStatus;
     Function SetWrapMode(WrapMode: TWrapMode): TStatus; 
-    Function GetWrapMode: TWrapMode; 
-
-    Function GetImage: TImage_; 
+    Function GetWrapMode: TWrapMode;
+    Function GetImage: TImage;
   end;
 
-
+{!!=============================================================================
+    TLinearGradientBrush - class declaration
+===============================================================================}
 //--------------------------------------------------------------------------
 // Linear Gradient Brush Object
 //--------------------------------------------------------------------------
@@ -108,36 +108,27 @@ type
     constructor Create(const Rect: TRect; const Color1,Color2: TColor; Mode: TLinearGradientMode); overload;
     constructor Create(const Rect: TRectF; const Color1,Color2: TColor; Angle: REAL; IsAngleScalable: BOOL = False); overload;
     constructor Create(const Rect: TRect; const Color1,Color2: TColor; Angle: REAL; IsAngleScalable: BOOL = False); overload;
-
     Function SetLinearColors(const Color1,Color2: TColor): TStatus; 
-    Function GetLinearColors(Colors: PColor): TStatus; 
-
+    Function GetLinearColors(Colors: PColor): TStatus;
     Function GetRectangle(Rect: PRectF): TStatus; overload; 
-    Function GetRectangle(Rect: PRect): TStatus; overload; 
-
+    Function GetRectangle(Rect: PRect): TStatus; overload;
     Function SetGammaCorrection(UseGammaCorrection: BOOL): TStatus; 
-    Function GetGammaCorrection: BOOL; 
-
+    Function GetGammaCorrection: BOOL;
     Function GetBlendCount: INT; 
     Function SetBlend(BlendFactors,BlendPositions: PREAL; Count: INT): TStatus; 
-    Function GetBlend(BlendFactors,BlendPositions: PREAL; Count: INT): TStatus; 
-
+    Function GetBlend(BlendFactors,BlendPositions: PREAL; Count: INT): TStatus;
     Function GetInterpolationColorCount: INT; 
     Function SetInterpolationColors(PresetColors: PColor; BlendPositions: PREAL; Count: INT): TStatus; 
-    Function GetInterpolationColors(PresetColors: PColor; BlendPositions: PREAL; Count: INT): TStatus; 
-
+    Function GetInterpolationColors(PresetColors: PColor; BlendPositions: PREAL; Count: INT): TStatus;
     Function SetBlendBellShape(Focus: REAL; Scale: REAL = 1.0): TStatus; 
-    Function SetBlendTriangularShape(Focus: REAL; Scale: REAL = 1.0): TStatus; 
-
-    Function SetTransform(Matrix: TMatrix_): TStatus; 
-    Function GetTransform(Matrix: TMatrix_): TStatus; 
-    Function ResetTransform: TStatus; 
-
-    Function MultiplyTransform(Matrix: TMatrix_; Order: TMatrixOrder = MatrixOrderPrepend): TStatus; 
+    Function SetBlendTriangularShape(Focus: REAL; Scale: REAL = 1.0): TStatus;
+    Function SetTransform(Matrix: TMatrix): TStatus;
+    Function GetTransform(Matrix: TMatrix): TStatus;
+    Function ResetTransform: TStatus;
+    Function MultiplyTransform(Matrix: TMatrix; Order: TMatrixOrder = MatrixOrderPrepend): TStatus;
     Function TranslateTransform(DX,DY: REAL; Order: TMatrixOrder = MatrixOrderPrepend): TStatus; 
     Function ScaleTransform(SX,SY: REAL; Order: TMatrixOrder = MatrixOrderPrepend): TStatus; 
-    Function RotateTransform(Angle: REAL; Order: TMatrixOrder = MatrixOrderPrepend): TStatus; 
-
+    Function RotateTransform(Angle: REAL; Order: TMatrixOrder = MatrixOrderPrepend): TStatus;
     Function SetWrapMode(WrapMode: TWrapMode): TStatus; 
     Function GetWrapMode: TWrapMode; 
   end;
@@ -147,6 +138,9 @@ type
 // in gdipluspath.h.
 //--------------------------------------------------------------------------
 
+{!!=============================================================================
+    THatchBrush - class declaration
+===============================================================================}
 //--------------------------------------------------------------------------
 // Hatch Brush Object
 //--------------------------------------------------------------------------
@@ -154,8 +148,7 @@ type
   THatchBrush = class(TBrush)
   public
     constructor Create(HatchStyle: THatchStyle; const ForeColor,BackColor: TColor); overload;
-    constructor Create(HatchStyle: THatchStyle; const ForeColor: TColor); overload;
-
+    constructor Create(HatchStyle: THatchStyle; const ForeColor: TColor); overload;  
     Function GetHatchStyle: THatchStyle; 
     Function GetForegroundColor(Color: PColor): TStatus; 
     Function GetBackgroundColor(Color: PColor): TStatus; 
@@ -172,6 +165,20 @@ uses
 {!!-----------------------------------------------------------------------------
     TBrush - protected methods
 -------------------------------------------------------------------------------}
+
+Function TBrush.GetNativeObject: Pointer;
+begin
+Result := fNativeBrush;
+end;
+
+//!!----------------------------------------------------------------------------
+
+Function TBrush.GetNativeObjectAddr: Pointer;
+begin
+Result := Addr(fNativeBrush);
+end;
+
+//!!----------------------------------------------------------------------------
 
 constructor TBrush.Create;
 begin
@@ -291,106 +298,100 @@ end;
     TTextureBrush - public methods
 -------------------------------------------------------------------------------}
 
-constructor TTextureBrush.Create(Image: TImage_; WrapMode: TWrapMode = WrapModeTile);
+constructor TTextureBrush.Create(Image: TImage; WrapMode: TWrapMode = WrapModeTile);
 var
   Texture: PGpTexture;
 begin
 inherited Create;
 Texture := nil;
-fLastResult := GdipCreateTexture(Image.fNativeImage,WrapMode,@Texture);
+fLastResult := GdipCreateTexture(Image.NativeObject,WrapMode,@Texture);
 SetNativeBrush(PGpBrush(Texture));
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-constructor TTextureBrush.Create(Image: TImage_; WrapMode: TWrapMode; const DstRect: TRectF);
+constructor TTextureBrush.Create(Image: TImage; WrapMode: TWrapMode; const DstRect: TRectF);
 var
   Texture: PGpTexture;
 begin
 inherited Create;
 Texture := nil;
-fLastResult := GdipCreateTexture2(Image.fNativeImage,WrapMode,DstRect.X,DstRect.Y,DstRect.Width,DstRect.Height,@Texture);
+fLastResult := GdipCreateTexture2(Image.NativeObject,WrapMode,DstRect.X,DstRect.Y,DstRect.Width,DstRect.Height,@Texture);
 SetNativeBrush(PGpBrush(Texture));
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-constructor TTextureBrush.Create(Image: TImage_; const DstRect: TRectF; ImageAttributes: TImageAttributes_ = nil);
+constructor TTextureBrush.Create(Image: TImage; const DstRect: TRectF; ImageAttributes: TImageAttributes = nil);
 var
   Texture: PGpTexture;
 begin
 inherited Create;
 Texture := nil;
-If Assigned(ImageAttributes) then
-  fLastResult := GdipCreateTextureIA(Image.fNativeImage,ImageAttributes.fNativeImageAttr,DstRect.X,DstRect.Y,DstRect.Width,DstRect.Height,@Texture)
-else
-  fLastResult := GdipCreateTextureIA(Image.fNativeImage,nil,DstRect.X,DstRect.Y,DstRect.Width,DstRect.Height,@Texture);
+fLastResult := GdipCreateTextureIA(Image.NativeObject,ImageAttributes.NativeObject,DstRect.X,DstRect.Y,DstRect.Width,DstRect.Height,@Texture);
 SetNativeBrush(PGpBrush(Texture));
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-constructor TTextureBrush.Create(Image: TImage_; const DstRect: TRect; ImageAttributes: TImageAttributes_ = nil);
+constructor TTextureBrush.Create(Image: TImage; const DstRect: TRect; ImageAttributes: TImageAttributes = nil);
 var
   Texture: PGpTexture;
 begin
 inherited Create;
 Texture := nil;
-If Assigned(ImageAttributes) then
-  fLastResult := GdipCreateTextureIAI(Image.fNativeImage,ImageAttributes.fNativeImageAttr,DstRect.X,DstRect.Y,DstRect.Width,DstRect.Height,@Texture)
-else
-  fLastResult := GdipCreateTextureIAI(Image.fNativeImage,nil,DstRect.X,DstRect.Y,DstRect.Width,DstRect.Height,@Texture);
+fLastResult := GdipCreateTextureIAI(Image.NativeObject,ImageAttributes.NativeObject,DstRect.X,DstRect.Y,DstRect.Width,DstRect.Height,@Texture);
 SetNativeBrush(PGpBrush(Texture));
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-constructor TTextureBrush.Create(Image: TImage_; WrapMode: TWrapMode; const DstRect: TRect);
+constructor TTextureBrush.Create(Image: TImage; WrapMode: TWrapMode; const DstRect: TRect);
 var
   Texture: PGpTexture;
 begin
 inherited Create;
 Texture := nil;
-fLastResult := GdipCreateTexture2I(Image.fNativeImage,WrapMode,DstRect.X,DstRect.Y,DstRect.Width,DstRect.Height,@Texture);
+fLastResult := GdipCreateTexture2I(Image.NativeObject,WrapMode,DstRect.X,DstRect.Y,DstRect.Width,DstRect.Height,@Texture);
 SetNativeBrush(PGpBrush(Texture));
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-constructor TTextureBrush.Create(Image: TImage_; WrapMode: TWrapMode; DstX,DstY,DstWidth,DstHeight: REAL);
+constructor TTextureBrush.Create(Image: TImage; WrapMode: TWrapMode; DstX,DstY,DstWidth,DstHeight: REAL);
 var
   Texture: PGpTexture;
 begin
 inherited Create;
 Texture := nil;
-fLastResult := GdipCreateTexture2(Image.fNativeImage,WrapMode,DstX,DstY,DstWidth,DstHeight,@Texture);
+fLastResult := GdipCreateTexture2(Image.NativeObject,WrapMode,DstX,DstY,DstWidth,DstHeight,@Texture);
 SetNativeBrush(PGpBrush(Texture));
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-constructor TTextureBrush.Create(Image: TImage_; WrapMode: TWrapMode; DstX,DstY,DstWidth,DstHeight: INT);
+constructor TTextureBrush.Create(Image: TImage; WrapMode: TWrapMode; DstX,DstY,DstWidth,DstHeight: INT);
 var
   Texture: PGpTexture;
 begin
 inherited Create;
 Texture := nil;
-fLastResult := GdipCreateTexture2I(Image.fNativeImage,WrapMode,DstX,DstY,DstWidth,DstHeight,@Texture);
+fLastResult := GdipCreateTexture2I(Image.NativeObject,WrapMode,DstX,DstY,DstWidth,DstHeight,@Texture);
 SetNativeBrush(PGpBrush(Texture));
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function TTextureBrush.SetTransform(Matrix: TMatrix_): TStatus;
+Function TTextureBrush.SetTransform(Matrix: TMatrix): TStatus;
 begin
-Result := SetStatus(GdipSetTextureTransform(PGpTexture(fNativeBrush),Matrix.fNativeMatrix));
+Result := SetStatus(GdipSetTextureTransform(PGpTexture(fNativeBrush),Matrix.NativeObject));
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function TTextureBrush.GetTransform(Matrix: TMatrix_): TStatus;
+Function TTextureBrush.GetTransform(Matrix: TMatrix): TStatus;
 begin
-Result := SetStatus(GdipGetTextureTransform(PGpTexture(fNativeBrush),Matrix.fNativeMatrix));
+Result := SetStatus(GdipGetTextureTransform(PGpTexture(fNativeBrush),Matrix.NativeObject));
 end;
 
 //!!----------------------------------------------------------------------------
@@ -402,9 +403,9 @@ end;
 
 //!!----------------------------------------------------------------------------
 
-Function TTextureBrush.MultiplyTransform(Matrix: TMatrix_; Order: TMatrixOrder = MatrixOrderPrepend): TStatus;
+Function TTextureBrush.MultiplyTransform(Matrix: TMatrix; Order: TMatrixOrder = MatrixOrderPrepend): TStatus;
 begin
-Result := SetStatus(GdipMultiplyTextureTransform(PGpTexture(fNativeBrush),Matrix.fNativeMatrix,Order));
+Result := SetStatus(GdipMultiplyTextureTransform(PGpTexture(fNativeBrush),Matrix.NativeObject,Order));
 end;
 
 //!!----------------------------------------------------------------------------
@@ -444,12 +445,12 @@ end;
 
 //!!----------------------------------------------------------------------------
 
-Function TTextureBrush.GetImage: TImage_;
+Function TTextureBrush.GetImage: TImage;
 var
   Image:  PGpImage;
 begin
 SetStatus(GdipGetTextureImage(PGpTexture(fNativeBrush),@Image));
-Result := TImage_.Create(Image,fLastResult);
+Result := TImage.Create(Image,fLastResult);
 If not Assigned(Result) then
   GdipDisposeImage(Image);
 end;
@@ -677,16 +678,16 @@ end;
 
 //!!----------------------------------------------------------------------------
 
-Function TLinearGradientBrush.SetTransform(Matrix: TMatrix_): TStatus;
+Function TLinearGradientBrush.SetTransform(Matrix: TMatrix): TStatus;
 begin
-Result := SetStatus(GdipSetLineTransform(PGpLineGradient(fNativeBrush),Matrix.fNativeMatrix));
+Result := SetStatus(GdipSetLineTransform(PGpLineGradient(fNativeBrush),Matrix.NativeObject));
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function TLinearGradientBrush.GetTransform(Matrix: TMatrix_): TStatus;
+Function TLinearGradientBrush.GetTransform(Matrix: TMatrix): TStatus;
 begin
-Result := SetStatus(GdipGetLineTransform(PGpLineGradient(fNativeBrush),Matrix.fNativeMatrix));
+Result := SetStatus(GdipGetLineTransform(PGpLineGradient(fNativeBrush),Matrix.NativeObject));
 end;
 
 //!!----------------------------------------------------------------------------
@@ -698,9 +699,9 @@ end;
 
 //!!----------------------------------------------------------------------------
 
-Function TLinearGradientBrush.MultiplyTransform(Matrix: TMatrix_; Order: TMatrixOrder = MatrixOrderPrepend): TStatus;
+Function TLinearGradientBrush.MultiplyTransform(Matrix: TMatrix; Order: TMatrixOrder = MatrixOrderPrepend): TStatus;
 begin
-Result := SetStatus(GdipMultiplyLineTransform(PGpLineGradient(fNativeBrush),Matrix.fNativeMatrix,Order));
+Result := SetStatus(GdipMultiplyLineTransform(PGpLineGradient(fNativeBrush),Matrix.NativeObject,Order));
 end;
 
 //!!----------------------------------------------------------------------------

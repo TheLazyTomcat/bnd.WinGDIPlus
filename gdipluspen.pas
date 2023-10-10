@@ -25,29 +25,27 @@ uses
 //--------------------------------------------------------------------------
 // Pen class
 //--------------------------------------------------------------------------
+{!!=============================================================================
+    TPen - class declaration
+===============================================================================}
 type
-  TBrush_ = class(gdiplusbrush.TBrush);
-  TCustomLineCap_ = class(gdiplusheaders.TCustomLineCap);
-  TMatrix_ = class(gdiplusmatrix.TMatrix);
-
   TPen = class(TGdiPlusBase)
   protected
     fNativePen:   PGpPen;
     fLastResult:  TStatus;
+    Function GetNativeObject: Pointer; override;
+    Function GetNativeObjectAddr: Pointer; override;
     constructor Create(NativePenArg: PGpPen; Status: TStatus); overload;
     procedure SetNativePen(NativePenArg: PGpPen); 
     Function SetStatus(Status: TStatus): TStatus; 
   public
     constructor Create(const Color: TColor; Width: REAL = 1.0); overload;
-    constructor Create(Brush: TBrush_; Width: REAL = 1.0); overload;
+    constructor Create(Brush: TBrush; Width: REAL = 1.0); overload;
     destructor Destroy; override;
-    Function Clone: TPen; 
-
+    Function Clone: TPen;
     Function SetWidth(Width: REAL): TStatus; 
-    Function GetWidht: REAL; 
-
+    Function GetWidht: REAL;
     // Set/get line caps: start, end, and dash
-
     // Line cap and join APIs by using LineCap and LineJoin enums.
     Function SetLineCap(StartCap,EndCap: TLineCap; DashCap: TDashCap): TStatus; 
     Function SetStartCap(StartCap: TLineCap): TStatus; 
@@ -55,52 +53,39 @@ type
     Function SetDashCap(DashCap: TDashCap): TStatus; 
     Function GetStartCap: TLineCap; 
     Function GetEndCap: TLineCap; 
-    Function GetDashCap: TDashCap; 
-
+    Function GetDashCap: TDashCap;
     Function SetLineJoin(LineJoin: TLineJoin): TStatus; 
-    Function GetLineJoin: TLineJoin; 
-
-    Function SetCustomStartCap(CustomCap: TCustomLineCap_): TStatus; 
-    Function GetCustomStartCap(CustomCap: TCustomLineCap_): TStatus; 
-
-    Function SetCustomEndCap(CustomCap: TCustomLineCap_): TStatus; 
-    Function GetCustomEndCap(CustomCap: TCustomLineCap_): TStatus; 
-
+    Function GetLineJoin: TLineJoin;
+    Function SetCustomStartCap(CustomCap: TCustomLineCap): TStatus; 
+    Function GetCustomStartCap(CustomCap: TCustomLineCap): TStatus;
+    Function SetCustomEndCap(CustomCap: TCustomLineCap): TStatus; 
+    Function GetCustomEndCap(CustomCap: TCustomLineCap): TStatus;
     Function SetMiterLimit(MiterLimit: REAL): TStatus; 
-    Function GetMiterLimit: REAL; 
-
+    Function GetMiterLimit: REAL;
     Function SetAlignment(PenAlignment: TPenAlignment): TStatus; 
-    Function GetAlignment: TPenAlignment; 
-
-    Function SetTransform(Matrix: TMatrix_): TStatus; 
-    Function GetTransform(Matrix: TMatrix_): TStatus; 
-    Function ResetTransform: TStatus; 
-
-    Function MultiplyTransform(Matrix: TMatrix_; Order: TMatrixOrder = MatrixOrderPrepend): TStatus; 
+    Function GetAlignment: TPenAlignment;
+    Function SetTransform(Matrix: TMatrix): TStatus; 
+    Function GetTransform(Matrix: TMatrix): TStatus; 
+    Function ResetTransform: TStatus;
+    Function MultiplyTransform(Matrix: TMatrix; Order: TMatrixOrder = MatrixOrderPrepend): TStatus; 
     Function TranslateTransform(DX,DY: REAL; Order: TMatrixOrder = MatrixOrderPrepend): TStatus; 
     Function ScaleTransform(SX,SY: REAL; Order: TMatrixOrder = MatrixOrderPrepend): TStatus; 
-    Function RotateTransform(Angle: REAL; Order: TMatrixOrder = MatrixOrderPrepend): TStatus; 
-
+    Function RotateTransform(Angle: REAL; Order: TMatrixOrder = MatrixOrderPrepend): TStatus;
     Function GetPenType: TPenType; 
     Function SetColor(const Color: TColor): TStatus; 
-    Function SetBrush(Brush: TBrush_): TStatus; 
+    Function SetBrush(Brush: TBrush): TStatus; 
     Function GetColor(Color: PColor): TStatus; 
-    Function GetBrush: TBrush_; 
-
+    Function GetBrush: TBrush;
     Function GetDashStyle: TDashStyle; 
-    Function SetDashStyle(DashStyle: TDashStyle): TStatus; 
-
+    Function SetDashStyle(DashStyle: TDashStyle): TStatus;
     Function GetDashOffset: REAL; 
-    Function SetDashOffset(DashOffset: REAL): TStatus; 
-
+    Function SetDashOffset(DashOffset: REAL): TStatus;
     Function SetDashPattern(DashArray: PREAL; Count: INT): TStatus; 
     Function GetDashPatternCount: INT; 
-    Function GetDashPattern(DashArray: PREAL; Count: INT): TStatus; 
-
+    Function GetDashPattern(DashArray: PREAL; Count: INT): TStatus;
     Function SetCompoundArray(CompoundArray: PREAL; Count: INT): TStatus; 
     Function GetCompoundArrayCount: INT; 
-    Function GetCompoundArray(CompoundArray: PREAL; Count: INT): TStatus; 
-
+    Function GetCompoundArray(CompoundArray: PREAL; Count: INT): TStatus;  
     Function GetLastStatus: TStatus; 
   end;
 
@@ -115,6 +100,20 @@ uses
 {!!-----------------------------------------------------------------------------
     TPen - protected methods
 -------------------------------------------------------------------------------}
+
+Function TPen.GetNativeObject: Pointer;
+begin
+Result := fNativePen;
+end;
+
+//!!----------------------------------------------------------------------------
+
+Function TPen.GetNativeObjectAddr: Pointer;
+begin
+Result := Addr(fNativePen);
+end;
+
+//!!----------------------------------------------------------------------------
 
 constructor TPen.Create(NativePenArg: PGpPen; Status: TStatus);
 begin
@@ -155,14 +154,14 @@ end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-constructor TPen.Create(Brush: TBrush_; Width: REAL = 1.0);
+constructor TPen.Create(Brush: TBrush; Width: REAL = 1.0);
 var
   aUnit:  TUnit;
 begin
 inherited Create;
 aUnit := UnitWorld;
 fNativePen := nil;
-fLastResult := GdipCreatePen2(Brush.fNativeBrush,Width,aUnit,@fNativePen);
+fLastResult := GdipCreatePen2(Brush.NativeObject,Width,aUnit,@fNativePen);
 end;
 //!!----------------------------------------------------------------------------
 
@@ -262,46 +261,34 @@ end;
 
 //!!----------------------------------------------------------------------------
 
-Function TPen.SetCustomStartCap(CustomCap: TCustomLineCap_): TStatus;
-var
-  NativeCap:  PGpCustomLineCap;
+Function TPen.SetCustomStartCap(CustomCap: TCustomLineCap): TStatus;
 begin
-If Assigned(CustomCap) then
-  NativeCap := CustomCap.fNativeCap
-else
-  NativeCap := nil;
-Result := SetStatus(GdipSetPenCustomStartCap(fNativePen,NativeCap));
+Result := SetStatus(GdipSetPenCustomStartCap(fNativePen,CustomCap.NativeObject));
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function TPen.GetCustomStartCap(CustomCap: TCustomLineCap_): TStatus;
+Function TPen.GetCustomStartCap(CustomCap: TCustomLineCap): TStatus;
 begin
 If Assigned(CustomCap) then
-  Result := SetStatus(GdipGetPenCustomStartCap(fNativePen,Addr(CustomCap.fNativeCap)))
+  Result := SetStatus(GdipGetPenCustomStartCap(fNativePen,CustomCap.NativeObjectAddr))
 else
   Result := SetStatus(InvalidParameter);
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function TPen.SetCustomEndCap(CustomCap: TCustomLineCap_): TStatus;
-var
-  NativeCap:  PGpCustomLineCap;
+Function TPen.SetCustomEndCap(CustomCap: TCustomLineCap): TStatus;
 begin
-If Assigned(CustomCap) then
-  NativeCap := CustomCap.fNativeCap
-else
-  NativeCap := nil;
-Result := SetStatus(GdipSetPenCustomEndCap(fNativePen,NativeCap));
+Result := SetStatus(GdipSetPenCustomEndCap(fNativePen,CustomCap.NativeObject));
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function TPen.GetCustomEndCap(CustomCap: TCustomLineCap_): TStatus;
+Function TPen.GetCustomEndCap(CustomCap: TCustomLineCap): TStatus;
 begin
 If Assigned(CustomCap) then
-  Result := SetStatus(GdipGetPenCustomEndCap(fNativePen,Addr(CustomCap.fNativeCap)))
+  Result := SetStatus(GdipGetPenCustomEndCap(fNativePen,CustomCap.NativeObjectAddr))
 else
   Result := SetStatus(InvalidParameter);
 end;
@@ -336,16 +323,16 @@ end;
 
 //!!----------------------------------------------------------------------------
 
-Function TPen.SetTransform(Matrix: TMatrix_): TStatus;
+Function TPen.SetTransform(Matrix: TMatrix): TStatus;
 begin
-Result := SetStatus(GdipSetPenTransform(fNativePen,Matrix.fNativeMatrix));
+Result := SetStatus(GdipSetPenTransform(fNativePen,Matrix.NativeObject));
 end;
 
 //!!----------------------------------------------------------------------------
 
-Function TPen.GetTransform(Matrix: TMatrix_): TStatus;
+Function TPen.GetTransform(Matrix: TMatrix): TStatus;
 begin
-Result := SetStatus(GdipGetPenTransform(fNativePen,Matrix.fNativeMatrix));
+Result := SetStatus(GdipGetPenTransform(fNativePen,Matrix.NativeObject));
 end;
 
 //!!----------------------------------------------------------------------------
@@ -357,9 +344,9 @@ end;
 
 //!!----------------------------------------------------------------------------
 
-Function TPen.MultiplyTransform(Matrix: TMatrix_; Order: TMatrixOrder = MatrixOrderPrepend): TStatus;
+Function TPen.MultiplyTransform(Matrix: TMatrix; Order: TMatrixOrder = MatrixOrderPrepend): TStatus;
 begin
-Result := SetStatus(GdipMultiplyPenTransform(fNativePen,Matrix.fNativeMatrix,Order));
+Result := SetStatus(GdipMultiplyPenTransform(fNativePen,Matrix.NativeObject,Order));
 end;
 
 //!!----------------------------------------------------------------------------
@@ -399,9 +386,9 @@ end;
 
 //!!----------------------------------------------------------------------------
 
-Function TPen.SetBrush(Brush: TBrush_): TStatus;
+Function TPen.SetBrush(Brush: TBrush): TStatus;
 begin
-Result := SetStatus(GdipSetPenBrushFill(fNativePen,Brush.fNativeBrush));
+Result := SetStatus(GdipSetPenBrushFill(fNativePen,Brush.NativeObject));
 end;
 
 //!!----------------------------------------------------------------------------
@@ -426,23 +413,26 @@ end;
 
 //!!----------------------------------------------------------------------------
 
-Function TPen.GetBrush: TBrush_;
+type
+  //!! following is here only to expose protected method SetNativeBrush
+  TBrush_ = class(TBrush);  {$message 'remove when joining'} 
+
+Function TPen.GetBrush: TBrush;
 var
   NativeBrush:  PGpBrush;
 begin
 Result := nil;
 case GetPenType of
-  {$message 'remove typecasting when joining'}
-  PenTypeSolidColor:      Result := TBrush_(TSolidBrush.Create);
-  PenTypeHatchFill:       Result := TBrush_(THatchBrush.Create);
-  PenTypeTextureFill:     Result := TBrush_(TTextureBrush.Create);
-  PenTypePathGradient:    Result := TBrush_(TBrush.Create);
-  PenTypeLinearGradient:  Result := TBrush_(TLinearGradientBrush.Create);
+  PenTypeSolidColor:      Result := TSolidBrush.Create;
+  PenTypeHatchFill:       Result := THatchBrush.Create;
+  PenTypeTextureFill:     Result := TTextureBrush.Create;
+  PenTypePathGradient:    Result := TBrush.Create;
+  PenTypeLinearGradient:  Result := TLinearGradientBrush.Create;
 end;
 If Assigned(Result) then
   begin
     SetStatus(GdipGetPenBrushFill(fNativePen,@NativeBrush));
-    Result.SetNativeBrush(NativeBrush);
+    TBrush_(Result).SetNativeBrush(NativeBrush);
   end;
 end;
 

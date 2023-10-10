@@ -22,11 +22,16 @@ uses
   gdiplus_common,
   gdiplusbase, gdiplusgpstubs, gdiplustypes, gdiplusenums;
 
+{!!=============================================================================
+    TStringFormat - class declaration
+===============================================================================}
 type
   TStringFormat = class(TGdiPlusBase)
   protected
     fNativeFormat:  PGpStringFormat;
     fLastError:     TStatus;
+    Function GetNativeObject: Pointer; override;
+    Function GetNativeObjectAddr: Pointer; override;
     Function SetStatus(NewStatus: TGpStatus): TStatus; 
     constructor Create(ClonedStringFormat: PGpStringFormat; Status: TStatus); overload;
   public
@@ -49,33 +54,24 @@ type
     constructor Create(Format: TStringFormat); overload;
     Function Clone: TStringFormat; 
     destructor Destroy; override;
-
     Function SetFormatFlags(Flags: INT): TStatus; 
-    Function GetFormatFlags: INT; 
-
+    Function GetFormatFlags: INT;
     Function SetAlignment(Align: TStringAlignment): TStatus; 
-    Function GetAlignment: TStringAlignment; 
-
+    Function GetAlignment: TStringAlignment;
     Function SetLineAlignment(Align: TStringAlignment): TStatus; 
-    Function GetLineAlignment: TStringAlignment; 
-
+    Function GetLineAlignment: TStringAlignment;
     Function SetHotkeyPrefix(HotkeyPrefix: THotkeyPrefix): TStatus; 
-    Function GetHotkeyPrefix: THotkeyPrefix; 
-
+    Function GetHotkeyPrefix: THotkeyPrefix;
     Function SetTabStops(FirstTabOffset: REAL; Count: INT; TabStops: PREAL): TStatus; 
     Function GetTabStopCount: INT; 
-    Function GetTabStops(Count: INT; FirstTabOffset,TabStops: PREAL): TStatus; 
-
+    Function GetTabStops(Count: INT; FirstTabOffset,TabStops: PREAL): TStatus;
     Function SetDigitSubstitution(Language: LANGID; Substitute: TStringDigitSubstitute): TStatus; 
     Function GetDigitSubstitutionLanguage: LANGID; 
-    Function GetDigitSubstitutionMethod: TStringDigitSubstitute; 
-
+    Function GetDigitSubstitutionMethod: TStringDigitSubstitute;
     Function SetTrimming(Trimming: TStringTrimming): TStatus; 
-    Function GetTrimming: TStringTrimming; 
-
+    Function GetTrimming: TStringTrimming;
     Function SetMeasurableCharacterRanges(RangeCount: INT; Ranges: PCharacterRange): TStatus; 
     Function GetMeasurableCharacterRangeCount: INT; 
-
     Function GetLastStatus: TStatus; 
   end;
 
@@ -90,6 +86,20 @@ uses
 {!!-----------------------------------------------------------------------------
     TStringFormat - protected methods
 -------------------------------------------------------------------------------}
+
+Function TStringFormat.GetNativeObject: Pointer;
+begin
+Result := fNativeFormat;
+end;
+
+//!!----------------------------------------------------------------------------
+
+Function TStringFormat.GetNativeObjectAddr: Pointer;
+begin
+Result := Addr(fNativeFormat);
+end;
+
+//!!----------------------------------------------------------------------------
 
 Function TStringFormat.SetStatus(NewStatus: TGpStatus): TStatus;
 begin
@@ -146,10 +156,7 @@ constructor TStringFormat.Create(Format: TStringFormat);
 begin
 inherited Create;
 fNativeFormat := nil;
-If Assigned(Format) then
-  fLastError := GdipCloneStringFormat(Format.fNativeFormat,@fNativeFormat)
-else
-  fLastError := GdipCloneStringFormat(nil,@fNativeFormat);
+fLastError := GdipCloneStringFormat(Format.NativeObject,@fNativeFormat)
 end;
 
 //!!----------------------------------------------------------------------------

@@ -48,59 +48,47 @@ type
   protected
     fNativeImageAttr: PGpImageAttributes;
     fLastResult:      TStatus;
+    Function GetNativeObject: Pointer; override;
+    Function GetNativeObjectAddr: Pointer; override;
     constructor Create(ImageAttr: PGpImageAttributes; Status: TStatus); overload;
     procedure SetNativeImageAttr(NativeImageAttrArg: PGpImageAttributes); 
     Function SetStatus(Status: TStatus): TStatus; 
   public
     constructor Create; overload;
     destructor Destroy; override;
-    Function Clone: TImageAttributes; 
-    
+    Function Clone: TImageAttributes;
     Function SetToIdentity(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; 
-    Function Reset(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; 
-
+    Function Reset(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus;
     Function SetColorMatrix(ColorMatrix: PColorMatrix; Mode: TColorMatrixFlags = ColorMatrixFlagsDefault;
       TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; 
-    Function ClearColorMatrix(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; 
-
+    Function ClearColorMatrix(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus;
     Function SetColorMatrices(ColorMatrix,GrayMatrix: PColorMatrix; Mode: TColorMatrixFlags = ColorMatrixFlagsDefault;
       TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; 
-    Function ClearColorMatrices(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; 
-
+    Function ClearColorMatrices(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus;
     Function SetThreshold(Threshold: REAL; TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; 
-    Function ClearThreshold(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; 
-
+    Function ClearThreshold(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus;
     Function SetGamma(Gamma: REAL; TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; 
-    Function ClearGamma(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; 
-
+    Function ClearGamma(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus;
     Function SetNoOp(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; 
-    Function ClearNoOp(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; 
-
+    Function ClearNoOp(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus;
     Function SetColorKey(const ColorLow,ColorHigh: TColor; TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; 
-    Function ClearColorKey(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; 
-
+    Function ClearColorKey(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus;
     Function SetOutputChannel(ChannelFlags: TColorChannelFlags; TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; 
-    Function ClearOutputChannel(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; 
-
+    Function ClearOutputChannel(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus;
     Function SetOutputChannelColorProfile(ColorProfileFilename: PWideChar;
       TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; overload; 
     Function SetOutputChannelColorProfile(const ColorProfileFilename: String;
       TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; overload; 
-    Function ClearOutputChannelColorProfile(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; 
-
+    Function ClearOutputChannelColorProfile(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus;
     Function SetRemapTable(MapSize: UINT; Map: PColorMap; TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; 
-    Function ClearRemapTable(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus; 
-
+    Function ClearRemapTable(TypeAdjusted: TColorAdjustType = ColorAdjustTypeDefault): TStatus;
     Function SetBrushRemapTable(MapSize: UINT; Map: PColorMap): TStatus; 
-    Function ClearBrushRemapTable: TStatus; 
-
+    Function ClearBrushRemapTable: TStatus;
     Function SetWrapMode(Wrap: TWrapMode; const Color: TColor; Clamp: BOOL = False): TStatus; overload; 
     //!! since record parameters (Color) cannot have default value...
-    Function SetWrapMode(Wrap: TWrapMode): TStatus; overload; 
-
+    Function SetWrapMode(Wrap: TWrapMode): TStatus; overload;
     // The flags of the palette are ignored.
-    Function GetAdjustedPalette(ColorPalette: PColorPalette; ColorAdjustType: TColorAdjustType): TStatus; 
-    
+    Function GetAdjustedPalette(ColorPalette: PColorPalette; ColorAdjustType: TColorAdjustType): TStatus;       
     Function GetLastStatus: TStatus; 
   end;
 
@@ -116,6 +104,20 @@ uses
 {!!-----------------------------------------------------------------------------
     TImageAttributes - protected methods
 -------------------------------------------------------------------------------}
+
+Function TImageAttributes.GetNativeObject: Pointer;
+begin
+Result := fNativeImageAttr;
+end;
+
+//!!----------------------------------------------------------------------------
+
+Function TImageAttributes.GetNativeObjectAddr: Pointer;
+begin
+Result := Addr(fNativeImageAttr);
+end;
+
+//!!----------------------------------------------------------------------------
 
 constructor TImageAttributes.Create(ImageAttr: PGpImageAttributes; Status: TStatus);
 begin
