@@ -136,7 +136,7 @@ var
 begin
 inherited Create;
 Matrix := nil;
-fLastResult := GdipCreateMatrix2(M11,M12,M21,M22,DX,DX,@Matrix);
+fLastResult := GdipCreateMatrix2(M11,M12,M21,M22,DX,DY,@Matrix);
 SetNativeMatrix(Matrix);
 end;
 

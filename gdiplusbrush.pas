@@ -445,12 +445,15 @@ end;
 
 //!!----------------------------------------------------------------------------
 
+type
+  TImage_ = class(TImage);  {$message 'remove when joining'} 
+
 Function TTextureBrush.GetImage: TImage;
 var
   Image:  PGpImage;
 begin
 SetStatus(GdipGetTextureImage(PGpTexture(fNativeBrush),@Image));
-Result := TImage.Create(Image,fLastResult);
+Result := TImage_.Create(Image,fLastResult);
 If not Assigned(Result) then
   GdipDisposeImage(Image);
 end;

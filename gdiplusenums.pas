@@ -18,7 +18,7 @@ unit gdiplusenums;
 interface
 
 uses
-  Windows,
+  Windows,{$IFDEF FPC} jwawingdi,{$ENDIF}
   gdiplus_common;
 
 //--------------------------------------------------------------------------
@@ -202,7 +202,7 @@ type
     HatchStyleLargeGrid = HatchStyleCross,  // 4
 
     HatchStyleMin       = HatchStyleHorizontal,
-    HatchStyleMax       = HatchStyleTotal - 1
+    HatchStyleMax       = Ord(HatchStyleTotal) - 1
   );
   PHatchStyle = ^THatchStyle;
 
@@ -836,7 +836,7 @@ type
 
     EmfPlusRecordTotal,
 
-    EmfPlusRecordTypeMax = EmfPlusRecordTotal-1,
+    EmfPlusRecordTypeMax = Ord(EmfPlusRecordTotal) - 1,
     EmfPlusRecordTypeMin = EmfPlusRecordTypeHeader
   );
   PEmfPlusRecordType = ^TEmfPlusRecordType;
@@ -1074,13 +1074,13 @@ type
 // Conversion of Emf To WMF Bits flags
 //---------------------------------------------------------------------------
 type
-  TEmfToWmfBitsFlags = (
-    EmfToWmfBitsFlagsDefault          = $00000000,
-    EmfToWmfBitsFlagsEmbedEmf         = $00000001,
-    EmfToWmfBitsFlagsIncludePlaceable = $00000002,
-    EmfToWmfBitsFlagsNoXORClip        = $00000004
-  );
-  PEmfToWmfBitsFlags = ^TEmfToWmfBitsFlags;
+  TEmfToWmfBitsFlags = INT;   PEmfToWmfBitsFlags = ^TEmfToWmfBitsFlags;
+const
+  EmfToWmfBitsFlagsDefault          = $00000000;
+  EmfToWmfBitsFlagsEmbedEmf         = $00000001;
+  EmfToWmfBitsFlagsIncludePlaceable = $00000002;
+  EmfToWmfBitsFlagsNoXORClip        = $00000004;
+
 
 {$IF GDIPVER >= $0110}
 //---------------------------------------------------------------------------

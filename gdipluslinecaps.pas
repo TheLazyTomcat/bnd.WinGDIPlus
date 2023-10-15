@@ -27,7 +27,6 @@ uses
 type
   TCustomLineCap = class(gdiplusheaders.TCustomLineCap)
   protected
-    fLastResult:  TStatus;
     constructor Create; overload;
     constructor Create(NativeCapArg: PGpCustomLineCap; Status: TStatus); overload;
     procedure SetNativeCap(NativeCapArg: PGpCustomLineCap);

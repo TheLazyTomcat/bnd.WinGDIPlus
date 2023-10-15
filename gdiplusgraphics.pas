@@ -31,7 +31,6 @@ uses
 type
   TGraphics = class(gdiplusheaders.TGraphics)
   protected
-    fLastResult:  TStatus;
     constructor Create(Graphics: PGpGraphics);
     procedure SetNativeGraphics(Graphics: PGpGraphics);
     Function SetStatus(Status: TStatus): TStatus;
@@ -173,32 +172,34 @@ type
     Function FillRegion(Brush: TBrush; Region: TRegion): TStatus;
     Function DrawString(Str: PWideChar; Length: INT; Font: TFont; const LayoutRect: TRectF; StringFormat: TStringFormat;
       Brush: TBrush): TStatus; overload;
-    Function DrawString(Str: PWideChar; Length: INT; Font: TFont; const Origin: TPointF; Brush: TBrush): TStatus; overload;
-    Function DrawString(Str: PWideChar; Length: INT; Font: TFont; const Origin: TPointF; StringFormat: TStringFormat;
-      Brush: TBrush): TStatus; overload;
     Function DrawString(const Str: String; Length: INT; Font: TFont; const LayoutRect: TRectF; StringFormat: TStringFormat;
       Brush: TBrush): TStatus; overload;
+    Function DrawString(Str: PWideChar; Length: INT; Font: TFont; const Origin: TPointF; Brush: TBrush): TStatus; overload;
     Function DrawString(const Str: String; Length: INT; Font: TFont; const Origin: TPointF; Brush: TBrush): TStatus; overload;
+    Function DrawString(Str: PWideChar; Length: INT; Font: TFont; const Origin: TPointF; StringFormat: TStringFormat;
+      Brush: TBrush): TStatus; overload;
     Function DrawString(const Str: String; Length: INT; Font: TFont; const Origin: TPointF; StringFormat: TStringFormat;
       Brush: TBrush): TStatus; overload;
     Function MeasureString(Str: PWideChar; Length: INT; Font: TFont; const LayoutRect: TRectF; StringFormat: TStringFormat;
       BoundingBox: PRectF; CodepointsFitted: PINT = nil; LinesFilled: PINT = nil): TStatus; overload;
+    Function MeasureString(const Str: String; Length: INT; Font: TFont; const LayoutRect: TRectF; StringFormat: TStringFormat;
+      BoundingBox: PRectF; CodepointsFitted: PINT = nil; LinesFilled: PINT = nil): TStatus; overload;
     Function MeasureString(Str: PWideChar; Length: INT; Font: TFont; const LayoutRectSize: TSizeF; StringFormat: TStringFormat;
+      Size: PSizeF; CodepointsFitted: PINT = nil; LinesFilled: PINT = nil): TStatus; overload;
+    Function MeasureString(const Str: String; Length: INT; Font: TFont; const LayoutRectSize: TSizeF; StringFormat: TStringFormat;
       Size: PSizeF; CodepointsFitted: PINT = nil; LinesFilled: PINT = nil): TStatus; overload;
     Function MeasureString(Str: PWideChar; Length: INT; Font: TFont; const Origin: TPointF; StringFormat: TStringFormat;
       BoundingBox: PRectF): TStatus; overload;
-    Function MeasureString(Str: PWideChar; Length: INT; Font: TFont; const LayoutRect: TRectF; BoundingBox: PRectF): TStatus; overload;
-    Function MeasureString(Str: PWideChar; Length: INT; Font: TFont; const Origin: TPointF; BoundingBox: PRectF): TStatus; overload;
-    Function MeasureString(const Str: String; Length: INT; Font: TFont; const LayoutRect: TRectF; StringFormat: TStringFormat;
-      BoundingBox: PRectF; CodepointsFitted: PINT = nil; LinesFilled: PINT = nil): TStatus; overload;
-    Function MeasureString(const Str: String; Length: INT; Font: TFont; const LayoutRectSize: TSizeF; StringFormat: TStringFormat;
-      Size: PSizeF; CodepointsFitted: PINT = nil; LinesFilled: PINT = nil): TStatus; overload;
     Function MeasureString(const Str: String; Length: INT; Font: TFont; const Origin: TPointF; StringFormat: TStringFormat;
       BoundingBox: PRectF): TStatus; overload;
+    Function MeasureString(Str: PWideChar; Length: INT; Font: TFont; const LayoutRect: TRectF; BoundingBox: PRectF): TStatus; overload;
     Function MeasureString(const Str: String; Length: INT; Font: TFont; const LayoutRect: TRectF; BoundingBox: PRectF): TStatus; overload;
+    Function MeasureString(Str: PWideChar; Length: INT; Font: TFont; const Origin: TPointF; BoundingBox: PRectF): TStatus; overload;
     Function MeasureString(const Str: String; Length: INT; Font: TFont; const Origin: TPointF; BoundingBox: PRectF): TStatus; overload;
     Function MeasureCharacterRanges(Str: PWideChar; Length: INT; Font: TFont; const LayoutRect: TRectF; StringFormat: TStringFormat;
-      RegionCount: INT; Regions: PRegion): TStatus;
+      RegionCount: INT; Regions: PRegion): TStatus; overload;
+    Function MeasureCharacterRanges(const Str: String; Length: INT; Font: TFont; const LayoutRect: TRectF; StringFormat: TStringFormat;
+      RegionCount: INT; Regions: PRegion): TStatus; overload;
     Function DrawDriverString(Text: PUINT16; Length: INT; Font: TFont; Brush: TBrush; Positions: PPointF;
       Flags: INT; Matrix: TMatrix): TStatus;
     Function MeasureDriverString(Text: PUINT16; Length: INT; Font: TFont; Positions: PPointF; Flags: INT;
@@ -1204,12 +1205,27 @@ end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+Function TGraphics.DrawString(const Str: String; Length: INT; Font: TFont; const LayoutRect: TRectF; StringFormat: TStringFormat;
+  Brush: TBrush): TStatus;
+begin
+Result := DrawString(PWideChar(StrToWide(Str)),Length,Font,LayoutRect,StringFormat,Brush);
+end;
+
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 Function TGraphics.DrawString(Str: PWideChar; Length: INT; Font: TFont; const Origin: TPointF;Brush: TBrush): TStatus;
 var
   LayoutRect: TRectF;
 begin
 LayoutRect := RectF(Origin.X,Origin.Y,0.0,0.0);
 Result := SetStatus(GdipDrawString(fNativeGraphics,Str,Length,Font.NativeObject,@LayoutRect,nil,Brush.NativeObject));
+end;
+
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Function TGraphics.DrawString(const Str: String; Length: INT; Font: TFont; const Origin: TPointF; Brush: TBrush): TStatus;
+begin
+Result := DrawString(PWideChar(StrToWide(Str)),Length,Font,Origin,Brush);
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1221,21 +1237,6 @@ var
 begin
 LayoutRect := RectF(Origin.X,Origin.Y,0.0,0.0);
 Result := SetStatus(GdipDrawString(fNativeGraphics,Str,Length,Font.NativeObject,@LayoutRect,StringFormat.NativeObject,Brush.NativeObject));
-end;
-
-//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-Function TGraphics.DrawString(const Str: String; Length: INT; Font: TFont; const LayoutRect: TRectF; StringFormat: TStringFormat;
-  Brush: TBrush): TStatus;
-begin
-Result := DrawString(PWideChar(StrToWide(Str)),Length,Font,LayoutRect,StringFormat,Brush);
-end;
-
-//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-Function TGraphics.DrawString(const Str: String; Length: INT; Font: TFont; const Origin: TPointF; Brush: TBrush): TStatus;
-begin
-Result := DrawString(PWideChar(StrToWide(Str)),Length,Font,Origin,Brush);
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1253,6 +1254,14 @@ Function TGraphics.MeasureString(Str: PWideChar; Length: INT; Font: TFont; const
 begin
 Result := SetStatus(GdipMeasureString(fNativeGraphics,Str,Length,Font.NativeObject,@LayoutRect,
   StringFormat.NativeObject,BoundingBox,CodepointsFitted,LinesFilled));
+end;
+
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Function TGraphics.MeasureString(const Str: String; Length: INT; Font: TFont; const LayoutRect: TRectF; StringFormat: TStringFormat;
+  BoundingBox: PRectF; CodepointsFitted: PINT = nil; LinesFilled: PINT = nil): TStatus;
+begin
+Result := MeasureString(PwideChar(StrToWide(Str)),Length,Font,LayoutRect,StringFormat,BoundingBox,CodepointsFitted,LinesFilled);
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1290,6 +1299,14 @@ end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+Function TGraphics.MeasureString(const Str: String; Length: INT; Font: TFont; const LayoutRectSize: TSizeF; StringFormat: TStringFormat;
+  Size: PSizeF; CodepointsFitted: PINT = nil; LinesFilled: PINT = nil): TStatus;
+begin
+Result := MeasureString(PwideChar(StrToWide(Str)),Length,Font,LayoutRectSize,StringFormat,Size,CodepointsFitted,LinesFilled);
+end;
+
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 Function TGraphics.MeasureString(Str: PWideChar; Length: INT; Font: TFont; const Origin: TPointF; StringFormat: TStringFormat;
   BoundingBox: PRectF): TStatus;
 var
@@ -1297,39 +1314,6 @@ var
 begin
 LayoutRect := RectF(Origin.X,Origin.Y,0.0,0.0);
 Result := SetStatus(GdipMeasureString(fNativeGraphics,Str,Length,Font.NativeObject,@LayoutRect,StringFormat.NativeObject,BoundingBox,nil,nil));
-end;
-
-//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-Function TGraphics.MeasureString(Str: PWideChar; Length: INT; Font: TFont; const LayoutRect: TRectF; BoundingBox: PRectF): TStatus;
-begin
-Result := SetStatus(GdipMeasureString(fNativeGraphics,Str,Length,Font.NativeObject,@LayoutRect,nil,BoundingBox,nil,nil));
-end;
-
-//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-Function TGraphics.MeasureString(Str: PWideChar; Length: INT; Font: TFont; const Origin: TPointF; BoundingBox: PRectF): TStatus;
-var
-  LayoutRect: TRectF;
-begin
-LayoutRect := RectF(Origin.X,Origin.Y,0.0,0.0);
-Result := SetStatus(GdipMeasureString(fNativeGraphics,Str,Length,Font.NativeObject,@LayoutRect,nil,BoundingBox,nil,nil));
-end;
-
-//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-Function TGraphics.MeasureString(const Str: String; Length: INT; Font: TFont; const LayoutRect: TRectF; StringFormat: TStringFormat;
-  BoundingBox: PRectF; CodepointsFitted: PINT = nil; LinesFilled: PINT = nil): TStatus;
-begin
-Result := MeasureString(PwideChar(StrToWide(Str)),Length,Font,LayoutRect,StringFormat,BoundingBox,CodepointsFitted,LinesFilled);
-end;
-
-//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-Function TGraphics.MeasureString(const Str: String; Length: INT; Font: TFont; const LayoutRectSize: TSizeF; StringFormat: TStringFormat;
-  Size: PSizeF; CodepointsFitted: PINT = nil; LinesFilled: PINT = nil): TStatus;
-begin
-Result := MeasureString(PwideChar(StrToWide(Str)),Length,Font,LayoutRectSize,StringFormat,Size,CodepointsFitted,LinesFilled);
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1342,9 +1326,26 @@ end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+Function TGraphics.MeasureString(Str: PWideChar; Length: INT; Font: TFont; const LayoutRect: TRectF; BoundingBox: PRectF): TStatus;
+begin
+Result := SetStatus(GdipMeasureString(fNativeGraphics,Str,Length,Font.NativeObject,@LayoutRect,nil,BoundingBox,nil,nil));
+end;
+
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 Function TGraphics.MeasureString(const Str: String; Length: INT; Font: TFont; const LayoutRect: TRectF; BoundingBox: PRectF): TStatus;
 begin
 Result := MeasureString(PwideChar(StrToWide(Str)),Length,Font,LayoutRect,BoundingBox);
+end;
+
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Function TGraphics.MeasureString(Str: PWideChar; Length: INT; Font: TFont; const Origin: TPointF; BoundingBox: PRectF): TStatus;
+var
+  LayoutRect: TRectF;
+begin
+LayoutRect := RectF(Origin.X,Origin.Y,0.0,0.0);
+Result := SetStatus(GdipMeasureString(fNativeGraphics,Str,Length,Font.NativeObject,@LayoutRect,nil,BoundingBox,nil,nil));
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1376,6 +1377,14 @@ If Assigned(Regions) and (RegionCount > 0) then
     else Result := OutOfMemory;
   end
 else Result := InvalidParameter;
+end;
+
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Function TGraphics.MeasureCharacterRanges(const Str: String; Length: INT; Font: TFont; const LayoutRect: TRectF; StringFormat: TStringFormat;
+  RegionCount: INT; Regions: PRegion): TStatus; 
+begin
+Result := MeasureCharacterRanges(PWideChar(StrToWide(Str)),Length,Font,LayoutRect,StringFormat,RegionCount,Regions);
 end;
 
 //!!----------------------------------------------------------------------------

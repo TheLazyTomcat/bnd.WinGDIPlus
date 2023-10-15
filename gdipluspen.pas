@@ -163,6 +163,7 @@ aUnit := UnitWorld;
 fNativePen := nil;
 fLastResult := GdipCreatePen2(Brush.NativeObject,Width,aUnit,@fNativePen);
 end;
+
 //!!----------------------------------------------------------------------------
 
 destructor TPen.Destroy;

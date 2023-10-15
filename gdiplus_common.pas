@@ -14,9 +14,10 @@ uses
 type
   EGDIPlusException = class(Exception);
 
-  EGDIPlusError = class(EGDIPlusException);
+  EGDIPlusError            = class(EGDIPlusException);
   EGDIPlusIndexOutOfBounds = class(EGDIPlusException);
   EGDIPlusObjecNotAssigned = class(EGDIPlusException);
+  EGDIPlusCodecNotFound    = class(EGDIPlusException);
   
 {!!-----------------------------------------------------------------------------
     Constants and types
@@ -61,7 +62,7 @@ const
 
 type
   //!! just some placeholder I assume
-  IDirectDrawSurface7  = IUnknown;
+  IDirectDrawSurface7 = IUnknown;
 
 implementation
 

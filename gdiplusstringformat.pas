@@ -36,7 +36,6 @@ type
     constructor Create(ClonedStringFormat: PGpStringFormat; Status: TStatus); overload;
   public
     constructor Create(FormatFlags: INT = 0; Language: LANGID = LANG_NEUTRAL); overload;
-    {$message 'write warning - the result must be explicitly freed'}
   {!!
     Implementation of methods GenericDefault and GenericTypographic differs
     significantly from original C++ headers.

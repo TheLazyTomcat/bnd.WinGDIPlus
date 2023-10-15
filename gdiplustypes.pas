@@ -39,7 +39,7 @@ type
 
   TEnumerateMetafileProc = Function(RecordType: TEmfPlusRecordType; flags,dataSize: UINT; data: PByte; callbackData: Pointer): BOOL; stdcall;
 
-{$IF GDIPVER >= $0110}{$IFDEF ShowHints}{$MESSAGE 'rewisit'}{$ENDIF}
+{$IF GDIPVER >= $0110}{$MESSAGE 'rewisit'}
 // This is the main GDI+ Abort interface
 type
   TGdiplusAbort = record end;
@@ -122,9 +122,6 @@ type
   {$IFEND}
   );
   PStatus = ^TStatus;
-
-Function GDIPCheck(Status: TStatus): Boolean;
-procedure GDIPError(Status: TStatus);
 
 //--------------------------------------------------------------------------
 // Represents a dimension in a 2D coordinate system (floating-point coordinates)
@@ -301,6 +298,11 @@ type
   end;
   PPathData = ^TPathData;
 
+{!!
+  Following functions are not part of the original code, but are not considered
+  helper functions either, as they are needed for proper management of TPathData
+  variables.
+}
 procedure PathDataInit(out PathData: TPathData);
 procedure PathDataAlloc(var PathData: TPathData; Count: Integer);
 procedure PathDataFree(var PathData: TPathData);
@@ -328,6 +330,11 @@ procedure Assign(var range: TCharacterRange; const rhs: TCharacterRange); overlo
 
 
 implementation
+
+{$IFDEF FPC_DisableWarns}
+  {$DEFINE FPCDWM}
+  {$DEFINE W4055:={$WARN 4055 OFF}} // Conversion between ordinals and pointers is not portable
+{$ENDIF}
 
 uses
   SysUtils,
@@ -369,21 +376,6 @@ If a > b then
   Result := a
 else
   Result := b;
-end;
-
-//!!----------------------------------------------------------------------------
-
-Function GDIPCheck(Status: TStatus): Boolean;
-begin
-Result := Status = Ok;
-end;
-
-//!!----------------------------------------------------------------------------
-
-procedure GDIPError(Status: TStatus);
-begin
-If Status <> Ok then
-  raise EGDIPlusError.CreateFmt('GDI+ error %d.',[Ord(Status)]);
 end;
 
 
@@ -1097,7 +1089,9 @@ end;
 Function PathDataPointGet(const PathData: TPathData; Index: Integer): TPointF;
 begin
 If (Index >= 0) and (Index < PathData.Count) then
+{$IFDEF FPCDWM}{$PUSH}W4055{$ENDIF}
   Result := PPointF(PtrUInt(PathData.Points) + PtrUInt(Index * SizeOf(TPointF)))^
+{$IFDEF FPCDWM}{$POP}{$ENDIF}
 else
   raise EGDIPlusIndexOutOfBounds.CreateFmt('PathDataPointGet: Index (%d) out of bounds.',[Index]);
 end;
@@ -1107,7 +1101,9 @@ end;
 procedure PathDataPointSet(const PathData: TPathData; Index: Integer; Value: TPointF);
 begin
 If (Index >= 0) and (Index < PathData.Count) then
+{$IFDEF FPCDWM}{$PUSH}W4055{$ENDIF}
   PPointF(PtrUInt(PathData.Points) + PtrUInt(Index * SizeOf(TPointF)))^ := Value
+{$IFDEF FPCDWM}{$POP}{$ENDIF}
 else
   raise EGDIPlusIndexOutOfBounds.CreateFmt('PathDataPointSet: Index (%d) out of bounds.',[Index]);
 end;
@@ -1117,7 +1113,9 @@ end;
 Function PathDataTypeGet(const PathData: TPathData; Index: Integer): Byte;
 begin
 If (Index >= 0) and (Index < PathData.Count) then
+{$IFDEF FPCDWM}{$PUSH}W4055{$ENDIF}
   Result := PByte(PtrUInt(PathData.Points) + PtrUInt(Index))^
+{$IFDEF FPCDWM}{$POP}{$ENDIF}
 else
   raise EGDIPlusIndexOutOfBounds.CreateFmt('PathDataTypeGet: Index (%d) out of bounds.',[Index]);
 end;
@@ -1127,7 +1125,9 @@ end;
 procedure PathDataTypeSet(const PathData: TPathData; Index: Integer; Value: Byte);
 begin
 If (Index >= 0) and (Index < PathData.Count) then
+{$IFDEF FPCDWM}{$PUSH}W4055{$ENDIF}
   PByte(PtrUInt(PathData.Points) + PtrUInt(Index))^ := Value
+{$IFDEF FPCDWM}{$POP}{$ENDIF}
 else
   raise EGDIPlusIndexOutOfBounds.CreateFmt('PathDataTypeSet: Index (%d) out of bounds.',[Index]);
 end;

@@ -94,21 +94,21 @@ type
     Function AddPie(X,Y,Width,Height: INT; StartAngle,SweepAngle: REAL): TStatus; overload;
     Function AddPolygon(Points: PPointF; Count: INT): TStatus; overload; 
     Function AddPolygon(Points: PPoint; Count: INT): TStatus; overload;
-    Function AddPath(AddingPath: TGraphicsPath; Connect: BOOL): TStatus;
+    Function AddPath(AddingPath: TGraphicsPath; Connect: BOOL): TStatus;  
     Function AddString(Str: PWideChar; Length: Int; Family: TFontFamily; Style: INT; EmSize: REAL{World units};
+      const Origin: TPointF; Format: TStringFormat): TStatus; overload;
+    Function AddString(const Str: String; Length: Int; Family: TFontFamily; Style: INT; EmSize: REAL;
       const Origin: TPointF; Format: TStringFormat): TStatus; overload;
     Function AddString(Str: PWideChar; Length: Int; Family: TFontFamily; Style: INT; EmSize: REAL;
       const LayoutRect: TRectF; Format: TStringFormat): TStatus; overload;
+    Function AddString(const Str: String; Length: Int; Family: TFontFamily; Style: INT; EmSize: REAL;
+      const LayoutRect: TRectF; Format: TStringFormat): TStatus; overload;
     Function AddString(Str: PWideChar; Length: Int; Family: TFontFamily; Style: INT; EmSize: REAL;
+      const Origin: TPoint; Format: TStringFormat): TStatus; overload;
+    Function AddString(const Str: String; Length: Int; Family: TFontFamily; Style: INT; EmSize: REAL;
       const Origin: TPoint; Format: TStringFormat): TStatus; overload;
     Function AddString(Str: PWideChar; Length: Int; Family: TFontFamily; Style: INT; EmSize: REAL;
       const LayoutRect: TRect; Format: TStringFormat): TStatus; overload;
-    Function AddString(const Str: String; Length: Int; Family: TFontFamily; Style: INT; EmSize: REAL;
-      const Origin: TPointF; Format: TStringFormat): TStatus; overload;
-    Function AddString(const Str: String; Length: Int; Family: TFontFamily; Style: INT; EmSize: REAL;
-      const LayoutRect: TRectF; Format: TStringFormat): TStatus; overload;
-    Function AddString(const Str: String; Length: Int; Family: TFontFamily; Style: INT; EmSize: REAL;
-      const Origin: TPoint; Format: TStringFormat): TStatus; overload;
     Function AddString(const Str: String; Length: Int; Family: TFontFamily; Style: INT; EmSize: REAL;
       const LayoutRect: TRect; Format: TStringFormat): TStatus; overload;
     Function Transform(Matrix: TMatrix): TStatus;
@@ -757,10 +757,26 @@ end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+Function TGraphicsPath.AddString(const Str: String; Length: Int; Family: TFontFamily; Style: INT; EmSize: REAL;
+  const Origin: TPointF; Format: TStringFormat): TStatus;
+begin
+Result := AddString(PWideChar(StrToWide(Str)),Length,Family,Style,EmSize,Origin,Format);
+end;
+
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 Function TGraphicsPath.AddString(Str: PWideChar; Length: Int; Family: TFontFamily; Style: INT; EmSize: REAL{World units};
   const LayoutRect: TRectF; Format: TStringFormat): TStatus;
 begin
 Result := SetStatus(GdipAddPathString(fNativePath,Str,Length,Family.NativeObject,Style,EmSize,@LayoutRect,Format.NativeObject));
+end;
+
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Function TGraphicsPath.AddString(const Str: String; Length: Int; Family: TFontFamily; Style: INT; EmSize: REAL;
+  const LayoutRect: TRectF; Format: TStringFormat): TStatus;
+begin
+Result := AddString(PWideChar(StrToWide(Str)),Length,Family,Style,EmSize,LayoutRect,Format);
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -776,34 +792,18 @@ end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-Function TGraphicsPath.AddString(Str: PWideChar; Length: Int; Family: TFontFamily; Style: INT; EmSize: REAL{World units};
-  const LayoutRect: TRect; Format: TStringFormat): TStatus;
-begin
-Result := SetStatus(GdipAddPathStringI(fNativePath,Str,Length,Family.NativeObject,Style,EmSize,@LayoutRect,Format.NativeObject));
-end;
-
-//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-Function TGraphicsPath.AddString(const Str: String; Length: Int; Family: TFontFamily; Style: INT; EmSize: REAL;
-  const Origin: TPointF; Format: TStringFormat): TStatus;
-begin
-Result := AddString(PWideChar(StrToWide(Str)),Length,Family,Style,EmSize,Origin,Format);
-end;
-
-//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-Function TGraphicsPath.AddString(const Str: String; Length: Int; Family: TFontFamily; Style: INT; EmSize: REAL;
-  const LayoutRect: TRectF; Format: TStringFormat): TStatus;
-begin
-Result := AddString(PWideChar(StrToWide(Str)),Length,Family,Style,EmSize,LayoutRect,Format);
-end;
-
-//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
 Function TGraphicsPath.AddString(const Str: String; Length: Int; Family: TFontFamily; Style: INT; EmSize: REAL;
   const Origin: TPoint; Format: TStringFormat): TStatus;
 begin
 Result := AddString(PWideChar(StrToWide(Str)),Length,Family,Style,EmSize,Origin,Format);
+end;
+
+//!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+Function TGraphicsPath.AddString(Str: PWideChar; Length: Int; Family: TFontFamily; Style: INT; EmSize: REAL{World units};
+  const LayoutRect: TRect; Format: TStringFormat): TStatus;
+begin
+Result := SetStatus(GdipAddPathStringI(fNativePath,Str,Length,Family.NativeObject,Style,EmSize,@LayoutRect,Format.NativeObject));
 end;
 
 //!! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
