@@ -61,7 +61,7 @@ type
     Function TransformVectors(Pts: PPoint; Count: INT = 1): TStatus; overload;
     Function IsInvertible: BOOL; 
     Function IsIdentity: BOOL;
-    Function Equals(Matrix: TMatrix): BOOL; 
+    Function IsEqual(Matrix: TMatrix): BOOL;  //!! renamed from Equals (conflict with rtl method)
     Function GetLastStatus: TStatus; 
   end;
 
@@ -337,7 +337,7 @@ end;
 
 //!!----------------------------------------------------------------------------
 
-Function TMatrix.Equals(Matrix: TMatrix): BOOL;
+Function TMatrix.IsEqual(Matrix: TMatrix): BOOL;
 begin
 Result := False;
 SetStatus(GdipIsMatrixEqual(fNativeMatrix,Matrix.NativeObject,@Result));

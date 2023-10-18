@@ -111,16 +111,27 @@ type
 //          GdiplusShutdown call.
 // input  - may not be NULL
 // output - may be NULL only if input->SuppressBackgroundThread is FALSE.
-Function GdiplusStartup(token: PULONG_PTR; input: PGdiplusStartupInput; output: PGdiplusStartupOutput): TStatus; stdcall; external GDIPLIB;
+Function LibGdiplusStartup(token: PULONG_PTR; input: PGdiplusStartupInput;
+  output: PGdiplusStartupOutput): TStatus; stdcall; external GDIPLIB name 'GdiplusStartup';
+
+//!! wrapper...
+Function GdiplusStartup(token: PULONG_PTR; input: PGdiplusStartupInput; output: PGdiplusStartupOutput): TStatus;
 
 // GDI+ termination. Must be called before GDI+ is unloaded. 
 // Must not be called from DllMain - can cause deadlock.
 //
 // GDI+ API's may not be called after GdiplusShutdown. Pay careful attention
 // to GDI+ object destructors.
-procedure GdiplusShutdown(token: ULONG_PTR); stdcall; external GDIPLIB;
+procedure LibGdiplusShutdown(token: ULONG_PTR); stdcall; external GDIPLIB name 'GdiplusShutdown';
+
+//!! wrapper
+procedure GdiplusShutdown(token: ULONG_PTR);
 
 implementation
+
+uses
+  DynLibUtils,
+  gdiplusflat;
 
 Function GdiplusStartupInput(
   debugEventCallback:       TDebugEventProc = nil;
@@ -133,9 +144,9 @@ Result.SuppressBackgroundThread := suppressBackgroundThread;
 Result.SuppressExternalCodecs := suppressExternalCodecs;
 end;
 
-{$IF GDIPVER >= $0110}
+{$IF GDIPVER >= $0110}     
 //!!----------------------------------------------------------------------------
-
+                      
 Function GdiplusStartupInputEx(
   startupParameters:        INT = 0;
   debugEventCallback:       TDebugEventProc = nil;
@@ -148,6 +159,65 @@ Result.SuppressBackgroundThread := suppressBackgroundThread;
 Result.SuppressExternalCodecs := suppressExternalCodecs;
 Result.StartupParameters := startupParameters;
 end;
+{$IFEND}
+
+//!!----------------------------------------------------------------------------
+{$IF (GDIPVER >= $0110) and not Defined(NewGDIPStatic)}
+var
+  GDIPLusLibraryContext: TDLULibraryContext;
+{$IFEND}
+
+Function GdiplusStartup(token: PULONG_PTR; input: PGdiplusStartupInput; output: PGdiplusStartupOutput): TStatus;
+begin
+{$IF (GDIPVER >= $0110) and not Defined(NewGDIPStatic)}  
+ContextLock(GDIPLusLibraryContext);         
+try                                   
+If OpenLibrary(GDIPLIB,GDIPLusLibraryContext) then
+  begin
+    If input^.GdiplusVersion >= 2 then
+      ResolveSymbols(GDIPLusLibraryContext,[
+        Symbol('GdipFindFirstImageItem',      @@GdipFindFirstImageItem),
+        Symbol('GdipFindNextImageItem',       @@GdipFindNextImageItem),
+        Symbol('GdipGetImageItemData',        @@GdipGetImageItemData),
+        Symbol('GdipImageSetAbort',           @@GdipImageSetAbort),
+        Symbol('GdipGraphicsSetAbort',        @@GdipGraphicsSetAbort),
+        Symbol('GdipBitmapConvertFormat',     @@GdipBitmapConvertFormat),
+        Symbol('GdipInitializePalette',       @@GdipInitializePalette),
+        Symbol('GdipBitmapApplyEffect',       @@GdipBitmapApplyEffect),
+        Symbol('GdipBitmapCreateApplyEffect', @@GdipBitmapCreateApplyEffect),
+        Symbol('GdipBitmapGetHistogram',      @@GdipBitmapGetHistogram),
+        Symbol('GdipBitmapGetHistogramSize',  @@GdipBitmapGetHistogramSize),
+        Symbol('GdipDrawImageFX',             @@GdipDrawImageFX),
+        Symbol('GdipConvertToEmfPlus',        @@GdipConvertToEmfPlus),
+        Symbol('GdipConvertToEmfPlusToFile',  @@GdipConvertToEmfPlusToFile),
+        Symbol('GdipConvertToEmfPlusToStream',@@GdipConvertToEmfPlusToStream)
+      ],True);
+  end;
+finally
+  ContextUnlock(GDIPLusLibraryContext);
+end;
+{$IFEND}
+Result := LibGdiplusStartup(token,Input,output);
+{$IF (GDIPVER >= $0110) and not Defined(NewGDIPStatic)}
+If Result <> Ok then
+  CloseLibrary(GDIPLusLibraryContext);
+{$IFEND}
+end;
+
+//!!----------------------------------------------------------------------------
+
+procedure GdiplusShutdown(token: ULONG_PTR);
+begin
+LibGdiplusShutdown(token);
+{$IF (GDIPVER >= $0110) and not Defined(NewGDIPStatic)}
+CloseLibrary(GDIPLusLibraryContext);
+{$IFEND}
+end;
+
+//!!----------------------------------------------------------------------------
+{$IF (GDIPVER >= $0110) and not Defined(NewGDIPStatic)}
+initialization
+  GDIPLusLibraryContext := DefaultLibraryContext;
 {$IFEND}
 
 end.

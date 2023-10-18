@@ -9,14 +9,31 @@ uses
   gdiplus_common,
   gdiplustypes;
 
-Function GDIPCheck(Status: TStatus): Boolean;
-procedure GDIPError(Status: TStatus);
+{!!
+  VersionSupported
+
+  Checks for existance of gdiplus.dll and selected symbols (functions) exported
+  by it.
+
+  If the library cannot be loaded, it returns 0, othervise following values
+  can be returned (note that if a value not listed here is returned, it should
+  be considered an error):
+
+    1 ... GDI+ version 1.0 is supported
+    2 ... GDI+ version 1.1 and older is supported
+}
+Function VersionSupported: Integer;
+
+Function StatusAsStr(Status: TStatus): String;
+
+Function StatusCheck(Status: TStatus): Boolean;
+Function StatusRaise(Status: TStatus): TStatus;
 
 type
-  TCodecTextType = (cttName,cttDLLName,cttFmtDescr,cttFileExt,cttMimeType);
+  TCodecString = (csName,csDLLName,csFmtDescr,csFileExt,csMimeType);
 
-procedure GetDecoders(List: TStringList; CodecTextType: TCodecTextType = cttMimeType);
-procedure GetEncoders(List: TStringList; CodecTextType: TCodecTextType = cttMimeType);
+procedure GetDecoders(List: TStringList; CodecString: TCodecString = csMimeType);
+procedure GetEncoders(List: TStringList; CodecString: TCodecString = csMimeType);
 
 Function GetDecoderCLSID(const MimeType: String): TCLSID;
 Function GetEncoderCLSID(const MimeType: String): TCLSID;
@@ -24,26 +41,75 @@ Function GetEncoderCLSID(const MimeType: String): TCLSID;
 implementation
 
 uses
-  Windows, SysUtils,
+  Windows, SysUtils, DynLibUtils,
   StrRect,
-  gdiplusimaging, gdiplusimagecodec;
+  gdiplusimaging, gdiplusimagecodec, gdiplusflat;
 
-Function GDIPCheck(Status: TStatus): Boolean;
+Function VersionSupported: Integer;
+begin
+If LibraryIsPresent(GDIPLIB) then
+  begin
+    If SymbolIsPresent(GDIPLIB,'GdipImageSetAbort') then
+      Result := 2
+    else
+      Result := 1;
+  end
+else Result := 0;
+end;
+
+//!!----------------------------------------------------------------------------
+
+Function StatusAsStr(Status: TStatus): String;
+begin
+case Status of
+  Ok:                         Result := 'Ok';
+  GenericError:               Result := 'Generic error';
+  InvalidParameter:           Result := 'Invalid parameter';
+  OutOfMemory:                Result := 'Out of memory';
+  ObjectBusy:                 Result := 'Object busy';
+  InsufficientBuffer:         Result := 'Insufficient buffer';
+  NotImplemented:             Result := 'Not implemented';
+  Win32Error:                 Result := 'Win32 error';
+  WrongState:                 Result := 'Wrong state';
+  Aborted:                    Result := 'Aborted';
+  FileNotFound:               Result := 'File not found';
+  ValueOverflow:              Result := 'Value overflow';
+  AccessDenied:               Result := 'Access denied';
+  UnknownImageFormat:         Result := 'Unknown image format';
+  FontFamilyNotFound:         Result := 'Font family not found';
+  FontStyleNotFound:          Result := 'Font style not found';
+  NotTrueTypeFont:            Result := 'Not TrueType font';
+  UnsupportedGdiplusVersion:  Result := 'Unsupported Gdiplus version';
+  GdiplusNotInitialized:      Result := 'Gdiplus not initialized';
+  PropertyNotFound:           Result := 'Property not found';
+  PropertyNotSupported:       Result := 'Property not supported';
+{$IF GDIPVER >= $0110}
+  ProfileNotFound:            Result := 'Profile not found';
+{$IFEND}
+else
+  Result := Format('Unknown error (%d).',[Ord(Status)]);
+end;
+end;
+
+//!!----------------------------------------------------------------------------
+
+Function StatusCheck(Status: TStatus): Boolean;
 begin
 Result := Status = Ok;
 end;
 
 //!!----------------------------------------------------------------------------
 
-procedure GDIPError(Status: TStatus);
+Function StatusRaise(Status: TStatus): TStatus;
 begin
+Result := Status;
 If Status <> Ok then
-  raise EGDIPlusError.CreateFmt('GDI+ error %d.',[Ord(Status)]);
+  raise EGDIPlusError.CreateFmt('GDI+ failed with error %d: %s.',[Ord(Status),StatusAsStr(Status)]);
 end;
 
 //!!----------------------------------------------------------------------------
 
-procedure GetDecoders(List: TStringList; CodecTextType: TCodecTextType = cttMimeType);
+procedure GetDecoders(List: TStringList; CodecString: TCodecString = csMimeType);
 var
   Count,Size: UINT;
   Decoders:   PImageCodecInfo;
@@ -51,22 +117,22 @@ var
   i:          Integer;
 begin
 List.Clear;
-If GDIPCheck(GetImageDecodersSize(@Count,@Size)) then
+If StatusCheck(GetImageDecodersSize(@Count,@Size)) then
   If Size > 0 then
     begin
       Decoders := AllocMem(Size);
       try
-        If GDIPCheck(GetImageDecoders(Count,Size,Decoders)) then
+        If StatusCheck(GetImageDecoders(Count,Size,Decoders)) then
           begin
             MovingPtr := Decoders;
             For i := 0 to Pred(Count) do
               begin
-                case CodecTextType of
-                  cttName:      List.Add(WideToStr(MovingPtr^.CodecName));
-                  cttDLLName:   List.Add(WideToStr(MovingPtr^.DllName));
-                  cttFmtDescr:  List.Add(WideToStr(MovingPtr^.FormatDescription));
-                  cttFileExt:   List.Add(WideToStr(MovingPtr^.FilenameExtension));
-                  cttMimeType:  List.Add(WideToStr(MovingPtr^.MimeType));
+                case CodecString of
+                  csName:     List.Add(WideToStr(MovingPtr^.CodecName));
+                  csDLLName:  List.Add(WideToStr(MovingPtr^.DllName));
+                  csFmtDescr: List.Add(WideToStr(MovingPtr^.FormatDescription));
+                  csFileExt:  List.Add(WideToStr(MovingPtr^.FilenameExtension));
+                  csMimeType: List.Add(WideToStr(MovingPtr^.MimeType));
                 end;
                 Inc(MovingPtr);
               end;
@@ -79,7 +145,7 @@ end;
 
 //!!----------------------------------------------------------------------------
 
-procedure GetEncoders(List: TStringList; CodecTextType: TCodecTextType = cttMimeType);
+procedure GetEncoders(List: TStringList; CodecString: TCodecString = csMimeType);
 var
   Count,Size: UINT;
   Encoders:   PImageCodecInfo;
@@ -87,22 +153,22 @@ var
   i:          Integer;
 begin
 List.Clear;
-If GDIPCheck(GetImageEncodersSize(@Count,@Size)) then
+If StatusCheck(GetImageEncodersSize(@Count,@Size)) then
   If Size > 0 then
     begin
       Encoders := AllocMem(Size);
       try
-        If GDIPCheck(GetImageEncoders(Count,Size,Encoders)) then
+        If StatusCheck(GetImageEncoders(Count,Size,Encoders)) then
           begin
             MovingPtr := Encoders;
             For i := 0 to Pred(Count) do
               begin
-                case CodecTextType of
-                  cttName:      List.Add(WideToStr(MovingPtr^.CodecName));
-                  cttDLLName:   List.Add(WideToStr(MovingPtr^.DllName));
-                  cttFmtDescr:  List.Add(WideToStr(MovingPtr^.FormatDescription));
-                  cttFileExt:   List.Add(WideToStr(MovingPtr^.FilenameExtension));
-                  cttMimeType:  List.Add(WideToStr(MovingPtr^.MimeType));
+                case CodecString of
+                  csName:     List.Add(WideToStr(MovingPtr^.CodecName));
+                  csDLLName:  List.Add(WideToStr(MovingPtr^.DllName));
+                  csFmtDescr: List.Add(WideToStr(MovingPtr^.FormatDescription));
+                  csFileExt:  List.Add(WideToStr(MovingPtr^.FilenameExtension));
+                  csMimeType: List.Add(WideToStr(MovingPtr^.MimeType));
                 end;
                 Inc(MovingPtr);
               end;
@@ -122,12 +188,12 @@ var
   MovingPtr:  PImageCodecInfo;
   i:          Integer;
 begin
-If GDIPCheck(GetImageDecodersSize(@Count,@Size)) then
+If StatusCheck(GetImageDecodersSize(@Count,@Size)) then
   If Size > 0 then
     begin
       Decoders := AllocMem(Size);
       try
-        If GDIPCheck(GetImageDecoders(Count,Size,Decoders)) then
+        If StatusCheck(GetImageDecoders(Count,Size,Decoders)) then
           begin
             MovingPtr := Decoders;
             For i := 0 to Pred(Count) do
@@ -142,7 +208,7 @@ If GDIPCheck(GetImageDecodersSize(@Count,@Size)) then
         FreeMem(Decoders,Size);
       end;
     end;
-raise EGDIPlusCodecNotFound.CreateFmt('GetDecoderCLSID: Decooder for mime type "%d" not found.',[MimeType]);
+raise EGDIPlusCodecNotFound.CreateFmt('GetDecoderCLSID: Decoder for mime type "%s" not found.',[MimeType]);
 end;
 
 //!!----------------------------------------------------------------------------
@@ -154,12 +220,12 @@ var
   MovingPtr:  PImageCodecInfo;
   i:          Integer;
 begin
-If GDIPCheck(GetImageEncodersSize(@Count,@Size)) then
+If StatusCheck(GetImageEncodersSize(@Count,@Size)) then
   If Size > 0 then
     begin
       Encoders := AllocMem(Size);
       try
-        If GDIPCheck(GetImageEncoders(Count,Size,Encoders)) then
+        If StatusCheck(GetImageEncoders(Count,Size,Encoders)) then
           begin
             MovingPtr := Encoders;
             For i := 0 to Pred(Count) do
@@ -174,7 +240,7 @@ If GDIPCheck(GetImageEncodersSize(@Count,@Size)) then
         FreeMem(Encoders,Size);
       end;
     end;
-raise EGDIPlusCodecNotFound.CreateFmt('GetEncoderCLSID: Encooder for mime type "%d" not found.',[MimeType]);
+raise EGDIPlusCodecNotFound.CreateFmt('GetEncoderCLSID: Encoder for mime type "%s" not found.',[MimeType]);
 end;
 
 end.

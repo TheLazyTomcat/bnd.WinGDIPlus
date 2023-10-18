@@ -777,6 +777,7 @@ Function GdipRemovePropertyItem(image: PGpImage; propId: TPROPID): TGpStatus; st
 Function GdipSetPropertyItem(image: PGpImage; item: PPropertyItem): TGpStatus; stdcall; external GDIPLIB;
 
 {$IF GDIPVER >= $0110}
+{$IFDEF NewGDIPStatic}
 
 Function GdipFindFirstImageItem(image: PGpImage; item: PImageItemData): TGpStatus; stdcall; external GDIPLIB;
 
@@ -784,6 +785,15 @@ Function GdipFindNextImageItem(image: PGpImage; item: PImageItemData): TGpStatus
 
 Function GdipGetImageItemData(image: PGpImage; item: PImageItemData): TGpStatus; stdcall; external GDIPLIB;
 
+{$ELSE}
+var
+  GdipFindFirstImageItem: Function(image: PGpImage; item: PImageItemData): TGpStatus; stdcall = nil;
+
+  GdipFindNextImageItem: Function(image: PGpImage; item: PImageItemData): TGpStatus; stdcall = nil;
+
+  GdipGetImageItemData: Function(image: PGpImage; item: PImageItemData): TGpStatus; stdcall = nil;
+
+{$ENDIF}
 {$IFEND}
 
 Function GdipImageForceValidation(image: PGpImage): TGpStatus; stdcall; external GDIPLIB;
@@ -835,6 +845,7 @@ Function GdipBitmapGetPixel(bitmap: PGpBitmap; x,y: INT; color: PARGB): TGpStatu
 Function GdipBitmapSetPixel(bitmap: PGpBitmap; x,y: INT; color: TARGB): TGpStatus; stdcall; external GDIPLIB;
 
 {$IF GDIPVER >= $0110}
+{$IFDEF NewGDIPStatic}
 
 Function GdipImageSetAbort(pImage: PGpImage; pIAbort: PGdiplusAbort): TGpStatus; stdcall; external GDIPLIB;
 
@@ -863,6 +874,30 @@ Function GdipBitmapGetHistogram(bitmap: PGpBitmap; format: THistogramFormat; Num
 
 Function GdipBitmapGetHistogramSize(format: THistogramFormat; NumberOfEntries: PUINT): TGpStatus; stdcall; external GDIPLIB;
 
+{$ELSE}
+var
+  GdipImageSetAbort: Function(pImage: PGpImage; pIAbort: PGdiplusAbort): TGpStatus; stdcall = nil;
+
+  GdipGraphicsSetAbort: Function(pGraphics: PGpGraphics; pIAbort: PGdiplusAbort): TGpStatus; stdcall = nil;
+
+  GdipBitmapConvertFormat: Function(pInputBitmap : PGpBitmap; format: TPixelFormat; dithertype: TDitherType; palettetype: TPaletteType;
+                                    palette: PColorPalette; alphaThresholdPercent: REAL): TGpStatus; stdcall = nil;
+
+  GdipInitializePalette: Function(palette: PColorPalette; palettetype: TPaletteType; optimalColors: INT; useTransparentColor: BOOL;
+                                  bitmap: PGpBitmap): TGpStatus; stdcall = nil;
+    
+  GdipBitmapApplyEffect: Function(bitmap: PGpBitmap; effect: PCGpEffect; roi: Windows.PRECT; useAuxData: BOOL;
+                                  auxData: PPointer; auxDataSize: PINT): TGpStatus; stdcall = nil;
+
+  GdipBitmapCreateApplyEffect: Function(inputBitmaps: PPGpBitmap; numInputs: INT; effect: PCGpEffect; roi: Windows.PRECT; outputRect: Windows.PRECT;
+                                        outputBitmap: PPGpBitmap; useAuxData: BOOL; auxData: PPointer; auxDataSize: PINT): TGpStatus; stdcall = nil;
+
+  GdipBitmapGetHistogram: Function(bitmap: PGpBitmap; format: THistogramFormat; NumberOfEntries: UINT;
+                                   channel0,channel1,channel2,channel3: PUINT): TGpStatus; stdcall = nil;
+
+  GdipBitmapGetHistogramSize: Function(format: THistogramFormat; NumberOfEntries: PUINT): TGpStatus; stdcall = nil;
+
+{$ENDIF}
 {$IFEND}
 
 Function GdipBitmapSetResolution(bitmap: PGpBitmap; xdpi,ydpi: REAL): TGpStatus; stdcall; external GDIPLIB;
@@ -1111,10 +1146,17 @@ Function GdipFillClosedCurve2I(graphics: PGpGraphics; brush: PGpBrush; points: P
 Function GdipFillRegion(graphics: PGpGraphics; brush: PGpBrush; region: PGpRegion): TGpStatus; stdcall; external GDIPLIB;
 
 {$IF GDIPVER >= $0110}
+{$IFDEF NewGDIPStatic}
 
 Function GdipDrawImageFX(graphics: PGpGraphics; image: PGpImage; source: PGpRectF; xForm: PGpMatrix; effect: PCGpEffect;
   imageAttributes: PGpImageAttributes; srcUnit: TGpUnit): TGpStatus; stdcall; external GDIPLIB;
 
+{$ELSE}
+var
+  GdipDrawImageFX: Function(graphics: PGpGraphics; image: PGpImage; source: PGpRectF; xForm: PGpMatrix; effect: PCGpEffect;
+                            imageAttributes: PGpImageAttributes; srcUnit: TGpUnit): TGpStatus; stdcall = nil;
+
+{$ENDIF}
 {$IFEND}
 
 Function GdipDrawImage(graphics: PGpGraphics; image: PGpImage; x,y: REAL): TGpStatus; stdcall; external GDIPLIB;
@@ -1476,6 +1518,7 @@ Function GdiplusNotificationHook(token: PULONG_PTR): TGpStatus; stdcall; externa
 procedure GdiplusNotificationUnhook(token: ULONG_PTR); stdcall; external GDIPLIB;
 
 {$IF GDIPVER >= $0110}
+{$IFDEF NewGDIPStatic}
 
 Function GdipConvertToEmfPlus(refGraphics: PGpGraphics; metafile: PGpMetafile; conversionFailureFlag: PINT; emfType: TEmfType;
   description: PWideChar; out_metafile: PPGpMetafile): TGpStatus; stdcall; external GDIPLIB;
@@ -1486,6 +1529,18 @@ Function GdipConvertToEmfPlusToFile(refGraphics: PGpGraphics; metafile: PGpMetaf
 Function GdipConvertToEmfPlusToStream(refGraphics: PGpGraphics; metafile: PGpMetafile; conversionFailureFlag: PINT; stream: IStream;
    emfType: TEmfType; description: PWideChar; out_metafile: PPGpMetafile): TGpStatus; stdcall; external GDIPLIB;
 
+{$ELSE}
+var
+  GdipConvertToEmfPlus: Function(refGraphics: PGpGraphics; metafile: PGpMetafile; conversionFailureFlag: PINT; emfType: TEmfType;
+                                 description: PWideChar; out_metafile: PPGpMetafile): TGpStatus; stdcall = nil;
+
+  GdipConvertToEmfPlusToFile: Function(refGraphics: PGpGraphics; metafile: PGpMetafile; conversionFailureFlag: PINT; filename: PWideChar;
+                                       emfType: TEmfType; description: PWideChar; out_metafile: PPGpMetafile): TGpStatus; stdcall = nil;
+
+  GdipConvertToEmfPlusToStream: Function(refGraphics: PGpGraphics; metafile: PGpMetafile; conversionFailureFlag: PINT; stream: IStream;
+                                         emfType: TEmfType; description: PWideChar; out_metafile: PPGpMetafile): TGpStatus; stdcall = nil;
+
+{$ENDIF}
 {$IFEND}
 
 implementation

@@ -39,11 +39,37 @@ type
 
   TEnumerateMetafileProc = Function(RecordType: TEmfPlusRecordType; flags,dataSize: UINT; data: PByte; callbackData: Pointer): BOOL; stdcall;
 
-{$IF GDIPVER >= $0110}{$MESSAGE 'rewisit'}
+{$IF GDIPVER >= $0110}
 // This is the main GDI+ Abort interface
+(*!!
+      struct __declspec(novtable) GdiplusAbort
+      {
+          virtual HRESULT __stdcall Abort(void) = 0;
+      };
+
+  This type is clearly not an interface (as in COM interface) nor object.
+  I have no knowledge on how C++ creates these "advanced structs" with methods,
+  but it seems a pointer to (virtual) method table is expected to be at the
+  beginning and the call is made through there. The following implementation
+  is based on this assumption and it seems to work ok.
+
+  If you want to pass data to the call, create a structure that will start with
+  TGdiplusAbort (there are multiple ways to do that) and add fields with values
+  you want to have. You can then reference them using Self argument, which
+  points to the beginning of the entire record.
+
+  To propertly prepare the structure, use function GdiplusAbortSetup.
+*)
 type
-  TGdiplusAbort = record end;
+  TGdiplusAbortCallback = Function(Self: Pointer): HRESULT; stdcall;
+
   PGdiplusAbort = ^TGdiplusAbort;
+  TGdiplusAbort = record
+    VMTPtr:         Pointer;
+    AbortCallback:  TGdiplusAbortCallback;
+  end;
+
+procedure GdiplusAbortSetup(Struct: PGdiplusAbort; Callback: TGdiplusAbortCallback);
 {$IFEND}
 
 //--------------------------------------------------------------------------
@@ -376,6 +402,14 @@ If a > b then
   Result := a
 else
   Result := b;
+end;
+
+//!!----------------------------------------------------------------------------
+
+procedure GdiplusAbortSetup(Struct: PGdiplusAbort; Callback: TGdiplusAbortCallback);
+begin
+Struct^.AbortCallback := Callback;
+Struct^.VMTPtr := @@(Struct^).AbortCallback;
 end;
 
 

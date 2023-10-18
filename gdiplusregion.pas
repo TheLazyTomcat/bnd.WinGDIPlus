@@ -90,7 +90,7 @@ type
     Function IsVisible(const Rect: TRect; G: TGraphics = nil): BOOL; overload;
     Function IsVisible(X,Y,Width,Height: REAL; G: TGraphics = nil): BOOL; overload;
     Function IsVisible(const Rect: TRectF; G: TGraphics = nil): BOOL; overload;
-    Function Equals(Region: TRegion; G: TGraphics): BOOL;
+    Function IsEqual(Region: TRegion; G: TGraphics): BOOL; //!! renamed from Equals (conflict with rtl method)
     Function GetRegionScansCount(Matrix: TMatrix): UINT;
     // If rects is NULL, return the count of rects in the region.
     // Otherwise, assume rects is big enough to hold all the region rects
@@ -536,7 +536,7 @@ end;
 
 //!!----------------------------------------------------------------------------
 
-Function TRegion.Equals(Region: TRegion; G: TGraphics): BOOL;
+Function TRegion.IsEqual(Region: TRegion; G: TGraphics): BOOL;
 begin
 Result := False;
 SetStatus(GdipIsEqualRegion(fNativeRegion,Region.NativeObject,G.NativeObject,@Result));
