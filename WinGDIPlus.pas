@@ -23,63 +23,124 @@
 
       - sources used for this translation were taken from Windows SDK of
         version 10.0.22000.0
+
       - everything was moved into one unit (obviously)
-      - all commens were copied from original sources wiht no change, comments
+
+      - all commens were copied from original sources with no change, comments
         that start with double exclamation character (!!) were added during
         translation
+
       - lot of code was moved to different places, mainly to avoid circular
         referencing
+
       - macros were either expanded in-situ or replaced by functions
+
       - all type identifiers were prepended with capital T (eg. TGraphics,
         TRect), pointers to them with capital P (PGraphics, PRect)
+
       - most enumerated types were translated as that, an enum, but some were
         changed to a pair of type (usually INT) and a set of constants, this is
         because values of these enums are expected to be combined (eg. using
         bitwise OR), and this would be problematic (though possible) in pascal
+
       - some methods, functions and arguments were renamed, ususally to deal
         with conflicts with reserved words or clashing identifiers
-      - library initialization was reworked, see further [1]      
+
+      - library initialization was reworked, see further [1]
+
       - all provided classes implement functions that are not part of the GDI+,
         these are there to simplify translation of some peculiar constructs
         (eg. ternary operators - see declaration of TGdiPlusWrapper class for
         more info)
+
       - classes intended only as data containers (eg. Point, RectF, ...) were
         reworked into records and their methods were implemented as normal
         functions (note that some were renamed to avoid conflicts and ambiguous
         overloads), this was done because of fundamental incompatibility of
         object pascal and C++ classes/objects
+
       - all constructors (with exceptions in TGraphics, see there for
         explanation) are named Create, therefore are named differently than in
         the original (C++ constructors are just named after the class)
+
       - some class methods that originally returned references to "global"
         objects were reworked to return unique instances, requiring explicit
         freeing of the returned objects, see further for details [2]
+
       - where declaration and implementation were separate and something was
         not matching (argument name, order of methods, ...), the declaration
-        part was used as template and the implementation only consulted        
+        part was used as a template and the implementation was only consulted
+
       - where required, new method overloads were added (eg. because the
         declaration called for a default value for structure/record, which is
         not allowed in pascal)
+
       - if method accepted PWideChar, an overload accepting default type String
         was added, the same goes for arguments of type IStream, they were
         supplemented with TStream-accepting overloads
+
       - remember to free any object you create, be it explicitly or implicitly,
-        these are usual objects, no interfaces
-      - number of helper functions were implemented, more might be added in the
+        as these are usual objects, not interfaces
+
+      - number of helper functions was implemented, more might be added in the
         future
+
       - I have found parts in the original code that seemed to be erroneous or
         incomplete, some were marked, but all of them were translated as found,
         with the probable errors
+
       - code that could be simplified without changing its behavior was
-        simplified (this mainly due to a fact that pascal can work with
+        simplified (this was mainly due to a fact that pascal can work with
         function result anywhere in the function's body, C++ code sets returned
-        value and exits as one operation, necessitating a temporary variable)
+        value and exits as one operation, necessitating a temporary variables)
+
       - given the extent of GDI+ library, only small part of this translation
         was tested, please report any errors and bugs you may find
 
-  version 1.0 (2023-10-__)
 
-  Last change 2023-10-__
+  [1] Functions GdiplusStartup and GdiplusShutdown are no longer pointing to
+      imported GDI+ functions of the same name. They are instead locally
+      implemented and are managing dynamic symbol resolving of functions
+      provided by highed versions of GDI+ (for details, see description of
+      symbol NewGDIPStatic). They also call the imported init and final
+      functions as required by the documentation, so it is not necessary to
+      call them explicitly.
+
+      Simply put, call functions GdiplusStartup and GdiplusShutdown as
+      described by GDI+ documentation, just be aware that you are not calling
+      directly to imports.
+
+      The imported functions are still available under names LibGdiplusStartup
+      and LibGdiplusShutdown.
+
+
+  [2] If I understand it correctly, following five functions are, in the
+      original code, returning instances of objects that are stored in global
+      static buffers.
+
+          TFontFamily.GenericSansSerif
+          TFontFamily.GenericSerif
+          TFontFamily.GenericMonospace
+
+          TStringFormat.GenericDefault
+          TStringFormat.GenericTypographic
+
+      These objects are, at least in the case of TFontFamily methods,
+      instantiated only once and then they exist the entire lifetime of the
+      program (they should not be destroyed). This saves memory and might
+      increase performance.
+
+      It is, in theory, possible to emulate this in pascal, but it would be
+      somewhat complex and problematic in multithread environment.
+      Therefore, I have decided to replace this by just returning new unique
+      instance of the particular object every time it is requested.
+      
+      This all means one important thing - you have to free the returned object
+      after use to prevent memory leak!
+
+  version 1.0 (2023-10-20)
+
+  Last change 2023-10-21
 
   ©2023 František Milt
 
@@ -107,7 +168,6 @@
   Library SimpleCPUID might not be needed, see DynLibUtils library for details.
 
 ===============================================================================}
-{$message '^todo^'}
 unit WinGDIPlus;
 
 {$IF not(defined(MSWINDOWS) or defined(WINDOWS))}
@@ -200,10 +260,10 @@ uses
 type
   EGDIPlusException = class(Exception);
 
-  EGDIPlusError            = class(EGDIPlusException);
-  EGDIPlusIndexOutOfBounds = class(EGDIPlusException);
-  EGDIPlusObjecNotAssigned = class(EGDIPlusException);
-  EGDIPlusCodecNotFound    = class(EGDIPlusException);
+  EGDIPlusError             = class(EGDIPlusException);
+  EGDIPlusIndexOutOfBounds  = class(EGDIPlusException);
+  EGDIPlusObjectNotAssigned = class(EGDIPlusException);
+  EGDIPlusCodecNotFound     = class(EGDIPlusException);
   
 {!!-----------------------------------------------------------------------------
     Constants and types
@@ -6049,8 +6109,8 @@ type
     of TStringFormat class. This means that, unlike in the original, you must
     manually free the returned object after you are done with it.
   }
-    class Function GenericDefault: TStringFormat; 
-    class Function GenericTypographic: TStringFormat; 
+    class Function GenericDefault: TStringFormat;
+    class Function GenericTypographic: TStringFormat;
     constructor Create(Format: TStringFormat); overload;
     Function Clone: TStringFormat; 
     destructor Destroy; override;
@@ -6856,7 +6916,7 @@ begin
 If Assigned(Self) then
   Result := GetNativeObjectAddr
 else
-  raise EGDIPlusObjecNotAssigned.CreateFmt('TGdiPlusWrapper.NativeObjectAddr: Instance of class %s not assigned.',[ClassName]);
+  raise EGDIPlusObjectNotAssigned.CreateFmt('TGdiPlusWrapper.NativeObjectAddr: Instance of class %s not assigned.',[ClassName]);
 end;
 
 
